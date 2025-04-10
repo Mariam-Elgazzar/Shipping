@@ -1,0 +1,166 @@
+// @import '../../../styles.scss';
+@import'../../../styles.scss';
+
+
+
+.login-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: white;
+  font-family: 'Inter', sans-serif;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
+}
+
+// Left side styling
+.login-left {
+  flex: 1;
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+
+  .logo {
+
+
+    img {
+      width: 50%; // Increased from 40px
+      // height: 50px; // Increased from 40px
+      margin-right: $spacing-sm;
+    }
+
+
+  }
+
+  .login-intro {
+    margin-bottom: auto;
+
+    h1 {
+      font-size: 48px; // Increased from 28px
+      font-weight: 300;
+      color: $text-primary;
+      line-height: 1.2; // Tightened from 1.3
+      margin-bottom: $spacing-lg;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      font-size: 16px; // Increased from $font-size-sm
+      color: $text-secondary;
+      line-height: 1.6;
+      max-width: 450px;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  .demo-card {
+    background: linear-gradient(90deg, #7B61FF 0%, #00B050 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: $spacing-xl;
+
+    .demo-content {
+      display: flex;
+      align-items: center;
+
+      .truck-image {
+        width: 459px;
+        height: 294.12px;
+        transform: scaleX(-1);
+        background-image: url('/images/redcar.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .demo-text {
+        padding: $spacing-md;
+        color: white;
+
+        h3 {
+          font-size: 38px;
+          font-weight: 700;
+          margin: 0 0 $spacing-xs 0;
+          letter-spacing: -0.01em;
+          line-height: 1.1;
+        }
+
+        p {
+          font-size: 16px;
+          margin: 0 0 $spacing-md 0;
+          opacity: 0.9;
+        }
+
+        .btn-demo {
+          background-color: white;
+          color: $primary-color;
+          border: none;
+          border-radius: 6px;
+          padding: 12px 20px;
+          font-size: 16px;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: $spacing-sm;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-transform: uppercase;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+          }
+
+          i {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.auth-right {
+  flex: 1;
+  background-image: url('/images/login.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+// Icon for arrow right
+.icon-arrow-right {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>');
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
+
+// Icon for shipping
+.icon-shipping {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>');
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
