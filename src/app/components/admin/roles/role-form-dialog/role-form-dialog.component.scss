@@ -1,0 +1,50 @@
+.form-row {
+  margin-bottom: 16px;
+  
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.permissions-section {
+  margin-top: 24px;
+  
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+}
+
+.loading-permissions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  
+  span {
+    margin-left: 12px;
+    color: var(--text-secondary);
+  }
+}
+
+.permissions-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.module-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.permission-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.permission-checkbox {
+  margin: 4px 0;
+}

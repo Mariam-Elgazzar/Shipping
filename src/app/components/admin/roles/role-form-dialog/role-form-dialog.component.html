@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Role' : 'Create New Role' }}</h2>
+
+<form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Role Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter role name">
+        <mat-error *ngIf="roleForm.get('name')?.hasError('required')">
+          Role name is required
+        </mat-error>
+        <mat-error *ngIf="roleForm.get('name')?.hasError('minlength')">
+          Role name must be at least 3 characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter role description" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+    
+    <div class="permissions-section">
+      <h3>Permissions</h3>
+      
+      <div *ngIf="loading" class="loading-permissions">
+        <mat-spinner diameter="30"></mat-spinner>
+        <span>Loading permissions...</span>
+      </div>
+      
+      <div *ngIf="!loading" class="permissions-list">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let module of permissionsByModule | keyvalue">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="module-checkbox">
+                  <mat-checkbox 
+                    [checked]="isModuleFullySelected(module.key)"
+                    [indeterminate]="isModulePartiallySelected(module.key)"
+                    (change)="selectAllInModule(module.key)"
+                    color="primary">
+                    {{ module.key | titlecase }}
+                  </mat-checkbox>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+            <div class="permission-items">
+              <mat-checkbox 
+                *ngFor="let permission of module.value"
+                [checked]="selectedPermissions.has(permission.id)"
+                (change)="togglePermission(permission.id)"
+                color="primary"
+                class="permission-checkbox">
+                {{ permission.name }}
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="btn-outline" [disabled]="loading">Cancel</button>
+    <button mat-raised-button class="btn-primary" type="submit" [disabled]="roleForm.invalid || loading">
+      <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+      <span *ngIf="!loading">{{ isEditMode ? 'Update' : 'Create' }}</span>
+    </button>
+  </mat-dialog-actions>
+</form>

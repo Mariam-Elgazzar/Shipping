@@ -1,0 +1,75 @@
+.shipments-container {
+  padding: 24px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .filter-field {
+    flex: 1;
+    margin-right: 16px;
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  
+  table {
+    width: 100%;
+  }
+}
+
+.mat-column-actions {
+  width: 60px;
+  text-align: center;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  
+  &.delivered {
+    background-color: rgba(0, 176, 80, 0.1);
+    color: var(--primary-color);
+  }
+  
+  &.in-transit {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+  }
+  
+  &.delayed {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .filter-field {
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
+  }
+}

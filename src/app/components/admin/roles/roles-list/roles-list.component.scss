@@ -1,0 +1,67 @@
+.roles-container {
+  padding: 24px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .filter-field {
+    flex: 1;
+  }
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  
+  table {
+    width: 100%;
+  }
+  
+  .permissions-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: rgba(0, 176, 80, 0.1);
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 8px;
+  }
+  
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+  }
+}
+
+.mat-column-actions {
+  width: 60px;
+  text-align: center;
+}

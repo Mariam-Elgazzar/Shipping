@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'ShippinSystemManagement' title`, () => {
+  it(`should have the 'ShippingSystem' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('ShippinSystemManagement');
+    expect(app.title).toEqual('ShippingSystem');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, ShippinSystemManagement');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, ShippingSystem');
   });
 });
