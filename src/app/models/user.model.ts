@@ -36,3 +36,9 @@ export interface LoginResponse {
   token: string
   user: User
 }
+export interface User {
+  id: string
+  username: string
+  email: string
+  // Add other user properties as needed
+}
