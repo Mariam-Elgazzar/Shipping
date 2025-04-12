@@ -7,6 +7,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './components/shared/unauthorized/unauthorized.component';
+import { CreateCityComponent } from './components/create-city/create-city.component';
+import { CreateGovernmentComponent } from './components/create-government/create-government.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -16,6 +18,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredPermission: 'dashboard:view' },
   },
+  { path: 'create-city', component: CreateCityComponent },
+  { path: 'create-government', component: CreateGovernmentComponent },
   {
     path: 'shipments',
     component: ShipmentsComponent,
