@@ -1,53 +1,102 @@
+@import '../../../styles.scss';
+
 .header {
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  height: 64px;
-  color: white;
+  justify-content: space-between; /* Ensure proper spacing between elements */
+  padding: 0 24px;
+  height: 60px;
+  background-color: white;
+  color: $text-primary;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  margin-right: 24px;
-  
+  margin-right: auto; /* Push the logo to the left */
+
   mat-icon {
+    font-size: 22px;
+    color: $primary-color;
     margin-right: 8px;
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
+  }
+
+  .logo-image {
+    width: 40px; /* Adjust the size as needed */
+    height: 40px;
+    margin-right: 8px;
+    object-fit: contain; /* Ensures the image scales properly */
+    filter: grayscale(100%) brightness(0); /* Converts the image to black */
   }
 }
 
 .app-title {
   font-size: 18px;
   font-weight: 600;
+  color: $text-primary;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .nav-links {
   display: flex;
   flex: 1;
-  
+  margin-left: 25px; /* Adjust this value to move the nav-links to the right */
+
   a {
     display: flex;
-    align-items: center;
+    align-items: center; /* Align icon and text vertically */
+    justify-content: flex-start; /* Align items horizontally */
     padding: 0 16px;
-    height: 64px;
-    color: rgba(255, 255, 255, 0.8);
-    
+    height: 60px;
+    color: $text-secondary;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative; /* Set relative positioning for the link */
+    transition: color 0.2s;
+    cursor: pointer;
+
     mat-icon {
-      margin-right: 8px;
-      font-size: 18px;
-      height: 18px;
-      width: 18px;
+      font-size: 24px;
+      color: $text-secondary;
+      margin-right: 8px; /* Add spacing between the icon and text */
+      cursor: pointer; /* Make the cursor clickable on hover */
     }
-    
+
+    span {
+      position: static; /* Reset positioning to inline */
+      transform: none; /* Remove centering transformation */
+      z-index: auto; /* Reset z-index */
+      opacity: 1; /* Make the text fully visible */
+    }
+
     &.active-link {
-      color: white;
-      border-bottom: 2px solid var(--primary-color);
+      color: $primary-color;
+
+      mat-icon {
+        color: $primary-color;
+      }
+
+      span {
+        color: $primary-color;
+      }
+    }
+
+    &:hover {
+      color: $primary-color;
+
+      mat-icon {
+        color: $primary-color;
+      }
+
+      span {
+        color: $primary-color;
+      }
     }
   }
 }
@@ -55,50 +104,199 @@
 .user-section {
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .notification-button {
   margin-right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  i, mat-icon {
+    font-size: 20px;
+    color: $text-secondary;
+  }
+
+  .notification-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background-color: $primary-color;
+    border-radius: 50%;
+  }
 }
 
 .user-button {
   display: flex;
   align-items: center;
-  padding: 4px 8px;
-  
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
   .avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
+    overflow: hidden;
     margin-right: 8px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
-  
+
   .user-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    
+
     .user-name {
       font-size: 14px;
       font-weight: 500;
+      color: $text-primary;
       line-height: 1.2;
     }
-    
+
     .user-role {
       font-size: 12px;
-      opacity: 0.8;
+      color: $text-secondary;
     }
+  }
+
+  .dropdown-icon {
+    margin-left: 4px;
+    color: $text-secondary;
+    font-size: 16px;
   }
 }
 
+// Mobile menu toggle button (hidden by default)
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto; /* Push the button to the far right */
+  margin-right: 0;
+
+  mat-icon {
+    font-size: 24px;
+    color: $text-secondary;
+  }
+}
+
+// Mobile menu overlay
+.mobile-menu-overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 @media (max-width: 1024px) {
+  .nav-links a span {
+    display: none;
+  }
+
+  .nav-links a {
+    padding: 0 12px;
+  }
+
+  .user-info {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .mobile-menu-toggle {
+    display: flex; /* Show the toggle button on small screens */
+  }
+
   .nav-links {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    background-color: white;
+    margin-left: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+
+    &.mobile-nav-open {
+      display: flex;
+    }
+
+    a {
+      height: 50px;
+      width: 100%;
+      padding: 0 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      span {
+        display: inline-block !important;
+      }
+    }
+  }
+
+  .app-title {
+    display: none;
+  }
+
+  .logo-container {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 12px;
+  }
+
+  .notification-button {
+    margin-right: 8px;
+  }
+
+  .user-button .avatar {
+    margin-right: 0;
+  }
+
+  .user-button mat-icon {
     display: none;
   }
 }
