@@ -3,26 +3,25 @@ import { RoleService } from '../../../../services/role.service';
 import { Role } from '../../../../models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { RoleFormDialogComponent } from '../role-form-dialog/role-form-dialog.component';
-import { DataTableComponent } from '../../../shared/data-table/data-table.component';
+// import { DataTableComponent } from '../../../shared/data-table/data-table.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { DatePipe } from '@angular/common';
 import { catchError, map, of, startWith } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-roles-list',
   standalone: true,
   imports: [
-    DataTableComponent,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
-    DatePipe,
+    CommonModule,
   ],
   templateUrl: './roles-list.component.html',
   styleUrl: './roles-list.component.scss',

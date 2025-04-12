@@ -17,10 +17,12 @@ import { ResetPasswordComponent } from './components/auth/reset-password/reset-p
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
 import { MerchantComponent } from './components/merchant/merchant.component';
 import { DeliveryComponent } from './components/delivery/delivery.component';
+import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
+import { PermissionsMatrixComponent } from './components/admin/permissions/permissions-matrix/permissions-matrix.component';
+import { AddPermissionComponent } from './components/admin/permissions/add-permission/add-permission.component';
 
 export const routes: Routes = [
-
-  { path: "", redirectTo: "dashboard", pathMatch: "full" },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -30,27 +32,23 @@ export const routes: Routes = [
   { path: 'create-city', component: CreateCityComponent },
   { path: 'create-government', component: CreateGovernmentComponent },
 
-
-  { path: "orders", component: OrderDashboardComponent },
-  { path: "**", redirectTo: "" },
-
+  { path: 'orders', component: OrderDashboardComponent },
 
   {
     path: 'merchants',
-     component:MerchantComponent
+    component: MerchantComponent,
   },
 
   {
     path: 'deliverys',
-     component:DeliveryComponent
+    component: DeliveryComponent,
   },
-
 
   {
     path: 'shipments',
     component: ShipmentsComponent,
-    canActivate: [AuthGuard],
-    data: { requiredPermission: 'shipments:view' },
+    // canActivate: [AuthGuard],
+    // data: { requiredPermission: 'shipments:view' },
   },
   // {
   //   path: 'shipments/:id',
@@ -63,11 +61,21 @@ export const routes: Routes = [
   //   component: OrdersComponent,
   //   canActivate: [AuthGuard],
   // },
-  // {
-  //   path: 'customers',
-  //   component: CustomersComponent,
-  //   canActivate: [AuthGuard],
-  // },
+  {
+    path: 'permissions-list',
+    component: PermissionsListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'add-permission',
+    component: AddPermissionComponent,
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'permissions-matrix',
+    component: PermissionsMatrixComponent,
+    canActivate: [AuthGuard],
+  },
   // {
   //   path: 'reports',
   //   component: ReportsComponent,
@@ -105,9 +113,6 @@ export const routes: Routes = [
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },
-
-  
-
 ];
 
 @NgModule({

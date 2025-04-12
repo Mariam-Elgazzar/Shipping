@@ -21,22 +21,22 @@ export class OrderDetailsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["orderId"] && this.orderId) {
-      this.loadOrderDetails()
+      // this.loadOrderDetails()
     }
   }
 
-  loadOrderDetails(): void {
-    if (!this.orderId) return
+  // loadOrderDetails(): void {
+  //   if (!this.orderId) return
 
-    this.orderService.getOrderDetails(this.orderId).subscribe(
-      (details) => {
-        this.orderDetails = details
-      },
-      (error) => {
-        console.error("Error loading order details:", error)
-      },
-    )
-  }
+  //   this.orderService.getOrderDetails(this.orderId).subscribe(
+  //     (details) => {
+  //       this.orderDetails = details
+  //     },
+  //     (error) => {
+  //       console.error("Error loading order details:", error)
+  //     },
+  //   )
+  // }
 
   onOverlayClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains("modal-overlay")) {

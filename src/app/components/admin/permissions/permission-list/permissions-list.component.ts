@@ -103,11 +103,11 @@ export class PermissionsListComponent implements OnInit {
   }
 
   addPermission(): void {
-    this.router.navigate(['/admin/permissions/create']);
+    this.router.navigate(['/add-permission']);
   }
 
   viewPermission(permission: Permission): void {
-    this.router.navigate(['/admin/permissions', permission.id]);
+    this.router.navigate(['/permission-matrix', permission.id]);
   }
 
   editPermission(permission: Permission): void {
@@ -141,23 +141,5 @@ export class PermissionsListComponent implements OnInit {
         });
       }
     });
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
   }
 }

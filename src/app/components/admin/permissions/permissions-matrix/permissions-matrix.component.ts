@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatSpinner } from '@angular/material/progress-spinner';
@@ -9,14 +8,14 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 
 interface PermissionModule {
-  id: number
-  name: string
+  id: number;
+  name: string;
   permissions: {
-    view: boolean
-    edit: boolean
-    delete: boolean
-    add: boolean
-  }
+    view: boolean;
+    edit: boolean;
+    delete: boolean;
+    add: boolean;
+  };
 }
 
 @Component({
@@ -24,12 +23,12 @@ interface PermissionModule {
   templateUrl: './permissions-matrix.component.html',
   styleUrls: ['./permissions-matrix.component.scss'],
   imports: [
-    ConfirmDialogComponent,
     CommonModule,
     MatIcon,
     MatSpinner,
     FormsModule,
     MatCheckbox,
+    RouterLink,
   ],
 })
 export class PermissionsMatrixComponent implements OnInit {
@@ -166,6 +165,6 @@ export class PermissionsMatrixComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/admin/roles']);
+    this.router.navigate(['/permissions-list']);
   }
 }

@@ -1,11 +1,11 @@
 <div class="permissions-list-container">
   <div class="header-actions">
     <h1>Permissions</h1>
-    <div class="breadcrumb">
+    <!-- <div class="breadcrumb">
       <a routerLink="/dashboard">Dashboard</a>
       <span class="separator">/</span>
       <span>Permissions</span>
-    </div>
+    </div> -->
   </div>
 
   <div class="card">
@@ -29,16 +29,6 @@
             (keyup.enter)="onSearch()"
           />
           <mat-icon>search</mat-icon>
-        </div>
-
-        <div class="page-size">
-          <span>Show</span>
-          <select [(ngModel)]="pageSize">
-            <option *ngFor="let size of pageSizeOptions" [value]="size">
-              {{ size }}
-            </option>
-          </select>
-          <span>entries</span>
         </div>
       </div>
     </div>
@@ -108,36 +98,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="card-footer">
-      <div class="pagination-info">
-        Showing page {{ currentPage }} of {{ totalPages }}
-      </div>
-
-      <div class="pagination-controls">
-        <button
-          mat-icon-button
-          [disabled]="currentPage === 1"
-          (click)="previousPage()"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-
-        <div class="page-numbers">
-          <button mat-mini-fab color="primary" class="page-number active">
-            1
-          </button>
-        </div>
-
-        <button
-          mat-icon-button
-          [disabled]="currentPage === totalPages"
-          (click)="nextPage()"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
     </div>
   </div>
 </div>
