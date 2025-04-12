@@ -11,6 +11,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
+import { MerchantComponent } from './components/merchant/merchant.component';
+import { DeliveryComponent } from './components/delivery/delivery.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -20,6 +22,17 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredPermission: 'dashboard:view' },
   },
+
+  {
+    path: 'merchants',
+     component:MerchantComponent
+  },
+
+  {
+    path: 'deliverys',
+     component:DeliveryComponent
+  },
+
   {
     path: 'shipments',
     component: ShipmentsComponent,
@@ -79,6 +92,9 @@ export const routes: Routes = [
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },
+
+  
+
 ];
 
 @NgModule({
