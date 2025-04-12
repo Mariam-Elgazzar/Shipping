@@ -1,0 +1,112 @@
+<div class="create-city-container">
+  <div class="card">
+    <div class="card-content">
+      <div class="header-actions">
+        <h1>Create New City</h1>
+      </div>
+      
+      <form [formGroup]="cityForm" (ngSubmit)="onSubmit()">
+        <!-- Government Field -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="government">Government <span class="required">*</span></label>
+            <select
+              id="government"
+              formControlName="government"
+              [ngClass]="{'is-invalid': governmentControl?.invalid && governmentControl?.touched}"
+            >
+              <option value="">Select Government</option>
+              <option *ngFor="let gov of governments" [value]="gov.id">{{ gov.name }}</option>
+            </select>
+            <div class="error-message" *ngIf="governmentControl?.invalid && governmentControl?.touched">
+              <span *ngIf="governmentControl?.errors?.['required']">Government is required</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- City Name Field -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cityName">City Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="cityName"
+              formControlName="cityName"
+              placeholder="Enter city name"
+              [ngClass]="{'is-invalid': cityNameControl?.invalid && cityNameControl?.touched}"
+            >
+            <div class="error-message" *ngIf="cityNameControl?.invalid && cityNameControl?.touched">
+              <span *ngIf="cityNameControl?.errors?.['required']">City name is required</span>
+              <span *ngIf="cityNameControl?.errors?.['minlength']">City name must be at least 3 characters</span>
+              <span *ngIf="cityNameControl?.errors?.['maxlength']">City name cannot exceed 50 characters</span>
+              <span *ngIf="cityNameControl?.errors?.['pattern']">City name must contain only letters and spaces</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Normal Order Cost -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="normalOrderCost">Normal Order Cost <span class="required">*</span></label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input
+                type="number"
+                id="normalOrderCost"
+                formControlName="normalOrderCost"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                [ngClass]="{'is-invalid': normalOrderCostControl?.invalid && normalOrderCostControl?.touched}"
+              >
+            </div>
+            <div class="error-message" *ngIf="normalOrderCostControl?.invalid && normalOrderCostControl?.touched">
+              <span *ngIf="normalOrderCostControl?.errors?.['required']">Normal order cost is required</span>
+              <span *ngIf="normalOrderCostControl?.errors?.['min']">Cost cannot be negative</span>
+              <span *ngIf="normalOrderCostControl?.errors?.['pattern']">Enter a valid amount (e.g., 10.99)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pickup Order Cost -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pickupOrderCost">Pickup Order Cost <span class="required">*</span></label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input
+                type="number"
+                id="pickupOrderCost"
+                formControlName="pickupOrderCost"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                [ngClass]="{'is-invalid': pickupOrderCostControl?.invalid && pickupOrderCostControl?.touched}"
+              >
+            </div>
+            <div class="error-message" *ngIf="pickupOrderCostControl?.invalid && pickupOrderCostControl?.touched">
+              <span *ngIf="pickupOrderCostControl?.errors?.['required']">Pickup order cost is required</span>
+              <span *ngIf="pickupOrderCostControl?.errors?.['min']">Cost cannot be negative</span>
+              <span *ngIf="pickupOrderCostControl?.errors?.['pattern']">Enter a valid amount (e.g., 10.99)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="goBack()">
+            <i class="icon-arrow-left"></i>
+            Back
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <div class="spinner" *ngIf="loading"></div>
+            <span *ngIf="!loading">
+              <i class="icon-save"></i>
+              Save
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
