@@ -1,11 +1,20 @@
-<main class="main-content">
-  <h1 class="page-title">Orders</h1>
+<div class="order-dashboard-container">
 
-  <div class="stats-cards">
-    <app-order-stats></app-order-stats>
-  </div>
+  <main class="main-content">
+    <h1 class="page-title">Inventory</h1>
 
-  <div class="order-table-section">
-    <app-order-table></app-order-table>
-  </div>
-</main>
+    <div class="banner-section">
+      <app-order-banner></app-order-banner>
+    </div>
+
+    <div class="order-content">
+      <div class="items-section">
+        <app-items-package></app-items-package>
+      </div>
+
+      <div class="order-table-section">
+        <app-order-table></app-order-table>
+      </div>
+    </div>
+  </main>
+</div>

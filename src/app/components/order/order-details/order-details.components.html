@@ -12,41 +12,37 @@
 
     <div class="modal-content" *ngIf="orderDetails">
       <div class="order-section">
-        <h3>Vehicle Information</h3>
+        <h3>Order Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Vehicle Number</div>
-            <div class="info-value">{{ orderDetails.vehicleNumber }}</div>
+            <div class="info-label">Order ID</div>
+            <div class="info-value">{{ orderDetails.id }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Vehicle Type</div>
-            <div class="info-value">{{ orderDetails.vehicleType }}</div>
+            <div class="info-label">Category</div>
+            <div class="info-value">{{ orderDetails.category }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Vehicle Status</div>
-            <div class="info-value">
-              <span class="status-badge" [ngClass]="orderDetails.vehicleStatus.toLowerCase()">
-                {{ orderDetails.vehicleStatus }}
-              </span>
-            </div>
+            <div class="info-label">Weight</div>
+            <div class="info-value">{{ orderDetails.weight }}</div>
           </div>
         </div>
       </div>
 
       <div class="order-section">
-        <h3>Driver Information</h3>
+        <h3>Location Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ orderDetails.driverName }}</div>
+            <div class="info-label">Origin</div>
+            <div class="info-value">{{ orderDetails.origin }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Phone Number</div>
-            <div class="info-value">{{ orderDetails.driverPhone || 'N/A' }}</div>
+            <div class="info-label">Destination</div>
+            <div class="info-value">{{ orderDetails.destination }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">License Number</div>
-            <div class="info-value">{{ orderDetails.licenseNumber || 'N/A' }}</div>
+            <div class="info-label">Last Location</div>
+            <div class="info-value">{{ orderDetails.lastLocation }}</div>
           </div>
         </div>
       </div>
@@ -55,28 +51,22 @@
         <h3>Delivery Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Last Location</div>
-            <div class="info-value">{{ orderDetails.lastLocation }}</div>
+            <div class="info-label">Arrival Date</div>
+            <div class="info-value">{{ orderDetails.arrivalDate }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Delivery Schedule</div>
-            <div class="info-value">{{ orderDetails.deliverySchedule }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Status</div>
+            <div class="info-label">Status</div>
             <div class="info-value">
-              <span class="status-badge" [ngClass]="orderDetails.deliveryStatus.toLowerCase()">
-                {{ orderDetails.deliveryStatus }}
-              </span>
+              <span class="status-badge">In Transit</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="order-section" *ngIf="orderDetails.deliveryHistory?.length">
-        <h3>Delivery History</h3>
+      <div class="order-section" *ngIf="orderDetails.trackingHistory?.length">
+        <h3>Tracking History</h3>
         <div class="history-timeline">
-          <div class="timeline-item" *ngFor="let history of orderDetails.deliveryHistory">
+          <div class="timeline-item" *ngFor="let history of orderDetails.trackingHistory">
             <div class="timeline-dot" [ngClass]="history.status.toLowerCase()"></div>
             <div class="timeline-content">
               <div class="timeline-date">{{ history.date }}</div>

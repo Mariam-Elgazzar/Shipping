@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges,  SimpleChanges } from "@angular/core"
+import { Component, Input, Output, EventEmitter,  OnChanges,  SimpleChanges } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import  { OrderService } from "../../../services/order.service"
 
@@ -9,6 +9,7 @@ import  { OrderService } from "../../../services/order.service"
   templateUrl: "./order-details.components.html",
   styleUrls: ["./order-details.components.scss"],
 })
+
 export class OrderDetailsComponent implements OnChanges {
   @Input() orderId: string | null = null
   @Input() isVisible = false

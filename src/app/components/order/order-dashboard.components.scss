@@ -1,29 +1,43 @@
-.order-dashboard-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f5f5f5;
-}
 
-.main-content {
-  flex: 1;
-  width: 100%;
-}
+  .order-dashboard-container {
+    display: flex;
+    flex-direction: column;
 
-.page-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #212b36;
-  margin-bottom: 20px;
-}
+    background-color: #f5f5f5;
+  }
 
-.stats-cards {
-  margin-bottom: 24px;
-}
-//ng g c namecmoponent
-.order-table-section {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
+  .main-content {
+    flex: 1;
+    // padding: 20px;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #212b36;
+    margin-bottom: 20px;
+  }
+
+  .banner-section {
+    margin-bottom: 24px;
+  }
+
+  .order-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .items-section {
+    margin-bottom: 16px;
+  }
+
+  .order-table-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+

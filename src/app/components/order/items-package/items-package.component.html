@@ -1,0 +1,37 @@
+<div class="items-package-container">
+  <div class="items-header">
+    <h3>Items Package</h3>
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Search Item" [(ngModel)]="searchTerm">
+    </div>
+  </div>
+
+  <div class="items-actions">
+    <button class="add-item-btn">Add new order</button>
+  </div>
+
+  <div class="items-list">
+    <div class="item-card" *ngFor="let item of filteredItems">
+      <div class="item-image">
+        <img [src]="item.image" [alt]="item.name">
+      </div>
+      <div class="item-details">
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-category">{{ item.category }}</div>
+        <div class="stock-bar">
+          <div class="stock-progress" [style.width.%]="(item.stock / item.maxStock) * 100"
+               [ngClass]="{'low': item.stock / item.maxStock < 0.3,
+                          'medium': item.stock / item.maxStock >= 0.3 && item.stock / item.maxStock < 0.7,
+                          'high': item.stock / item.maxStock >= 0.7}">
+          </div>
+        </div>
+        <div class="stock-info">{{ item.stock }}</div>
+      </div>
+      <button class="edit-btn">Edit</button>
+    </div>
+  </div>
+</div>
