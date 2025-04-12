@@ -5,10 +5,16 @@ import { ShipmentsComponent } from './components/shipments/shipments.component';
 // Corrected the path to OrderDashboardComponent
 import { OrderDashboardComponent } from './components/order/order-dashboard.component';
 
-import { LoginComponent } from './components/login/login.component';
+// import { LoginComponent } from './components/login/login.component';
 import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './components/shared/unauthorized/unauthorized.component';
+import { LoginComponent } from './pages/login/login.component';
+import { LoginFormComponent } from './components/auth/login-form/login-form.component';
+import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
+import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
+import { MerchantComponent } from './components/merchant/merchant.component';
+import { DeliveryComponent } from './components/delivery/delivery.component';
 
 export const routes: Routes = [
 
@@ -19,8 +25,22 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredPermission: 'dashboard:view' },
   },
+
   { path: "orders", component: OrderDashboardComponent },
   { path: "**", redirectTo: "" },
+
+
+  {
+    path: 'merchants',
+     component:MerchantComponent
+  },
+
+  {
+    path: 'deliverys',
+     component:DeliveryComponent
+  },
+
+
   {
     path: 'shipments',
     component: ShipmentsComponent,
@@ -59,9 +79,30 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredPermission: 'roles:manage' },
   },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    children: [
+      { path: '', redirectTo: 'login-form', pathMatch: 'full' },
+      {
+        path: 'login-form',
+        component: LoginFormComponent,
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent,
+      },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordFormComponent,
+      },
+    ],
+  },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },
+
+  
+
 ];
 
 @NgModule({

@@ -1,0 +1,271 @@
+<div class="merchant-container">
+    <div class="merchant-header">
+      <h1>
+        <i class="icon-merchant"></i>
+        Merchant Management
+      </h1>
+    </div>
+  
+    <div class="merchant-content">
+      <div class="merchant-form-card">
+        <div class="card-header">
+          <h2>
+            <i class="icon-info-circle"></i>
+            {{ isEditing ? 'Edit Merchant' : 'New Merchant' }}
+          </h2>
+          <button *ngIf="isEditing" class="btn-close" (click)="cancel()">
+            <i class="icon-close"></i>
+          </button>
+        </div>
+  
+        <div class="card-body">
+          <form [formGroup]="merchantForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="userId">User</label>
+              <select 
+                id="userId" 
+                formControlName="userId" 
+                class="form-control"
+                [class.is-invalid]="merchantForm.get('userId')?.invalid && merchantForm.get('userId')?.touched">
+                <option value="">Select User</option>
+                <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="merchantForm.get('userId')?.invalid && merchantForm.get('userId')?.touched">
+                User is required
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  formControlName="name" 
+                  class="form-control"
+                  placeholder="Enter merchant name"
+                  [class.is-invalid]="merchantForm.get('name')?.invalid && merchantForm.get('name')?.touched">
+                <div class="invalid-feedback" *ngIf="merchantForm.get('name')?.invalid && merchantForm.get('name')?.touched">
+                  <span *ngIf="merchantForm.get('name')?.errors?.['required']">Name is required</span>
+                  <span *ngIf="merchantForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
+                </div>
+              </div>
+  
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  formControlName="email" 
+                  class="form-control"
+                  placeholder="Enter email address"
+                  [class.is-invalid]="merchantForm.get('email')?.invalid && merchantForm.get('email')?.touched">
+                <div class="invalid-feedback" *ngIf="merchantForm.get('email')?.invalid && merchantForm.get('email')?.touched">
+                  <span *ngIf="merchantForm.get('email')?.errors?.['required']">Email is required</span>
+                  <span *ngIf="merchantForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="password">Password {{ isEditing ? '(Leave blank to keep current)' : '' }}</label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  formControlName="password" 
+                  class="form-control"
+                  placeholder="Enter password"
+                  [class.is-invalid]="merchantForm.get('password')?.invalid && merchantForm.get('password')?.touched">
+                <div class="invalid-feedback" *ngIf="merchantForm.get('password')?.invalid && merchantForm.get('password')?.touched">
+                  <span *ngIf="merchantForm.get('password')?.errors?.['required']">Password is required</span>
+                  <span *ngIf="merchantForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+                </div>
+              </div>
+  
+              <div class="form-group col-md-6">
+                <label for="branch">Branch</label>
+                <input 
+                  type="text" 
+                  id="branch" 
+                  formControlName="branch" 
+                  class="form-control"
+                  placeholder="Enter branch name"
+                  [class.is-invalid]="merchantForm.get('branch')?.invalid && merchantForm.get('branch')?.touched">
+                <div class="invalid-feedback" *ngIf="merchantForm.get('branch')?.invalid && merchantForm.get('branch')?.touched">
+                  Branch is required
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input 
+                type="tel" 
+                id="phoneNumber" 
+                formControlName="phoneNumber" 
+                class="form-control"
+                placeholder="Enter phone number"
+                [class.is-invalid]="merchantForm.get('phoneNumber')?.invalid && merchantForm.get('phoneNumber')?.touched">
+              <div class="invalid-feedback" *ngIf="merchantForm.get('phoneNumber')?.invalid && merchantForm.get('phoneNumber')?.touched">
+                <span *ngIf="merchantForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="merchantForm.get('phoneNumber')?.errors?.['pattern']">Please enter a valid phone number</span>
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="government">Government</label>
+                <select 
+                  id="government" 
+                  formControlName="government" 
+                  class="form-control"
+                  [class.is-invalid]="merchantForm.get('government')?.invalid && merchantForm.get('government')?.touched">
+                  <option value="">Select Government</option>
+                  <option *ngFor="let gov of governments" [value]="gov">{{ gov }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="merchantForm.get('government')?.invalid && merchantForm.get('government')?.touched">
+                  Government is required
+                </div>
+              </div>
+  
+              <div class="form-group col-md-6">
+                <label for="city">City</label>
+                <select 
+                  id="city" 
+                  formControlName="city" 
+                  class="form-control"
+                  [class.is-invalid]="merchantForm.get('city')?.invalid && merchantForm.get('city')?.touched"
+                  [disabled]="!merchantForm.get('government')?.value">
+                  <option value="">Select City</option>
+                  <option *ngFor="let city of availableCities" [value]="city">{{ city }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="merchantForm.get('city')?.invalid && merchantForm.get('city')?.touched">
+                  City is required
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea 
+                id="address" 
+                formControlName="address" 
+                class="form-control"
+                placeholder="Enter detailed address"
+                rows="3"
+                [class.is-invalid]="merchantForm.get('address')?.invalid && merchantForm.get('address')?.touched"></textarea>
+              <div class="invalid-feedback" *ngIf="merchantForm.get('address')?.invalid && merchantForm.get('address')?.touched">
+                Address is required
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="cost_Rejection">Cost Rejection</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input 
+                    type="number" 
+                    id="cost_Rejection" 
+                    formControlName="cost_Rejection" 
+                    class="form-control"
+                    placeholder="0.00"
+                    [class.is-invalid]="merchantForm.get('cost_Rejection')?.invalid && merchantForm.get('cost_Rejection')?.touched">
+                </div>
+                <div class="invalid-feedback" *ngIf="merchantForm.get('cost_Rejection')?.invalid && merchantForm.get('cost_Rejection')?.touched">
+                  Cost Rejection must be a positive number
+                </div>
+              </div>
+  
+              <div class="form-group col-md-6">
+                <label for="bickup">Pickup Fee</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input 
+                    type="number" 
+                    id="bickup" 
+                    formControlName="bickup" 
+                    class="form-control"
+                    placeholder="0.00"
+                    [class.is-invalid]="merchantForm.get('bickup')?.invalid && merchantForm.get('bickup')?.touched">
+                </div>
+                <div class="invalid-feedback" *ngIf="merchantForm.get('bickup')?.invalid && merchantForm.get('bickup')?.touched">
+                  Pickup Fee must be a positive number
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" (click)="cancel()">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="merchantForm.invalid || isLoading">
+                {{ isEditing ? 'Update' : 'Create' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <!-- Merchant List Section -->
+      <div class="merchant-list-card">
+        <div class="card-header">
+          <h2>
+            <i class="icon-list"></i>
+            Merchant List
+          </h2>
+          <div class="header-actions">
+            <div class="search-box">
+              <i class="icon-search"></i>
+              <input type="text" placeholder="Search merchants">
+            </div>
+            <button class="btn btn-filter">
+              <i class="icon-filter"></i>
+              Filter
+            </button>
+          </div>
+        </div>
+  
+        <div class="card-body">
+          <table class="merchant-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Branch</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Cost Rejection</th>
+                <th>Pickup Fee</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- This would be populated with *ngFor from your merchant service -->
+              <tr *ngFor="let merchant of merchants">
+                <td>{{ merchant.name }}</td>
+                <td>{{ merchant.email }}</td>
+                <td>{{ merchant.branch }}</td>
+                <td>{{ merchant.phoneNumber }}</td>
+                <td>{{ merchant.city }}, {{ merchant.government }}</td>
+                <td>${{ merchant.cost_Rejection.toFixed(2) }}</td>
+                <td>${{ merchant.bickup.toFixed(2) }}</td>
+                <td class="actions">
+                  <button class="btn-icon" (click)="editMerchant(merchant)">
+                    <i class="icon-edit"></i>
+                  </button>
+                  <button class="btn-icon btn-danger">
+                    <i class="icon-delete"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
