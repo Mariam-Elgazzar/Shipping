@@ -1,0 +1,122 @@
+<div class="permissions-container">
+  <div class="header-actions">
+    <h1>Role Permissions: {{ roleName }}</h1>
+    <div class="breadcrumb">
+      <a routerLink="/dashboard">Dashboard</a>
+      <span class="separator">/</span>
+      <a routerLink="/admin/roles">Roles</a>
+      <span class="separator">/</span>
+      <span>Edit Permissions</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search modules"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        />
+        <mat-icon>search</mat-icon>
+      </div>
+
+      <div class="page-size">
+        <span>Show</span>
+        <select [(ngModel)]="pageSize">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">
+            {{ size }}
+          </option>
+        </select>
+        <span>entries</span>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="permissions-table">
+        <thead>
+          <tr>
+            <th class="number-column">#</th>
+            <th class="module-column">Module</th>
+            <th class="permission-column">View</th>
+            <th class="permission-column">Edit</th>
+            <th class="permission-column">Delete</th>
+            <th class="permission-column">Add</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="!loading">
+            <tr
+              *ngFor="let module of filteredModules; let i = index"
+              [ngClass]="{ 'even-row': i % 2 === 0 }"
+            >
+              <td class="number-column">{{ module.id }}</td>
+              <td class="module-column">{{ module.name }}</td>
+              <td class="permission-column">
+                <mat-checkbox
+                  [checked]="module.permissions.view"
+                  (change)="togglePermission(module, 'view')"
+                  color="primary"
+                ></mat-checkbox>
+              </td>
+              <td class="permission-column">
+                <mat-checkbox
+                  [checked]="module.permissions.edit"
+                  (change)="togglePermission(module, 'edit')"
+                  color="primary"
+                ></mat-checkbox>
+              </td>
+              <td class="permission-column">
+                <mat-checkbox
+                  [checked]="module.permissions.delete"
+                  (change)="togglePermission(module, 'delete')"
+                  color="primary"
+                ></mat-checkbox>
+              </td>
+              <td class="permission-column">
+                <mat-checkbox
+                  [checked]="module.permissions.add"
+                  (change)="togglePermission(module, 'add')"
+                  color="primary"
+                ></mat-checkbox>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr *ngIf="loading">
+            <td colspan="6" class="loading-cell">
+              <mat-spinner diameter="40"></mat-spinner>
+              <span>Loading permissions...</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="!loading && filteredModules.length === 0">
+            <td colspan="6" class="empty-cell">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer">
+      <button mat-button class="btn-outline" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="savePermissions()"
+        [disabled]="loading"
+      >
+        <mat-icon *ngIf="loading">
+          <mat-spinner diameter="20" color="accent"></mat-spinner>
+        </mat-icon>
+        <span *ngIf="!loading">
+          <mat-icon>save</mat-icon>
+          Save Permissions
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
