@@ -5,11 +5,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MerchantService } from '../../services/merchant.service';
-import { UserService } from '../../services/user.service';
-import { LocationService } from '../../services/location.service';
-import { Merchant } from '../../models/merchant.model';
-import { User } from '../../models/user.model';
+import { MerchantService } from '../../../services/merchant.service';
+import { UserService } from '../../../services/user.service';
+import { LocationService } from '../../../services/location.service';
+import { Merchant } from '../../../models/merchant.model';
+import { User } from '../../../models/user.model';
 import { CommonModule } from '@angular/common';
 
 @Component({

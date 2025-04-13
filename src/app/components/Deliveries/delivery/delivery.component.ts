@@ -5,12 +5,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { LocationService } from '../../services/location.service';
+import { UserService } from '../../../services/user.service';
+import { LocationService } from '../../../services/location.service';
 // import { Delivery, SaleTypeEnum } from '../../models/delivery.model';
-import { User } from '../../models/user.model';
-import { DeliveryService } from '../../services/delivery.service';
-import { Delivery, SaleTypeEnum } from '../../models/delivery.model';
+import { User } from '../../../models/user.model';
+import { DeliveryService } from '../../../services/delivery.service';
+import { Delivery, SaleTypeEnum } from '../../../models/delivery.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -78,7 +78,7 @@ export class DeliveryComponent implements OnInit {
     this.loadUsers();
     this.loadEmployees();
     this.loadLocations();
-    this.loadDeliveries();
+    // this.loadDeliveries();
   }
 
   loadUsers(): void {
@@ -126,19 +126,19 @@ export class DeliveryComponent implements OnInit {
     });
   }
 
-  loadDeliveries(): void {
-    this.isLoading = true;
-    this.deliveryService.getDeliveries().subscribe({
-      next: (deliveries) => {
-        this.deliveries = deliveries;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading deliveries', error);
-        this.isLoading = false;
-      },
-    });
-  }
+  // loadDeliveries(): void {
+  //   this.isLoading = true;
+  //   this.deliveryService.getDeliveries().subscribe({
+  //     next: (deliveries) => {
+  //       this.deliveries = deliveries;
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading deliveries', error);
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
 
   onSubmit(): void {
     if (this.deliveryForm.invalid) {
@@ -156,45 +156,45 @@ export class DeliveryComponent implements OnInit {
       if (!deliveryData.password) {
         delete deliveryData.password;
       }
-      this.updateDelivery(deliveryData);
+      // this.updateDelivery(deliveryData);
     } else {
-      this.createDelivery(deliveryData);
+      // this.createDelivery(deliveryData);
     }
   }
 
-  createDelivery(delivery: Delivery): void {
-    this.isLoading = true;
-    this.deliveryService.createDelivery(delivery).subscribe({
-      next: () => {
-        this.resetForm();
-        this.loadDeliveries();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error creating delivery', error);
-        this.isLoading = false;
-      },
-    });
-  }
+  // createDelivery(delivery: Delivery): void {
+  //   this.isLoading = true;
+  //   this.deliveryService.createDelivery(delivery).subscribe({
+  //     next: () => {
+  //       this.resetForm();
+  //       this.loadDeliveries();
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error creating delivery', error);
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
 
-  updateDelivery(delivery: Delivery): void {
-    if (!this.currentDeliveryId) return;
+  // updateDelivery(delivery: Delivery): void {
+  //   if (!this.currentDeliveryId) return;
 
-    this.isLoading = true;
-    this.deliveryService
-      .updateDelivery(this.currentDeliveryId, delivery)
-      .subscribe({
-        next: () => {
-          this.resetForm();
-          this.loadDeliveries();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error updating delivery', error);
-          this.isLoading = false;
-        },
-      });
-  }
+  //   this.isLoading = true;
+  //   this.deliveryService
+  //     .updateDelivery(this.currentDeliveryId, delivery)
+  //     .subscribe({
+  //       next: () => {
+  //         this.resetForm();
+  //         this.loadDeliveries();
+  //         this.isLoading = false;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error updating delivery', error);
+  //         this.isLoading = false;
+  //       },
+  //     });
+  // }
 
   editDelivery(delivery: Delivery): void {
     this.isEditing = true;
@@ -257,7 +257,7 @@ export class DeliveryComponent implements OnInit {
       this.isLoading = true;
       this.deliveryService.deleteDelivery(userId).subscribe({
         next: () => {
-          this.loadDeliveries();
+          // this.loadDeliveries();
           this.isLoading = false;
         },
         error: (error) => {

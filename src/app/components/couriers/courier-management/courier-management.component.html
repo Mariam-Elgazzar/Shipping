@@ -1,0 +1,151 @@
+<div class="courier-container">
+  <h1>Courier</h1>
+
+  <!-- Stats Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Total Courier</div>
+        <div class="stat-value">{{ totalCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon active">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Active</div>
+        <div class="stat-value">{{ activeCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon leave">
+        <mat-icon>sick</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">leave/sick</div>
+        <div class="stat-value">{{ leaveSickCouriers < 10 ? '0' + leaveSickCouriers : leaveSickCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon deactive">
+        <mat-icon>block</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Deactive</div>
+        <div class="stat-value">{{ deactiveCouriers }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Header -->
+  <div class="table-header">
+    <div class="table-title">
+      <mat-icon>directions_run</mat-icon>
+      <span>Courier</span>
+    </div>
+
+    <div class="table-actions">
+      <button mat-raised-button color="primary" class="add-button" (click)="addNewCourier()">
+        Add New Courier
+      </button>
+
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search something"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        >
+        <mat-icon>search</mat-icon>
+      </div>
+
+      <button mat-button class="filter-button" (click)="applyFilter()">
+        <mat-icon>filter_list</mat-icon>
+        Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="courier-table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th class="checkbox-column">
+            <mat-checkbox (change)="toggleSelectAll($event)"></mat-checkbox>
+          </th>
+          <th>Id</th>
+          <th>Rider</th>
+          <th>Start Work</th>
+          <th>Finish Work</th>
+          <th>Average Work</th>
+          <th>Total Order</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let courier of filteredCouriers">
+          <td class="checkbox-column">
+            <mat-checkbox
+              [checked]="isSelected(courier.id)"
+              (change)="toggleSelectCourier(courier.id, $event)"
+            ></mat-checkbox>
+          </td>
+          <td>{{ courier.id }}</td>
+          <td>{{ courier.rider }}</td>
+          <td>{{ courier.startWork }}</td>
+          <td>{{ courier.finishWork }}</td>
+          <td>{{ courier.averageWork }}</td>
+          <td>{{ courier.totalOrder }}</td>
+          <td>
+            <div class="status-badge" [ngClass]="getStatusClass(courier.status)">
+              <span class="status-dot"></span>
+              {{ courier.status }}
+            </div>
+          </td>
+          <td>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="viewCourier(courier)">
+                <mat-icon>visibility</mat-icon>
+                <span>View</span>
+              </button>
+              <button mat-menu-item (click)="contactCourier(courier)">
+                <mat-icon>contact_phone</mat-icon>
+                <span>Contact</span>
+              </button>
+              <button mat-menu-item (click)="editCourier(courier)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item (click)="deleteCourier(courier)" class="delete-action">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading couriers...</p>
+    </div>
+
+    <div class="empty-container" *ngIf="!loading && filteredCouriers.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <p>No couriers found</p>
+    </div>
+  </div>
+</div>

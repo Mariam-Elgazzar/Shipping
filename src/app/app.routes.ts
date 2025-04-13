@@ -15,11 +15,17 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
-import { MerchantComponent } from './components/merchant/merchant.component';
-import { DeliveryComponent } from './components/delivery/delivery.component';
+import { MerchantComponent } from './components/Merchants/merchant/merchant.component';
+import { DeliveryComponent } from './components/Deliveries/delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
 import { PermissionsMatrixComponent } from './components/admin/permissions/permissions-matrix/permissions-matrix.component';
 import { AddPermissionComponent } from './components/admin/permissions/add-permission/add-permission.component';
+import { CouriersListComponent } from './components/couriers/couriers-list/couriers-list.component';
+import { CourierManagementComponent } from './components/couriers/courier-management/courier-management.component';
+import { MerchantListComponent } from './components/Merchants/merchant-list/merchant-list.component';
+import { MerchantDetailsComponent } from './components/Merchants/merchant-details/merchant-details.component';
+import { DeliveryDetailsComponent } from './components/Deliveries/delivery-details/delivery-details.component';
+import { DeliveryListComponent } from './components/Deliveries/delivery-list/delivery-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -33,15 +39,32 @@ export const routes: Routes = [
   { path: 'create-government', component: CreateGovernmentComponent },
 
   { path: 'orders', component: OrderDashboardComponent },
-
+  { path: 'CourierManagement', component: CourierManagementComponent },
+  { path: 'Courierslist', component: CouriersListComponent },
   {
     path: 'merchants',
     component: MerchantComponent,
+  },
+  {
+    path: 'merchantstable',
+    component: MerchantListComponent,
+  },
+  {
+    path: 'merchantdetails',
+    component: MerchantDetailsComponent,
   },
 
   {
     path: 'deliverys',
     component: DeliveryComponent,
+  },
+  {
+    path: 'DeliveryDetailsComponent',
+    component: DeliveryDetailsComponent,
+  },
+  {
+    path: 'DeliveryListComponent',
+    component: DeliveryListComponent,
   },
 
   {
