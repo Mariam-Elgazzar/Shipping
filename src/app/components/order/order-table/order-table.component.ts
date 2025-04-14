@@ -1,364 +1,401 @@
-import { Component,  OnInit } from "@angular/core"
+import { Component,  OnInit,  OnDestroy } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
-import { OrderService } from "../../../services/order.service"
-import { OrderDetailsComponent } from "../order-details/order-details.component"
+ import {Order} from "../../../models/order.model"
+import { FilterOptions } from "../../../models/order.model"
+import  { OrderService } from "../../../services/order.service"
 
-interface Order {
-  id: string
-  vehicleNumber: string
-  vehicleType: string
-  driverName: string
-  vehicleStatus: string
-  lastLocation: string
-  deliverySchedule: string
-  deliveryStatus: string
-}
+import { OrderDetailsComponent } from "../order-details/order-details.component"
+import { AddOrderModalComponent } from "../add-order-modal/add-order-modal.component"
+import { EditOrderModalComponent } from "../edit-order-modal/edit-order-modal.component"
+
+
+// Update the Order interface to include statusNotes
+
+
 
 @Component({
   selector: "app-order-table",
   standalone: true,
-  imports: [CommonModule, FormsModule, OrderDetailsComponent],
-  template: `
-    <div class="order-table-container">
-      <div class="table-header">
-        <div class="header-left">
-          <div class="header-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </div>
-          <h3>Payment history</h3>
-        </div>
 
-        <div class="header-actions">
-          <button class="add-btn">
-            Add New Order
-          </button>
+  imports: [CommonModule, FormsModule, OrderDetailsComponent, AddOrderModalComponent, EditOrderModalComponent],
+  templateUrl: "./order-table.component.html",
+  styleUrls: ["./order-table.component.scss"],
+})
+export class OrderTableComponent implements OnInit, OnDestroy {
+  // Update the orders array with the new data structure
+  orders: Order[] = [
+    {
+      id: "MHGJ3-0",
+      date: "23 Mar 2024",
+      customerName: "John Doe",
+      government: "Cairo",
+      city: "Nasr City",
+      orderCost: "$120.00",
+      merchant: "Electronics Store",
+      category: "Electronic",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse A",
+      customerPhone: "+1 (555) 123-4567",
+      customerEmail: "john.doe@example.com",
+      shippingType: "Express",
+      payWay: "Credit Card",
+      status: "New",
+    },
+    {
+      id: "MHGJ3-2",
+      date: "22 Mar 2024",
+      customerName: "Jane Smith",
+      government: "Alexandria",
+      city: "Miami",
+      orderCost: "$85.50",
+      merchant: "Fashion Outlet",
+      category: "Fashion",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse A",
+      customerPhone: "+1 (555) 987-6543",
+      customerEmail: "jane.smith@example.com",
+      shippingType: "Standard",
+      payWay: "Cash on Delivery",
+      status: "Delivered",
+    },
+    {
+      id: "MHGJ3-3",
+      date: "21 Mar 2024",
+      customerName: "Robert Johnson",
+      government: "Giza",
+      city: "Dokki",
+      orderCost: "$210.75",
+      merchant: "Grocery Market",
+      category: "Food",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse A",
+      customerPhone: "+1 (555) 234-5678",
+      customerEmail: "robert.johnson@example.com",
+      shippingType: "Same Day",
+      payWay: "Digital Wallet",
+      status: "Partially Delivered",
+    },
+    {
+      id: "MHGJ3-4",
+      date: "20 Mar 2024",
+      customerName: "Emily Davis",
+      government: "Cairo",
+      city: "Maadi",
+      orderCost: "$150.25",
+      merchant: "Home Depot",
+      category: "Furniture",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse A",
+      customerPhone: "+1 (555) 345-6789",
+      customerEmail: "emily.davis@example.com",
+      shippingType: "Standard",
+      payWay: "Bank Transfer",
+      status: "Cancelled by Recipient",
+    },
+    {
+      id: "MHGJ3-5",
+      date: "19 Mar 2024",
+      customerName: "Michael Wilson",
+      government: "Alexandria",
+      city: "Montazah",
+      orderCost: "$95.00",
+      merchant: "Grocery Market",
+      category: "Frozen Food",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse B",
+      customerPhone: "+1 (555) 456-7890",
+      customerEmail: "michael.wilson@example.com",
+      shippingType: "Express",
+      payWay: "Credit Card",
+      status: "Postponed",
+    },
+    {
+      id: "MHGJ3-6",
+      date: "18 Mar 2024",
+      customerName: "Sarah Brown",
+      government: "Giza",
+      city: "6th of October",
+      orderCost: "$175.30",
+      merchant: "Auto Parts Store",
+      category: "Auto Parts",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse C",
+      customerPhone: "+1 (555) 567-8901",
+      customerEmail: "sarah.brown@example.com",
+      shippingType: "Standard",
+      payWay: "Cash on Delivery",
+      status: "Rejected with Payment",
+    },
+    {
+      id: "MHGJ3-7",
+      date: "17 Mar 2024",
+      customerName: "David Miller",
+      government: "Luxor",
+      city: "East Bank",
+      orderCost: "$65.80",
+      merchant: "Grocery Market",
+      category: "Frozen Food",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse B",
+      customerPhone: "+1 (555) 678-9012",
+      customerEmail: "david.miller@example.com",
+      shippingType: "Same Day",
+      payWay: "Digital Wallet",
+      status: "Rejected without Payment",
+    },
+    {
+      id: "MHGJ3-8",
+      date: "16 Mar 2024",
+      customerName: "Lisa Taylor",
+      government: "Aswan",
+      city: "Aswan City",
+      orderCost: "$130.45",
+      merchant: "Chemical Supply Co",
+      category: "Chemicals",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse D",
+      customerPhone: "+1 (555) 789-0123",
+      customerEmail: "lisa.taylor@example.com",
+      shippingType: "International",
+      payWay: "Bank Transfer",
+      status: "New",
+    },
+  ]
 
-          <div class="search-box">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" placeholder="Search something" [(ngModel)]="searchTerm" (input)="filterOrders()">
-          </div>
 
-          <button class="filter-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            Filter
-          </button>
-        </div>
-      </div>
+    
 
-      <div class="table-wrapper">
-        <table class="order-table">
-          <thead>
-            <tr>
-              <th class="checkbox-col">
-                <input type="checkbox" (change)="toggleSelectAll($event)">
-              </th>
-              <th>Vehicle Number</th>
-              <th>Vehicle Type</th>
-              <th>Driver's Name</th>
-              <th>Vehicle Status</th>
-              <th>Last Location</th>
-              <th>Delivery Schedule</th>
-              <th>Delivery Status</th>
-              <th class="actions-col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let order of filteredOrders">
-              <td class="checkbox-col">
-                <input type="checkbox" [checked]="selectedOrders.includes(order.id)" (change)="toggleOrderSelection(order.id)">
-              </td>
-              <td>{{ order.vehicleNumber }}</td>
-              <td>{{ order.vehicleType }}</td>
-              <td>{{ order.driverName }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="order.vehicleStatus.toLowerCase()">
-                  {{ order.vehicleStatus }}
-                </span>
-              </td>
-              <td>{{ order.lastLocation }}</td>
-              <td>{{ order.deliverySchedule }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="order.deliveryStatus.toLowerCase()">
-                  {{ order.deliveryStatus }}
-                </span>
-              </td>
-              <td class="actions-col">
-                <button class="action-btn" (click)="showActionMenu(order.id)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="19" cy="12" r="1"></circle>
-                    <circle cx="5" cy="12" r="1"></circle>
-                  </svg>
-                </button>
+  // For date picker
+  showDatePicker = false
 
-                <div class="action-menu" *ngIf="activeActionMenu === order.id">
-                  <button class="menu-item" (click)="viewOrderDetails(order.id)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    View
-                  </button>
-                  <button class="menu-item" (click)="editOrder(order.id)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                    Edit
-                  </button>
-                  <button class="menu-item delete" (click)="deleteOrder(order.id)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  // For filter menu
+  showFilterMenu = false
+  availableCategories: string[] = []
+  availableLocations: string[] = []
 
-      <!-- Order Details Modal -->
-      <app-order-details
-        *ngIf="selectedOrderId"
-        [orderId]="selectedOrderId"
-        [isVisible]="isOrderDetailsVisible"
-        (close)="closeOrderDetails()">
-      </app-order-details>
-    </div>
-  `,
-  styles: [
-    `
-    .order-table-container {
-      width: 100%;
-      position: relative;
+  // Add a new property to the class
+  showAddOrderModal = false
+
+  // Add properties for edit modal
+  showEditOrderModal = false
+  selectedOrderData: Order | null = null
+
+  // Update the filterOptions initialization
+  filterOptions: FilterOptions = {
+    categories: [],
+    governments: [],
+    cities: [],
+    merchants: [],
+    dateRange: {
+      start: null,
+      end: null,
+    },
+    locations: [],
+  }
+
+  // Add these properties to the class
+  availableGovernments: string[] = []
+  availableCities: string[] = []
+  availableMerchants: string[] = []
+
+  // Add properties for assign merchant modal
+  showAssignMerchantModal = false
+  selectedMerchant: string | null = null
+  selectedOrderToAssign: string | null = null
+
+  // Add these properties to the class
+  showStatusModal = false
+  selectedStatus = ""
+  statusNotes = ""
+  availableStatuses: string[] = [
+    "New",
+    "Pending",
+    "Delivered",
+    "Partially Delivered",
+    "Cancelled",
+    "Postponed",
+    "Rejected with Payment",
+    "Rejected without Payment",
+    "Cancelled by Recipient",
+  ]
+
+  constructor(private orderService: OrderService) {
+    this.selectedDate = "All Dates"
+  }
+
+  // Update the ngOnInit method to extract governments and cities
+  ngOnInit(): void {
+    // Add some sample statuses to orders
+    this.orders.forEach((order, index) => {
+      const statuses = [
+        "New",
+        "Delivered",
+        "Partially Delivered",
+        "Cancelled",
+        "Postponed",
+        "Rejected with Payment",
+        "Rejected without Payment",
+        "Cancelled by Recipient",
+      ]
+      order.status = statuses[index % statuses.length]
+    })
+
+    this.filteredOrders = [...this.orders]
+
+    // Extract unique categories, governments, cities, and locations for filters
+    this.availableCategories = [...new Set(this.orders.map((order) => order.category || ""))]
+    this.availableGovernments = [...new Set(this.orders.map((order) => order.government))]
+    this.availableCities = [...new Set(this.orders.map((order) => order.city))]
+    this.availableMerchants = [...new Set(this.orders.map((order) => order.merchant))]
+    this.availableLocations = [...new Set(this.orders.map((order) => order.lastLocation || ""))]
+
+    // Add global click handler to close menus
+    document.addEventListener("click", this.handleDocumentClick.bind(this))
+
+    // Add escape key handler to close menus
+    document.addEventListener("keydown", this.handleEscapeKey.bind(this))
+  }
+
+  // Add this method to handle escape key press
+  handleEscapeKey(event: KeyboardEvent): void {
+    if (event.key === "Escape") {
+      this.activeActionMenu = null
+      this.showDatePicker = false
+      this.showFilterMenu = false
+      this.showAssignMerchantModal = false
+      this.showStatusModal = false
     }
+  }
 
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
-    }
+  // Add this method to handle document clicks
+  handleDocumentClick(event: MouseEvent): void {
+    // Only process if any menu is open
+    if (
+      this.showDatePicker ||
+      this.showFilterMenu ||
+      this.activeActionMenu ||
+      this.showAssignMerchantModal ||
+      this.showStatusModal
+    ) {
+      const target = event.target as HTMLElement
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      h3 {
-        font-size: 16px;
-        font-weight: 500;
-        margin: 0;
-        color: #212b36;
+      // Don't close menus if clicking inside them
+      if (
+        target.closest(".date-picker") ||
+        target.closest(".date-trigger") ||
+        target.closest(".filter-menu") ||
+        target.closest(".filter-btn") ||
+        target.closest(".action-menu") ||
+        target.closest(".action-btn") ||
+        target.closest(".modal-container") ||
+        target.closest(".assign-btn")
+      ) {
+        return
       }
+
+      // Close all menus
+      this.showDatePicker = false
+      this.showFilterMenu = false
+      this.activeActionMenu = null
+      this.showAssignMerchantModal = false
+      this.showStatusModal = false
+    
     }
 
-    .header-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background-color: rgba(0, 167, 111, 0.1);
 
-      svg {
-        color: #00a76f;
-      }
+  // Update the filterOrders method to include government and city filters
+  filterOrders(): void {
+    // Start with all orders
+    let filtered = [...this.orders]
+
+    // Apply search term filter
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase()
+      filtered = filtered.filter(
+        (order) =>
+          order.id.toLowerCase().includes(term) ||
+          order.customerName.toLowerCase().includes(term) ||
+          order.government.toLowerCase().includes(term) ||
+          order.city.toLowerCase().includes(term) ||
+          (order.category && order.category.toLowerCase().includes(term)),
+      )
     }
 
-    .header-actions {
-      display: flex;
-      gap: 12px;
+    // Apply category filters
+    if (this.filterOptions.categories.length > 0) {
+      filtered = filtered.filter((order) => order.category && this.filterOptions.categories.includes(order.category))
     }
 
-    .add-btn {
-      background-color: #00a76f;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: darken(#00a76f, 5%);
-      }
+    // Apply government filters
+    if (this.filterOptions.governments.length > 0) {
+      filtered = filtered.filter((order) => this.filterOptions.governments.includes(order.government))
     }
 
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background-color: #f5f5f5;
-      border-radius: 4px;
-      padding: 8px 12px;
-      width: 240px;
+    // Apply city filters
+    if (this.filterOptions.cities.length > 0) {
+      filtered = filtered.filter((order) => this.filterOptions.cities.includes(order.city))
+    }
 
-      svg {
-        color: #637381;
-      }
+    // Apply merchant filters
+    if (this.filterOptions.merchants.length > 0) {
+      filtered = filtered.filter((order) => this.filterOptions.merchants.includes(order.merchant))
+    }
 
-      input {
-        border: none;
-        background: none;
-        outline: none;
-        font-size: 14px;
-        color: #212b36;
-        width: 100%;
+    // Apply location filters
+    if (this.filterOptions.locations.length > 0) {
+      filtered = filtered.filter(
+        (order) => order.lastLocation && this.filterOptions.locations.includes(order.lastLocation),
+      )
+    }
 
-        &::placeholder {
-          color: #637381;
+    // Apply date range filter
+    if (this.filterOptions.dateRange.start || this.filterOptions.dateRange.end) {
+      filtered = filtered.filter((order) => {
+        // Convert order date string to Date object for comparison
+        const orderDate = this.parseOrderDate(order.date)
+
+        // If we have a start date, check if order date is after or equal to it
+        if (this.filterOptions.dateRange.start) {
+          const startDate = new Date(this.filterOptions.dateRange.start)
+          if (orderDate < startDate) return false
         }
-      }
-    }
 
-    .filter-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background-color: #f5f5f5;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 12px;
-      font-size: 14px;
-      color: #212b36;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #e0e0e0;
-      }
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-    }
-
-    .order-table {
-      width: 100%;
-      border-collapse: collapse;
-
-      th, td {
-        padding: 12px 16px;
-        text-align: left;
-        font-size: 14px;
-      }
-
-      th {
-        color: #637381;
-        font-weight: 600;
-        background-color: #f9fafb;
-      }
-
-      td {
-        color: #212b36;
-        border-bottom: 1px solid #f0f0f0;
-      }
-
-      .checkbox-col {
-        width: 40px;
-      }
-
-      .actions-col {
-        width: 60px;
-      }
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
-
-      &.active {
-        background-color: rgba(0, 167, 111, 0.1);
-        color: #00a76f;
-      }
-
-      &.inactive, &.defective {
-        background-color: rgba(255, 77, 79, 0.1);
-        color: #ff4d4f;
-      }
-
-      &.delivery {
-        background-color: rgba(32, 101, 209, 0.1);
-        color: #2065d1;
-      }
-
-      &.complete {
-        background-color: rgba(0, 167, 111, 0.1);
-        color: #00a76f;
-      }
-
-      &.pending {
-        background-color: rgba(255, 77, 79, 0.1);
-        color: #ff4d4f;
-      }
-    }
-
-    .action-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #637381;
-
-      &:hover {
-        color: #212b36;
-      }
-    }
-
-    .action-menu {
-      position: absolute;
-      right: 40px;
-      background-color: white;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      z-index: 10;
-      overflow: hidden;
-      width: 120px;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      padding: 8px 12px;
-      border: none;
-      background: none;
-      text-align: left;
-      font-size: 14px;
-      color: #212b36;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #f5f5f5;
-      }
-
-      &.delete {
-        color: #ff4d4f;
-
-        &:hover {
-          background-color: rgba(255, 77, 79, 0.1);
+        // If we have an end date, check if order date is before or equal to it
+        if (this.filterOptions.dateRange.end) {
+          const endDate = new Date(this.filterOptions.dateRange.end)
+          // Set end date to end of day for inclusive filtering
+          endDate.setHours(23, 59, 59, 999)
+          if (orderDate > endDate) return false
         }
-      }
+
+        return true
+      })
+
     }
   `,
   ],
@@ -387,41 +424,219 @@ export class OrderTableComponent implements OnInit {
     })
   }
 
-  loadOrders(): void {
-    this.orderService.getOrders().subscribe(
-      (data) => {
-        this.orders = data
-        this.filteredOrders = [...data]
-      },
-      (error) => {
-        console.error("Error loading orders:", error)
-      },
-    )
+
+  // Add a helper method to parse the order date string
+  parseOrderDate(dateStr: string): Date {
+    // Handle date format like "23 Mar 2024"
+    const parts = dateStr.split(" ")
+    if (parts.length === 3) {
+      const day = Number.parseInt(parts[0])
+      const month = this.getMonthNumber(parts[1])
+      const year = Number.parseInt(parts[2])
+      return new Date(year, month, day)
+    }
+    // Fallback to current date if format doesn't match
+    return new Date()
   }
 
-  filterOrders(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredOrders = [...this.orders]
+  // Add a helper method to convert month name to month number
+  getMonthNumber(monthName: string): number {
+    const months: { [key: string]: number } = {
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 11,
+    }
+    return months[monthName] || 0
+  }
+
+  // Update the isFilterSelected method to include government and city
+  isFilterSelected(
+    filterType: "categories" | "governments" | "cities" | "merchants" | "locations",
+    value: string,
+  ): boolean {
+    return this.filterOptions[filterType].includes(value)
+  }
+
+  // Update the toggleFilter method to include government and city
+  toggleFilter(filterType: "categories" | "governments" | "cities" | "merchants" | "locations", value: string): void {
+    const index = this.filterOptions[filterType].indexOf(value)
+    if (index === -1) {
+      this.filterOptions[filterType].push(value)
+    } else {
+      this.filterOptions[filterType].splice(index, 1)
+    }
+  }
+
+  // Update the resetFilters method to include government and city
+  resetFilters(): void {
+    this.filterOptions = {
+      categories: [],
+      governments: [],
+      cities: [],
+      merchants: [],
+      dateRange: {
+        start: null,
+        end: null,
+      },
+      locations: [],
+    }
+    this.selectedDate = "23 March 2024" // Reset to default date
+    this.applyFilters()
+  }
+
+  // Update the createOrder method to match the new Order interface
+  createOrder(orderData: any): void {
+    console.log("New order data:", orderData)
+    // In a real app, you would call a service to save the order
+    // this.orderService.createOrder(orderData).subscribe(...)
+
+    // For now, just add a mock order to the list
+    const newOrder: Order = {
+      id: `MHGJ3-${Math.floor(Math.random() * 100)}`,
+      date: new Date().toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }),
+      customerName: orderData.customerName,
+      government: orderData.government,
+      city: orderData.city,
+      merchant: orderData.merchantName,
+      orderCost: "$100.00", // Default value
+      category: orderData.orderType,
+      lastLocation: orderData.branch,
+      customerPhone: orderData.customerPhone,
+      customerEmail: orderData.customerEmail,
+      shippingType: orderData.shippingType,
+      payWay: orderData.payWay,
+      status: "New",
+    }
+
+    this.orders.unshift(newOrder)
+    this.filterOrders()
+  }
+
+  // Add method to update an existing order
+  updateOrder(orderData: any): void {
+    console.log("Update order data:", orderData)
+    // In a real app, you would call a service to update the order
+    // this.orderService.updateOrder(orderData).subscribe(...)
+
+    // For now, just update the order in the list
+    const index = this.orders.findIndex((order) => order.id === orderData.id)
+    if (index !== -1) {
+      // Update the order with new data while preserving the date
+      const date = this.orders[index].date
+      this.orders[index] = {
+        ...orderData,
+        date: date,
+        category: orderData.orderType,
+      }
+      this.filterOrders()
+    }
+  }
+
+  // Add a new method to show the status change modal
+  showStatusChangeModal(orderId: string): void {
+    this.selectedOrderId = orderId
+    this.showStatusModal = true
+
+    // Find the current order to get its status
+    const order = this.orders.find((o) => o.id === orderId)
+    if (order) {
+      this.selectedStatus = order.status || "New"
+      this.statusNotes = ""
+    }
+  }
+
+  // Add a method to close the status modal
+  closeStatusModal(): void {
+    this.showStatusModal = false
+    this.selectedOrderId = null
+  }
+
+  // Add a method to save the status change
+  saveStatusChange(): void {
+    if (!this.selectedOrderId || !this.selectedStatus) {
       return
     }
 
-    const term = this.searchTerm.toLowerCase()
-    this.filteredOrders = this.orders.filter(
-      (order) =>
-        order.vehicleNumber.toLowerCase().includes(term) ||
-        order.driverName.toLowerCase().includes(term) ||
-        order.lastLocation.toLowerCase().includes(term),
-    )
+    // Find the order and update its status
+    const orderIndex = this.orders.findIndex((order) => order.id === this.selectedOrderId)
+    if (orderIndex !== -1) {
+      this.orders[orderIndex].status = this.selectedStatus
+      this.orders[orderIndex].statusNotes = this.statusNotes
+
+      // In a real app, you would call a service to update the order status
+      // this.orderService.updateOrderStatus(this.selectedOrderId, this.selectedStatus, this.statusNotes).subscribe(...)
+
+      // Update the filtered orders
+      this.filterOrders()
+    }
+
+    this.closeStatusModal()
   }
 
-  toggleSelectAll(event: Event): void {
-    const isChecked = (event.target as HTMLInputElement).checked
+  // Action menu methods
+  // Update the showActionMenu method to better position the menu
+  showActionMenu(event: MouseEvent, orderId: string): void {
+    event.stopPropagation()
 
-    if (isChecked) {
-      this.selectedOrders = this.filteredOrders.map((order) => order.id)
-    } else {
-      this.selectedOrders = []
+    // Toggle the menu
+    if (this.activeActionMenu === orderId) {
+      this.activeActionMenu = null
+      return
     }
+
+    this.activeActionMenu = orderId
+
+    // Close other menus
+    this.showDatePicker = false
+    this.showFilterMenu = false
+    this.showAssignMerchantModal = false
+    this.showStatusModal = false
+
+    // Position the menu next to the clicked button
+    setTimeout(() => {
+      const button = event.currentTarget as HTMLElement
+      const menu = document.querySelector(".action-menu") as HTMLElement
+
+      if (button && menu) {
+        const rect = button.getBoundingClientRect()
+        const windowHeight = window.innerHeight
+        const menuHeight = menu.offsetHeight
+
+        // Position the menu
+        menu.style.position = "fixed"
+
+        // Check if menu would go off the bottom of the screen
+        if (rect.bottom + menuHeight > windowHeight) {
+          // Position above the button if it would go off the bottom
+          menu.style.top = `${rect.top - menuHeight}px`
+        } else {
+          // Position below the button
+          menu.style.top = `${rect.bottom + 5}px`
+        }
+
+        // Horizontal positioning
+        if (rect.left + menu.offsetWidth > window.innerWidth) {
+          // Align to the right edge of the button if it would go off the right side
+          menu.style.left = `${rect.right - menu.offsetWidth}px`
+        } else {
+          // Align to the left edge of the button
+          menu.style.left = `${rect.left}px`
+        }
+
+        // Ensure the menu is above other elements
+        menu.style.zIndex = "1050"
+      }
+    })
+
   }
 
   toggleOrderSelection(orderId: string): void {
@@ -445,8 +660,21 @@ export class OrderTableComponent implements OnInit {
   }
 
   editOrder(orderId: string): void {
-    console.log("Edit order:", orderId)
+    // Find the order to edit
+    const orderToEdit = this.orders.find((order) => order.id === orderId)
+    if (orderToEdit) {
+      this.selectedOrderId = orderId
+      this.selectedOrderData = orderToEdit
+      this.showEditOrderModal = true
+    }
     this.activeActionMenu = null
+  }
+
+  closeEditModal(): void {
+    this.showEditOrderModal = false
+    this.selectedOrderId = null
+    this.selectedOrderData = null
+
   }
 
   deleteOrder(orderId: string): void {
@@ -467,5 +695,176 @@ export class OrderTableComponent implements OnInit {
   closeOrderDetails(): void {
     this.isOrderDetailsVisible = false
     this.selectedOrderId = null
+  }
+
+  // Date picker methods
+  // Update the toggleDatePicker method to position the date picker correctly
+  toggleDatePicker(event: MouseEvent): void {
+    event.stopPropagation()
+    this.showDatePicker = !this.showDatePicker
+
+    // Close other menus
+    if (this.showDatePicker) {
+      this.showFilterMenu = false
+      this.activeActionMenu = null
+      this.showAssignMerchantModal = false
+      this.showStatusModal = false
+
+      // Position the date picker below the trigger button
+      setTimeout(() => {
+        const trigger = event.currentTarget as HTMLElement
+        const datePicker = document.querySelector(".date-picker") as HTMLElement
+
+        if (trigger && datePicker) {
+          const rect = trigger.getBoundingClientRect()
+          datePicker.style.position = "absolute"
+          datePicker.style.top = `${rect.bottom + window.scrollY + 5}px`
+          datePicker.style.left = `${rect.left}px`
+        }
+      })
+    }
+  }
+
+  resetDateFilter(): void {
+    this.filterOptions.dateRange = {
+      start: null,
+      end: null,
+    }
+    this.selectedDate = "All Dates"
+  }
+
+  // Update the applyDateFilter method to format the displayed date better
+  applyDateFilter(): void {
+    // Format dates for display
+    if (this.filterOptions.dateRange.start && this.filterOptions.dateRange.end) {
+      const startDate = new Date(this.filterOptions.dateRange.start)
+      const endDate = new Date(this.filterOptions.dateRange.end)
+
+      // Format dates as "DD MMM YYYY"
+      const formatDate = (date: Date) => {
+        const day = date.getDate()
+        const month = date.toLocaleString("en-US", { month: "short" })
+        const year = date.getFullYear()
+        return `${day} ${month} ${year}`
+      }
+
+      this.selectedDate = `${formatDate(startDate)} - ${formatDate(endDate)}`
+    } else if (this.filterOptions.dateRange.start) {
+      const startDate = new Date(this.filterOptions.dateRange.start)
+      this.selectedDate = `From ${startDate.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`
+    } else if (this.filterOptions.dateRange.end) {
+      const endDate = new Date(this.filterOptions.dateRange.end)
+      this.selectedDate = `Until ${endDate.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`
+    } else {
+      this.selectedDate = "All Dates"
+    }
+
+    this.applyFilters()
+    this.showDatePicker = false
+  }
+
+  // Filter menu methods
+  // Update the toggleFilterMenu method to position the filter menu correctly
+  toggleFilterMenu(event: MouseEvent): void {
+    event.stopPropagation()
+    this.showFilterMenu = !this.showFilterMenu
+
+    // Close other menus
+    if (this.showFilterMenu) {
+      this.showDatePicker = false
+      this.activeActionMenu = null
+      this.showAssignMerchantModal = false
+      this.showStatusModal = false
+
+      // Position the filter menu below the filter button
+      setTimeout(() => {
+        const button = event.currentTarget as HTMLElement
+        const filterMenu = document.querySelector(".filter-dropdown") as HTMLElement
+
+        if (button && filterMenu) {
+          const rect = button.getBoundingClientRect()
+          filterMenu.style.position = "absolute"
+          filterMenu.style.top = `${rect.bottom + window.scrollY + 5}px`
+          filterMenu.style.left = `${rect.left - filterMenu.offsetWidth + button.offsetWidth}px`
+        }
+      })
+    }
+  }
+
+  applyFilters(): void {
+    this.filterOrders()
+    this.showFilterMenu = false
+  }
+
+  // Add a method to handle adding a new order
+  addNewOrder(): void {
+    this.showAddOrderModal = true
+  }
+
+  // Add ngOnDestroy to clean up event listeners
+  ngOnDestroy(): void {
+    document.removeEventListener("click", this.handleDocumentClick.bind(this))
+    document.removeEventListener("keydown", this.handleEscapeKey.bind(this))
+  }
+
+  formatDateRange(): string {
+    if (this.filterOptions.dateRange.start && this.filterOptions.dateRange.end) {
+      return `${this.filterOptions.dateRange.start} - ${this.filterOptions.dateRange.end}`
+    }
+    return "Select date range"
+  }
+
+  // Add methods to handle assign merchant modal
+  showAssignModal(orderId: string): void {
+    this.selectedOrderToAssign = orderId
+    this.selectedMerchant = ""
+    this.showAssignMerchantModal = true
+  }
+
+  closeAssignModal(): void {
+    this.showAssignMerchantModal = false
+    this.selectedOrderToAssign = null
+  }
+
+  assignMerchant(): void {
+    if (!this.selectedOrderToAssign || !this.selectedMerchant) {
+      return
+    }
+
+    // Find the order and update it
+    const orderIndex = this.orders.findIndex((order) => order.id === this.selectedOrderToAssign)
+    if (orderIndex !== -1) {
+      this.orders[orderIndex].assignedMerchant = this.selectedMerchant
+
+      // In a real app, you would call a service to update the order
+      // this.orderService.assignMerchant(this.orderToAssign, this.selectedMerchant).subscribe(...)
+
+      // Update the filtered orders
+      this.filterOrders()
+    }
+
+    this.closeAssignModal()
+  }
+
+  // Method to get order count by status
+  getOrderCountByStatus(status: string): number {
+    return this.orders.filter((order) => order.status === status).length
+  }
+
+  // Method to get status class
+  getStatusClass(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      New: "new",
+      Delivered: "delivered",
+      "Partially Delivered": "partially-delivered",
+      Cancelled: "cancelled",
+      "Cancelled by Recipient": "cancelled",
+      Postponed: "postponed",
+      Rejected: "rejected",
+      "Rejected with Payment": "rejected",
+      "Rejected without Payment": "rejected",
+    }
+
+    return statusMap[status] || "new"
   }
 }

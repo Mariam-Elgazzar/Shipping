@@ -16,7 +16,8 @@ interface InventoryItem {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: "./items-package.component.html",
-  styleUrls:["./items-package.component.scss"] ,
+  styleUrls: ["./items-package.component.scss"],
+  
 })
 export class ItemsPackageComponent {
   searchTerm = ""
