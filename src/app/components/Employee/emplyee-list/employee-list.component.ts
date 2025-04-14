@@ -13,8 +13,8 @@ interface Employee {
   name: string;
   email: string;
   phone: string;
-  branchLocation: string;
   branchName: string;
+  permission: string;
   status: string;
 }
 @Component({
@@ -80,7 +80,7 @@ export class EmployeeListComponent implements OnInit {
       (Employee) =>
         Employee.phone.toLowerCase().includes(term) ||
         Employee.name.toLowerCase().includes(term) ||
-        Employee.branchLocation.toLowerCase().includes(term)
+        Employee.permission.toLowerCase().includes(term)
     );
   }
 

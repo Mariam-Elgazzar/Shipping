@@ -8,8 +8,8 @@ interface Employee {
   name: string;
   email: string;
   phone: string;
-  branchLocation: string;
   branchName: string;
+  permission: string;
   status: string;
 }
 @Injectable({
@@ -22,7 +22,7 @@ export class EmployeeService {
       name: 'user1',
       email: 'defgd@user1',
       phone: 'user1',
-      branchLocation: 'user1',
+      permission: 'user1',
       branchName: 'user1',
       status: 'true',
     },
@@ -31,7 +31,7 @@ export class EmployeeService {
       name: 'user2',
       email: 'user2@dghjffkmj',
       phone: 'user2',
-      branchLocation: 'user2',
+      permission: 'user2',
       branchName: 'user2',
       status: 'false',
     },
@@ -40,7 +40,7 @@ export class EmployeeService {
       name: 'user2',
       email: 'user2@dghjffkmj',
       phone: 'user2',
-      branchLocation: 'user2',
+      permission: 'user2',
       branchName: 'user2',
       status: 'true',
     },
