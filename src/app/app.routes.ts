@@ -49,9 +49,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredPermission: 'dashboard:view' },
   },
-  { path: 'create-city', component: CreateCityComponent },
+  { path: 'city/add', component: CreateCityComponent },
   { path: 'create-government', component: CreateGovernmentComponent },
-  { path: 'updategovernment', component: GovernmentUpdateComponent },
+  
   { path: 'orders', component: OrderDashboardComponent },
   { path: 'orders', component: OrderDashboardComponent },
 
@@ -61,80 +61,84 @@ export const routes: Routes = [
   // { path: 'CourierManagement', component: CourierManagementComponent },
   // { path: 'Courierslist', component: CouriersListComponent },
   {
-    path: 'merchants',
+    path: 'merchant',
     component: MerchantComponent,
   },
   {
-    path: 'merchantstable',
+    path: 'merchant/list',
     component: MerchantListComponent,
   },
   {
-    path: 'merchantdetails',
+    path: 'merchant/details',
     component: MerchantDetailsComponent,
   },
 
   {
-    path: 'merchantUpdate',
+    path: 'merchant/Update',
     component: MerchantUpdateComponent,
   },
+  // {
+  //   path: 'City/add',
+  //   component: CreateCityComponent,
+  // },
   {
-    path: 'Citys',
-    component: CreateCityComponent,
-  },
-  {
-    path: 'Cityadd',
+    path: 'City/add',
     component: CityAddComponent,
   },
   {
-    path: 'Cityslist',
+    path: 'Citys/list',
     component: CityListComponent,
   },
   {
-    path: 'Citydetails',
+    path: 'City/details',
     component: CityDetailsComponent,
   },
   {
-    path: 'Cityupdate',
+    path: 'City/:id/update',
     component: CityUpdateComponent,
   },
   {
-    path: 'Governments',
+    path: 'Government/add',
     component: CreateGovernmentComponent,
   },
   {
-    path: 'Governmentslist',
+    path: 'Government/list',
     component: GovernmentListComponent,
   },
+  { 
+    path: 'government/:id/update', 
+    component: GovernmentUpdateComponent 
+  },
   {
-    path: 'brancheslist',
+    path: 'branche/list',
     component: BranchesListComponent,
   },
   {
-    path: 'brancheupdate',
+    path: 'branche/:id/edit',
     component: BranchesUpdateComponent,
   },
   {
-    path: 'brancheadd',
+    path: 'branche/add',
     component: BrancheAddComponent,
   },
   {
-    path: 'Governmentdetails',
+    path: 'Government/details',
     component: GovernmentDetailsComponent,
   },
   {
-    path: 'Employeestable',
+    path: 'Employee/list',
     component: EmployeeListComponent,
   },
   {
-    path: 'addEmployee',
+    path: 'Employee/add',
     component: EmployeeAddComponent,
   },
   {
-    path: 'Employeedetails',
+    path: 'Employee/details',
     component: EmployeeDetailsComponent,
   },
   {
-    path: 'Employeeupdate',
+    path: 'Employee/:id/update',
     component: EmployeeUpdateComponent,
   },
 
@@ -143,15 +147,15 @@ export const routes: Routes = [
     component: DeliveryComponent,
   },
   {
-    path: 'DeliveryDetailsComponent',
+    path: 'Delivery/Details',
     component: DeliveryDetailsComponent,
   },
   {
-    path: 'DeliveryListComponent',
+    path: 'Delivery/List',
     component: DeliveryListComponent,
   },
   {
-    path: 'DeliveryUpdate',
+    path: 'Delivery/:id/Update',
     component: DeliveryUpdateComponent,
   },
 
@@ -173,12 +177,12 @@ export const routes: Routes = [
   //   canActivate: [AuthGuard],
   // },
   {
-    path: 'permissions-list',
+    path: 'permissions/list',
     component: PermissionsListComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'add-permission',
+    path: 'permission/',
     component: AddPermissionComponent,
     // canActivate: [AuthGuard],
   },
