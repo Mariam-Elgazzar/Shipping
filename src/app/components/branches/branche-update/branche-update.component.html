@@ -1,8 +1,8 @@
-<div class="branches-add-container">
+<div class="branches-update-container">
     <div class="header">
       <h2>
-        <mat-icon>add</mat-icon>
-        Add Branch
+        <mat-icon>edit</mat-icon>
+        Update Branch
       </h2>
       <button mat-stroked-button class="btn-back" (click)="router.navigate(['/branches'])">
         <mat-icon>arrow_back</mat-icon> Back to List
@@ -43,7 +43,7 @@
       <div class="form-actions">
         <button mat-stroked-button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="branchForm.invalid || isLoading">
-          {{ isLoading ? 'Adding...' : 'Add Branch' }}
+          {{ isLoading ? 'Updating...' : 'Update Branch' }}
         </button>
       </div>
     </form>

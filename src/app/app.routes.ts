@@ -30,12 +30,16 @@ import { CityListComponent } from './components/city/city-list/city-list.compone
 import { CityDetailsComponent } from './components/city/city-details/city-details.component';
 import { GovernmentListComponent } from './components/government/government-list/government-list.component';
 import { GovernmentDetailsComponent } from './components/government/government-details/government-details.component';
-import { BranchsListComponent } from './components/branches/branches-list/branches-list.component';
+import { BranchesListComponent } from './components/branches/branches-list/branches-list.component';
 import { CityUpdateComponent } from './components/city/city-update/city-update.component';
 import { CityAddComponent } from './components/city/city-add/city-add.component';
 import { GovernmentUpdateComponent } from './components/government/government-update/government-update.component';
 import { EmployeeAddComponent } from './components/Employee/employee-add/employee-add.component';
 import { EmployeeUpdateComponent } from './components/Employee/employee-update/employee-update.component';
+import { BrancheAddComponent } from './components/branches/branche-add/branche-add.component';
+import { BranchesUpdateComponent } from './components/branches/branche-update/branche-update.component';
+
+// path: 'branches/:id/edit'
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -103,7 +107,15 @@ export const routes: Routes = [
   },
   {
     path: 'brancheslist',
-    component: BranchsListComponent,
+    component: BranchesListComponent,
+  },
+  {
+    path: 'brancheupdate',
+    component: BranchesUpdateComponent,
+  },
+  {
+    path: 'brancheadd',
+    component: BrancheAddComponent,
   },
   {
     path: 'Governmentdetails',

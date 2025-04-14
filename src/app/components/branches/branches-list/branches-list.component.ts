@@ -1,146 +1,81 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-// import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-import { MatSpinner } from '@angular/material/progress-spinner';
-import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-interface Branch {
-  id: number;
-  name: string;
-  dateAdded: string;
-}
+import { Router, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { BranchesService, Branch } from '../../../services/branches.service';
 
 @Component({
-  selector: 'app-Branchs-list',
+  selector: 'app-branches-list',
   templateUrl: './branches-list.component.html',
   styleUrls: ['./branches-list.component.scss'],
+  standalone: true,
   imports: [
-    ConfirmDialogComponent,
     CommonModule,
-    MatIcon,
-    MatSpinner,
     FormsModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
   ],
 })
-export class BranchsListComponent implements OnInit {
-  loading = false;
-  searchQuery = '';
-
-  // Pagination
-  currentPage = 1;
-  totalPages = 1;
-  pageSize = 10;
-  pageSizeOptions = [5, 10, 25, 50];
-
-  Branches:Branch [] = [
-    {
-      id: 1,
-      name: 'Manager',
-      dateAdded: '14:03:47 2020-11-05',
-    },
-    {
-      id: 2,
-      name: 'Driver',
-      dateAdded: '13:50:21 2020-12-08',
-    },
-    {
-      id: 3,
-      name: 'Super Driver',
-      dateAdded: '16:03:14 2020-12-15',
-    },
-    {
-      id: 4,
-      name: 'Branch Manager',
-      dateAdded: '14:02:23 2021-05-10',
-    },
-    {
-      id: 5,
-      name: 'Security Officer',
-      dateAdded: '18:36:52 2022-06-04',
-    },
-    {
-      id: 6,
-      name: 'Accountant',
-      dateAdded: '14:46:48 2023-02-07',
-    },
-  ];
-
+export class BranchesListComponent implements OnInit {
+  branches: Branch[] = [];
   filteredBranchs: Branch[] = [];
+  searchQuery: string = '';
+  loading: boolean = false;
 
-  constructor(
-    private router: Router,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+  constructor(private branchesService: BranchesService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadBranchs();
+    this.loadBranches();
   }
 
-  loadBranchs(): void {
+  loadBranches(): void {
     this.loading = true;
-
-    // In a real app, this would be an API call
-    setTimeout(() => {
-      this.filteredBranchs = [...this.Branches];
-      this.loading = false;
-    }, 800);
+    this.branchesService.getBranches().subscribe({
+      next: (branches) => {
+        this.branches = branches;
+        this.filteredBranchs = [...branches];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading branches', err);
+        this.loading = false;
+      },
+    });
   }
 
   onSearch(): void {
-    if (!this.searchQuery.trim()) {
-      this.filteredBranchs = [...this.Branches];
-      return;
-    }
-
     const query = this.searchQuery.toLowerCase().trim();
-    this.filteredBranchs = this.Branches.filter((Branch) =>
-      Branch.name.toLowerCase().includes(query)
+    this.filteredBranchs = this.branches.filter((branch) =>
+      branch.name.toLowerCase().includes(query)
     );
   }
 
   addBranch(): void {
-    this.router.navigate(['/add-Branch']);
+    this.router.navigate(['/branches/add']);
   }
 
-  viewBranch(Branch: Branch): void {
-    this.router.navigate(['/Branch-matrix', Branch.id]);
+  editBranch(branch: Branch): void {
+    this.router.navigate(['/branches', branch.id, 'edit']);
   }
 
-  editBranch(Branch: Branch): void {
-    this.router.navigate(['/admin/Branchs/edit', Branch.id]);
-  }
-
-  deleteBranch(Branch: Branch): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Delete Branch',
-        message: `Are you sure you want to delete "${Branch.name}" Branch?`,
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
-        isDangerous: true,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // In a real app, this would be an API call
-        this.filteredBranchs = this.filteredBranchs.filter(
-          (p) => p.id !== Branch.id
-        );
-        this.Branches = this.Branches.filter(
-          (p) => p.id !== Branch.id
-        );
-
-        this.snackBar.open('Branch deleted successfully', 'Close', {
-          duration: 3000,
-        });
-      }
-    });
+  deleteBranch(branch: Branch): void {
+    if (confirm(`Are you sure you want to delete ${branch.name}?`)) {
+      this.branchesService.deleteBranch(branch.id).subscribe({
+        next: () => {
+          this.branches = this.branches.filter((b) => b.id !== branch.id);
+          this.filteredBranchs = [...this.branches];
+        },
+        error: (err) => console.error('Error deleting branch', err),
+      });
+    }
   }
 }
