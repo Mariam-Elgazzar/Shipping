@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+// import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ShipmentsComponent } from './components/shipments/shipments.component';
 import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -12,6 +12,9 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
+import { MerchantComponent } from './components/merchant/merchant.component';
+import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
+
 import { MerchantComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
@@ -47,7 +50,9 @@ export const routes: Routes = [
   { path: 'orders', component: OrderDashboardComponent },
 
   // { path: "orders", component: OrderDashboardComponent },
-  // { path: '**', redirectTo: '' },
+  //  { path: "delivery", component: DeliveryDashboardComponent },
+  { path: "delivery", component: DeliveryDashboardComponent },
+
 
   // { path: 'CourierManagement', component: CourierManagementComponent },
   // { path: 'Courierslist', component: CouriersListComponent },
@@ -65,6 +70,9 @@ export const routes: Routes = [
   },
 
   {
+
+    path: 'deliverys',
+     component:OrderDashboardComponent
     path: 'merchantUpdate',
     component: MerchantUpdateComponent,
   },
@@ -129,6 +137,8 @@ export const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: { requiredPermission: 'shipments:view' },
   },
+  { path: "**", redirectTo: "" },
+
   // {
   //   path: 'shipments/:id',
   //   component: ShipmentDetailsComponent,
@@ -192,6 +202,7 @@ export const routes: Routes = [
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },
+
 ];
 
 @NgModule({

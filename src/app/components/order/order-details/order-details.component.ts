@@ -1,6 +1,13 @@
+
 import { Component, Input, Output, EventEmitter,  OnChanges,  SimpleChanges } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import  { OrderService } from "../../../services/order.service"
+
+interface OrderProduct {
+  name: string
+  quantity: number
+  weight: string
+}
 
 @Component({
   selector: "app-order-details",
@@ -31,6 +38,14 @@ export class OrderDetailsComponent implements OnChanges {
 
     this.orderService.getOrderDetails(this.orderId).subscribe(
       (details) => {
+        // If products don't exist, add sample products for demonstration
+        if (!details.products) {
+          details.products = [
+            { name: "Laptop", quantity: 1, weight: "2.5 kg" },
+            { name: "Smartphone", quantity: 2, weight: "0.4 kg" },
+            { name: "Headphones", quantity: 3, weight: "0.3 kg" },
+          ]
+        }
         this.orderDetails = details
       },
       (error) => {
@@ -49,7 +64,19 @@ export class OrderDetailsComponent implements OnChanges {
     this.close.emit()
   }
 
-  onEdit(): void {
-    console.log("Edit order details:", this.orderId)
+  getStatusClass(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      New: "new",
+      Delivered: "delivered",
+      "Partially Delivered": "partially-delivered",
+      Cancelled: "cancelled",
+      "Cancelled by Recipient": "cancelled",
+      Postponed: "postponed",
+      Rejected: "rejected",
+      "Rejected with Payment": "rejected",
+      "Rejected without Payment": "rejected",
+    }
+
+    return statusMap[status] || "new"
   }
 }
