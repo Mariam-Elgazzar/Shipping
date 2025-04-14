@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
+import { DeliveryServiceModel } from '../models/DeliveryServiceModel';
 interface Delivery {
   id: string;
   name: string;
@@ -59,8 +60,13 @@ export class DeliveryService {
     return this.http.post<Delivery>(this.apiUrl, delivery);
   }
 
-  updateDelivery(userId: string, delivery: Delivery): Observable<Delivery> {
-    return this.http.put<Delivery>(`${this.apiUrl}/${userId}`, delivery);
+  // updateDelivery(userId: string, delivery: Delivery): Observable<Delivery> {
+  //   return this.http.put<Delivery>(`${this.apiUrl}/${userId}`, delivery);
+  // }
+
+  // delivery.service.ts
+  updateDelivery(id: string, delivery: DeliveryServiceModel): Observable<DeliveryServiceModel> {
+    return this.http.put<DeliveryServiceModel>(`${this.apiUrl}/${id}`, delivery);
   }
 
   // deleteDelivery(userId: string): Observable<void> {

@@ -24,6 +24,7 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 // import { EmployeeListComponent } from './components/Employee/employee-list/employee-list.component';
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
+import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -76,6 +77,10 @@ export const routes: Routes = [
   {
     path: 'DeliveryListComponent',
     component: DeliveryListComponent,
+  },
+  {
+    path: 'DeliveryUpdateComponent',
+    component: DeliveryUpdateComponent,
   },
 
   {
