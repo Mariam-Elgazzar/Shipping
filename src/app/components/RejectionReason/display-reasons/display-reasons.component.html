@@ -1,0 +1,107 @@
+<div class="display-reasons-container">
+  <div class="header-actions">
+    <h1>Rejection Reasons</h1>
+    <!-- <div class="breadcrumb">
+      <a routerLink="/dashboard">Dashboard</a>
+      <span class="separator">/</span>
+      <span>Rejection Reasons</span>
+    </div> -->
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <button
+        class="add-button"
+        (click)="addReason()"
+      >
+        <mat-icon>add</mat-icon>
+        Add Reason
+      </button>
+
+      <div class="search-filters">
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="Search reasons"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+          />
+          <mat-icon>search</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="reasons-list-table">
+        <thead>
+          <tr>
+            <th class="number-column">#</th>
+            <th class="name-column">Reason</th>
+            <th class="date-column">Date Added</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="!loading">
+            <tr
+              *ngFor="let reason of filteredReasons; let i = index"
+              [ngClass]="{ 'even-row': i % 2 === 0 }"
+            >
+              <td class="number-column">{{ i + 1 }}</td>
+              <td class="name-column">{{ reason.reason }}</td>
+              <td class="date-column">{{ formatDate(reason.createdAt) }}</td>
+              <td class="actions-column">
+                <div class="action-buttons">
+                  <button
+                    class="action-button view-button"
+                    (click)="viewReason(reason)"
+                    matTooltip="View"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    class="action-button edit-button"
+                    (click)="editReason(reason.id!)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    class="action-button delete-button"
+                    (click)="confirmDeleteReason(reason)"
+                    matTooltip="Delete"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr *ngIf="loading">
+            <td colspan="4" class="loading-cell">
+              <mat-spinner diameter="40"></mat-spinner>
+              <span>Loading rejection reasons...</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="!loading && filteredReasons.length === 0">
+            <td colspan="4" class="empty-cell">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Dialog -->
+<div class="confirm-overlay" *ngIf="showConfirmDialog">
+  <div class="confirm-dialog">
+    <h2>Delete Rejection Reason</h2>
+    <p>Are you sure you want to delete the reason: "{{ reasonToDelete?.reason }}"?</p>
+    <div class="confirm-actions">
+      <button class="cancel-button" (click)="cancelDelete()">Cancel</button>
+      <button class="delete-button" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
