@@ -86,7 +86,7 @@ export const routes: Routes = [
     component: DeliveryListComponent,
   },
   {
-    path: 'DeliveryUpdateComponent',
+    path: 'DeliveryUpdate',
     component: DeliveryUpdateComponent,
   },
 
