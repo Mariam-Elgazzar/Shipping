@@ -3,12 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ShipmentsComponent } from './components/shipments/shipments.component';
 // Corrected the path to OrderDashboardComponent
-import { OrderDashboardComponent } from './components/order/order-dashboard.component';
+// import { OrderDashboardComponent } from './components/order/order-dashboard.component';
 
 // import { LoginComponent } from './components/login/login.component';
 import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './components/shared/unauthorized/unauthorized.component';
+import { OrderDashboardComponent } from './components/order/order-dashboard.component';
+// import { OrderDashboardComponent } from './components/order/order/order-dashboard.component';
 import { CreateCityComponent } from './components/create-city/create-city.component';
 import { CreateGovernmentComponent } from './components/create-government/create-government.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -37,6 +39,13 @@ export const routes: Routes = [
   { path: 'create-government', component: CreateGovernmentComponent },
 
   { path: 'orders', component: OrderDashboardComponent },
+  { path: 'orders', component: OrderDashboardComponent },
+
+  // { path: "orders", component: OrderDashboardComponent },
+  { path: '**', redirectTo: '' },
+
+  // { path: 'CourierManagement', component: CourierManagementComponent },
+  // { path: 'Courierslist', component: CouriersListComponent },
   {
     path: 'merchants',
     component: MerchantComponent,

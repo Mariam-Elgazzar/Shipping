@@ -5,7 +5,9 @@ import { CommonModule } from "@angular/common"
   selector: "app-order-banner",
   standalone: true,
   imports: [CommonModule],
-  templateUrl:"./order-banner.component.html" ,
-  styleUrls: ["./order-banner.component.scss"],
+  templateUrl: "./order-banner.component.html",
+  styleUrls: [
+    "./order-banner.component.scss",
+  ],
 })
 export class OrderBannerComponent {}
