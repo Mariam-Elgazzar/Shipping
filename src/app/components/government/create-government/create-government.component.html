@@ -9,9 +9,9 @@
         <div class="form-row">
           <div class="form-group">
             <label for="government-name">Government Name <span class="required">*</span></label>
-            <input 
-              type="text" 
-              id="government-name" 
+            <input
+              type="text"
+              id="government-name"
               formControlName="name"
               placeholder="Enter government name"
               [ngClass]="{'is-invalid': nameControl?.invalid && nameControl?.touched}"
@@ -30,19 +30,19 @@
             <label>Status <span class="required">*</span></label>
             <div class="radio-group">
               <div class="radio-option">
-                <input 
-                  type="radio" 
-                  id="status-active" 
-                  formControlName="status" 
+                <input
+                  type="radio"
+                  id="status-active"
+                  formControlName="status"
                   value="active"
                 >
                 <label for="status-active">Active</label>
               </div>
               <div class="radio-option">
-                <input 
-                  type="radio" 
-                  id="status-inactive" 
-                  formControlName="status" 
+                <input
+                  type="radio"
+                  id="status-inactive"
+                  formControlName="status"
                   value="inactive"
                 >
                 <label for="status-inactive">Inactive</label>
@@ -83,18 +83,18 @@
         <div class="form-row">
           <div class="form-group">
             <label for="government-name">Government Name <span class="required">*</span></label>
-            <input 
-              type="text" 
-              id="government-name" 
+            <input
+              type="text"
+              id="government-name"
               formControlName="name"
               placeholder="Enter government name"
-              [ngClass]="{'is-invalid': nameControl?.invalid && nameControl?.touched}"
+              [ngClass]="{'is-invalid': governmentForm?.invalid && governmentForm?.touched}"
             >
-            <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
-              <span *ngIf="nameControl?.errors?.['required']">Government name is required</span>
-              <span *ngIf="nameControl?.errors?.['minlength']">Government name must be at least 3 characters</span>
-              <span *ngIf="nameControl?.errors?.['maxlength']">Government name cannot exceed 50 characters</span>
-              <span *ngIf="nameControl?.errors?.['pattern']">Government name can only contain letters, spaces, and hyphens</span>
+            <div class="error-message" *ngIf="governmentForm?.invalid && governmentForm?.touched">
+              <span *ngIf="governmentForm?.errors?.['required']">Government name is required</span>
+              <span *ngIf="governmentForm?.errors?.['minlength']">Government name must be at least 3 characters</span>
+              <span *ngIf="governmentForm?.errors?.['maxlength']">Government name cannot exceed 50 characters</span>
+              <span *ngIf="governmentForm?.errors?.['pattern']">Government name can only contain letters, spaces, and hyphens</span>
             </div>
           </div>
         </div>
@@ -104,19 +104,19 @@
             <label>Status <span class="required">*</span></label>
             <div class="radio-group">
               <div class="radio-option">
-                <input 
-                  type="radio" 
-                  id="status-active" 
-                  formControlName="status" 
+                <input
+                  type="radio"
+                  id="status-active"
+                  formControlName="status"
                   value="active"
                 >
                 <label for="status-active">Active</label>
               </div>
               <div class="radio-option">
-                <input 
-                  type="radio" 
-                  id="status-inactive" 
-                  formControlName="status" 
+                <input
+                  type="radio"
+                  id="status-inactive"
+                  formControlName="status"
                   value="inactive"
                 >
                 <label for="status-inactive">Inactive</label>

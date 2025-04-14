@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -9,12 +9,11 @@ describe('GovernmentListComponent', () => {
   let component: GovernmentListComponent;
   let fixture: ComponentFixture<GovernmentListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ GovernmentListComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [GovernmentListComponent],
+    }).compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GovernmentListComponent);

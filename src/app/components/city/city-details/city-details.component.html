@@ -1,7 +1,7 @@
 <div class="modal-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
   <div class="modal-container">
     <div class="modal-header">
-      <h2>Employee Details</h2>
+      <h2>City Details</h2>
       <button class="close-btn" (click)="onClose()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -20,77 +20,74 @@
       </button>
     </div>
 
-    <div class="modal-content" *ngIf="EmployeeDetails">
-      <div class="Employee-section">
-        <h3>Employee Information</h3>
+    <div class="modal-content" *ngIf="CityDetails">
+      <div class="City-section">
+        <h3>City Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Employee Name</div>
-            <div class="info-value">{{ EmployeeDetails.name }}</div>
+            <div class="info-label">Goverenment</div>
+            <div class="info-value">{{ CityDetails.goverenmentName }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">{{ EmployeeDetails.email }}</div>
+            <div class="info-label">City</div>
+            <div class="info-value">{{ CityDetails.cityName }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Phone</div>
-            <div class="info-value">{{ EmployeeDetails.phone }}</div>
+            <div class="info-label">Charge Cost</div>
+            <div class="info-value">{{ CityDetails.cost }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Branch Name</div>
-            <div class="info-value">{{ EmployeeDetails.branchName }}</div>
+            <div class="info-label">pickupCost</div>
+            <div class="info-value">{{ CityDetails.pickupCost }}</div>
           </div>
-          <div class="info-item">
-            <div class="info-label">Permission</div>
-            <div class="info-value">{{ EmployeeDetails.permission }}</div>
-          </div>
+
           <div class="info-item">
             <div class="info-label">Status</div>
             <div class="info-value">
               <span
                 class="status-badge"
-                [ngClass]="EmployeeDetails.status.toLowerCase()"
+                [ngClass]="CityDetails.status.toLowerCase()"
               >
-                {{ EmployeeDetails.status }}
+                {{ CityDetails.status }}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="Employee-section">
+      <div class="City-section">
         <h3>Driver Information</h3>
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ EmployeeDetails.driverName }}</div>
+            <div class="info-value">{{ CityDetails.driverName }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Phone Number</div>
             <div class="info-value">
-              {{ EmployeeDetails.driverPhone || "N/A" }}
+              {{ CityDetails.driverPhone || "N/A" }}
             </div>
           </div>
           <div class="info-item">
             <div class="info-label">License Number</div>
             <div class="info-value">
-              {{ EmployeeDetails.licenseNumber || "N/A" }}
+              {{ CityDetails.licenseNumber || "N/A" }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="Employee-section">
+      <div class="City-section">
         <h3>Delivery Information</h3>
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Last Location</div>
-            <div class="info-value">{{ EmployeeDetails.lastLocation }}</div>
+            <div class="info-value">{{ CityDetails.lastLocation }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Delivery Schedule</div>
             <div class="info-value">
-              {{ EmployeeDetails.deliverySchedule }}
+              {{ CityDetails.deliverySchedule }}
             </div>
           </div>
           <div class="info-item">
@@ -98,24 +95,21 @@
             <div class="info-value">
               <span
                 class="status-badge"
-                [ngClass]="EmployeeDetails.deliveryStatus.toLowerCase()"
+                [ngClass]="CityDetails.deliveryStatus.toLowerCase()"
               >
-                {{ EmployeeDetails.deliveryStatus }}
+                {{ CityDetails.deliveryStatus }}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div
-        class="Employee-section"
-        *ngIf="EmployeeDetails.deliveryHistory?.length"
-      >
+      <div class="City-section" *ngIf="CityDetails.deliveryHistory?.length">
         <h3>Delivery History</h3>
         <div class="history-timeline">
           <div
             class="timeline-item"
-            *ngFor="let history of EmployeeDetails.deliveryHistory"
+            *ngFor="let history of CityDetails.deliveryHistory"
           >
             <div
               class="timeline-dot"

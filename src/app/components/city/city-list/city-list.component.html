@@ -1,4 +1,4 @@
-<div class="Government-table-container">
+<div class="City-table-container">
   <div class="table-header">
     <div class="header-left">
       <div class="header-icon">
@@ -19,13 +19,13 @@
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
       </div>
-      <h3>Governments</h3>
+      <h3>Citys</h3>
     </div>
 
     <div class="header-actions">
-      <button class="add-btn" [routerLink]="['/Governments']">
+      <button class="add-btn" [routerLink]="['/Citys']">
         <!-- routerLinkActive="router-link-active" -->
-        Add New Government
+        Add New City
       </button>
 
       <div class="search-box">
@@ -47,7 +47,7 @@
           type="text"
           placeholder="Search something"
           [(ngModel)]="searchTerm"
-          (input)="filterGovernments()"
+          (input)="filterCitys()"
         />
       </div>
 
@@ -73,13 +73,14 @@
   </div>
 
   <div class="table-wrapper">
-    <table class="Government-table">
+    <table class="City-table">
       <thead>
         <tr>
           <th class="checkbox-col">
             <input type="checkbox" (change)="toggleSelectAll($event)" />
           </th>
           <th>Government</th>
+          <th>City</th>
           <th>Cost</th>
           <th>Pick up Cost</th>
 
@@ -88,24 +89,25 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let Government of filteredGovernments">
+        <tr *ngFor="let City of filteredCitys">
           <td class="checkbox-col">
             <input
               type="checkbox"
-              [checked]="selectedGovernments.includes(Government.id)"
-              (change)="toggleGovernmentSelection(Government.id)"
+              [checked]="selectedCitys.includes(City.id)"
+              (change)="toggleCitySelection(City.id)"
             />
           </td>
-          <td>{{ Government.GovernmentName }}</td>
-          <td>{{ Government.cost }}</td>
-          <td>{{ Government.pickupCost }}</td>
+          <td>{{ City.goverenmentName }}</td>
+          <td>{{ City.cityName }}</td>
+          <td>{{ City.cost }}</td>
+          <td>{{ City.pickupCost }}</td>
           <td>
-            <span class="status-badge" [ngClass]="Government.status.toLowerCase()">
-              {{ Government.status }}
+            <span class="status-badge" [ngClass]="City.status.toLowerCase()">
+              {{ City.status }}
             </span>
           </td>
           <td class="actions-col">
-            <button class="action-btn" (click)="showActionMenu(Government.id)">
+            <button class="action-btn" (click)="showActionMenu(City.id)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -123,8 +125,8 @@
               </svg>
             </button>
 
-            <div class="action-menu" *ngIf="activeActionMenu === Government.id">
-              <button class="menu-item" (click)="viewGovernmentDetails(Government.id)">
+            <div class="action-menu" *ngIf="activeActionMenu === City.id">
+              <button class="menu-item" (click)="viewCityDetails(City.id)">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -141,7 +143,7 @@
                 </svg>
                 View
               </button>
-              <button class="menu-item" (click)="editGovernment(Government.id)">
+              <button class="menu-item" (click)="editCity(City.id)">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -162,7 +164,7 @@
                 </svg>
                 Edit
               </button>
-              <button class="menu-item delete" (click)="deleteGovernment(Government.id)">
+              <button class="menu-item delete" (click)="deleteCity(City.id)">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -188,12 +190,12 @@
     </table>
   </div>
 
-  <!--  Government Details Modal -->
-  <app-Government-details
-    *ngIf="selectedGovernmentId"
-    [GovernmentId]="selectedGovernmentId"
-    [isVisible]="isGovernmentDetailsVisible"
-    (close)="closeGovernmentDetails()"
+  <!--  City Details Modal -->
+  <app-City-details
+    *ngIf="selectedCityId"
+    [CityId]="selectedCityId"
+    [isVisible]="isCityDetailsVisible"
+    (close)="closeCityDetails()"
   >
-  </app-Government-details>
+  </app-City-details>
 </div>

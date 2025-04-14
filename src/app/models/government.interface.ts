@@ -1,4 +1,4 @@
 export interface Government {
   id: string,
-  name: string,
+  GovernmentName: string,
   status: string}
