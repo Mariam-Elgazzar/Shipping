@@ -2,13 +2,16 @@ import { Injectable } from "@angular/core"
 import   { HttpClient } from "@angular/common/http"
 import {   Observable, of } from "rxjs"
 import   { User, Role } from "../models/user.model"
+// import { environment } from "../../environments/environment"
 
 @Injectable({
   providedIn: "root",
 })
+
 export class UserService {
   private apiUrl = "/api/users"
 
+  
   // Mock data for demo purposes
   private mockUsers: User[] = [
     {
@@ -182,5 +185,8 @@ export class UserService {
     this.mockUsers[userIndex].roles = roles
 
     return of(this.mockUsers[userIndex])
+  }
+  getEmployees(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/employees`)
   }
 }
