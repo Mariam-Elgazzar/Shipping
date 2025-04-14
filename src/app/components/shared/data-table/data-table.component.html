@@ -1,0 +1,271 @@
+<div class="data-table-container">
+  <div class="data-table-header">
+    <div class="data-table-title">
+      <i class="icon-box"></i>
+      <h2>{{ title }}</h2>
+    </div>
+
+    <div class="data-table-actions">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search something"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        />
+        <i class="icon-search"></i>
+      </div>
+
+      <button class="btn-filter" (click)="onFilter()">
+        <i class="icon-filter"></i>
+        Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop Table View -->
+  <div class="data-table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th *ngIf="selectable">
+            <input type="checkbox" (change)="toggleSelectAll($event)" />
+          </th>
+          <th
+            *ngFor="let column of columns"
+            (click)="sort(column.key)"
+            class="sortable-header"
+          >
+            {{ column.label }}
+            <i [class]="getSortIcon(column.key)" class="sort-icon"></i>
+          </th>
+          <th></th>
+          <!-- Actions column -->
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngIf="loading">
+          <td
+            [attr.colspan]="columns.length + (selectable ? 2 : 1)"
+            class="loading-row"
+          >
+            <div class="spinner"></div>
+            <span>Loading data...</span>
+          </td>
+        </tr>
+
+        <tr *ngIf="!loading && data.length === 0">
+          <td
+            [attr.colspan]="columns.length + (selectable ? 2 : 1)"
+            class="empty-row"
+          >
+            No data available
+          </td>
+        </tr>
+
+        <ng-container *ngIf="!loading && data.length > 0">
+          <tr
+            *ngFor="let item of paginatedData; let even = even"
+            [ngClass]="{ 'even-row': even }"
+          >
+            <td *ngIf="selectable">
+              <input
+                type="checkbox"
+                [checked]="isSelected(item)"
+                (change)="toggleSelectItem(item, $event)"
+              />
+            </td>
+
+            <ng-container *ngFor="let column of columns">
+              <td
+                *ngIf="column.key !== 'status'"
+                [ngClass]="{
+                  'text-right':
+                    column.key === 'fee' || column.key === 'deliveryFee'
+                }"
+              >
+                {{ item[column.key] }}
+              </td>
+              <td *ngIf="column.key === 'status'">
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(item[column.key])"
+                >
+                  <i class="icon-circle"></i>
+                  {{ item[column.key] }}
+                </span>
+              </td>
+            </ng-container>
+
+            <td class="actions-cell">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  mat-menu-item
+                  *ngIf="hasPermission(actionPermissions['view'])"
+                  (click)="handleView(item)"
+                >
+                  <mat-icon>visibility</mat-icon>
+                  <span>View</span>
+                </button>
+                <button
+                  mat-menu-item
+                  *ngIf="hasPermission(actionPermissions['contact'])"
+                  (click)="handleContact(item)"
+                >
+                  <mat-icon>contact_phone</mat-icon>
+                  <span>Contact</span>
+                </button>
+                <button
+                  mat-menu-item
+                  *ngIf="hasPermission(actionPermissions['edit'])"
+                  (click)="handleEdit(item)"
+                >
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button
+                  mat-menu-item
+                  *ngIf="hasPermission(actionPermissions['delete'])"
+                  (click)="handleDelete(item)"
+                  class="text-danger"
+                >
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-card-view">
+    <div *ngIf="loading" class="loading-row">
+      <div class="spinner"></div>
+      <span>Loading data...</span>
+    </div>
+
+    <div *ngIf="!loading && data.length === 0" class="empty-row">
+      No data available
+    </div>
+
+    <ng-container *ngIf="!loading && data.length > 0">
+      <div
+        *ngFor="let item of paginatedData; let even = even"
+        class="data-card"
+        [ngClass]="{ 'even-card': even }"
+      >
+        <div class="card-header">
+          <div class="card-title">{{ getPrimaryField(item) }}</div>
+          <div class="card-actions">
+            <button class="btn-icon" (click)="onRowAction(item)">
+              <i class="icon-more"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <ng-container *ngFor="let column of columns">
+            <div *ngIf="column.key !== getPrimaryFieldKey()" class="card-row">
+              <div class="card-label">{{ column.label }}</div>
+              <div
+                *ngIf="column.key !== 'status'"
+                class="card-value"
+                [ngClass]="{
+                  'text-right':
+                    column.key === 'fee' || column.key === 'deliveryFee'
+                }"
+              >
+                {{ item[column.key] }}
+              </div>
+              <div *ngIf="column.key === 'status'" class="card-value">
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(item[column.key])"
+                >
+                  <i class="icon-circle"></i>
+                  {{ item[column.key] }}
+                </span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="!loading && data.length > 0">
+    <div class="pagination-info">
+      Showing {{ displayRange.start }} to {{ displayRange.end }} of
+      {{ displayRange.total }} entries
+    </div>
+
+    <div class="pagination-controls">
+      <div class="page-size-selector">
+        <select (change)="changePageSize($event)">
+          <option
+            *ngFor="let size of pageSizeOptions"
+            [value]="size"
+            [selected]="pageSize === size"
+          >
+            {{ size }} per page
+          </option>
+        </select>
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="firstPage()"
+          aria-label="First page"
+        >
+          <i class="icon-chevrons-left"></i>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+          aria-label="Previous page"
+        >
+          <i class="icon-chevron-left"></i>
+        </button>
+
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <span *ngIf="page < 0" class="pagination-ellipsis">...</span>
+          <button
+            *ngIf="page > 0"
+            class="pagination-button"
+            [class.active]="currentPage === page"
+            (click)="goToPage(page)"
+          >
+            <span>{{ page }}</span>
+          </button>
+        </ng-container>
+
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+          aria-label="Next page"
+        >
+          <i class="icon-chevron-right"></i>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="lastPage()"
+          aria-label="Last page"
+        >
+          <i class="icon-chevrons-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

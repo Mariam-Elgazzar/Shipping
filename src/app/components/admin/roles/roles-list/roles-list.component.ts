@@ -1,104 +1,96 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, signal, computed } from '@angular/core';
 import { RoleService } from '../../../../services/role.service';
 import { Role } from '../../../../models/user.model';
+import { MatDialog } from '@angular/material/dialog';
 import { RoleFormDialogComponent } from '../role-form-dialog/role-form-dialog.component';
-import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+// import { DataTableComponent } from '../../../shared/data-table/data-table.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { catchError, map, of, startWith } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-roles-list',
-  templateUrl: './roles-list.component.html',
-  styleUrls: ['./roles-list.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule,
+    MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatProgressSpinnerModule,
+    CommonModule,
   ],
+  templateUrl: './roles-list.component.html',
+  styleUrl: './roles-list.component.scss',
 })
-export class RolesListComponent implements OnInit {
-  displayedColumns: string[] = [
-    'name',
-    'description',
-    'permissionsCount',
-    'updatedAt',
-    'actions',
+export class RolesListComponent {
+  // Signals for reactive state
+  roles = signal<Role[]>([]);
+  searchTerm = signal<string>('');
+  loading = signal<boolean>(true);
+  error = signal<string | null>(null);
+  showConfirmDialog = signal<boolean>(false);
+  roleToDelete = signal<Role | null>(null);
+  selectedRole = signal<Role | null>(null);
+  menuPosition = signal<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  // Computed signal for filtered roles
+  filteredRoles = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.roles();
+
+    return this.roles().filter(
+      (role) =>
+        role.name.toLowerCase().includes(term) ||
+        (role.description && role.description.toLowerCase().includes(term))
+    );
+  });
+
+  // Table configuration
+  tableColumns = [
+    { key: 'name', label: 'Name', primary: true },
+    { key: 'description', label: 'Description' },
+    { key: 'permissionsCount', label: 'Permissions' },
+    { key: 'updatedAt', label: 'Last Updated', pipe: 'date' },
   ];
-  dataSource!: MatTableDataSource<Role>;
-  loading = true;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(
-    private roleService: RoleService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
-
-  ngOnInit(): void {
+  constructor(private roleService: RoleService, private dialog: MatDialog) {
     this.loadRoles();
   }
 
-  loadRoles(): void {
-    this.loading = true;
-    this.roleService.getRoles().subscribe({
-      next: (roles) => {
-        this.dataSource = new MatTableDataSource(roles);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.snackBar.open('Failed to load roles', 'Close', {
-          duration: 5000,
-          panelClass: ['error-snackbar'],
-        });
-        this.loading = false;
-      },
-    });
-  }
+  private loadRoles(): void {
+    this.loading.set(true);
+    this.error.set(null);
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.roleService
+      .getRoles()
+      .pipe(
+        map((roles) =>
+          roles.map((role) => ({
+            ...role,
+            permissionsCount: role.permissions.length,
+          }))
+        ),
+        catchError((err) => {
+          this.error.set('Failed to load roles. Please try again.');
+          console.error('Error loading roles:', err);
+          return of([]);
+        }),
+        startWith([])
+      )
+      .subscribe((roles) => {
+        this.roles.set(roles);
+        this.loading.set(false);
+      });
   }
 
   openRoleForm(role?: Role): void {
     const dialogRef = this.dialog.open(RoleFormDialogComponent, {
       width: '600px',
-      data: { role },
+      data: role || null,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -108,34 +100,64 @@ export class RolesListComponent implements OnInit {
     });
   }
 
-  deleteRole(role: Role): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Delete Role',
-        message: `Are you sure you want to delete the role "${role.name}"?`,
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
-      },
+  openRoleView(role: Role): void {
+    const dialogRef = this.dialog.open(RoleFormDialogComponent, {
+      width: '600px',
+      data: { ...role, readOnly: true },
     });
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.roleService.deleteRole(role.id).subscribe({
-          next: () => {
-            this.snackBar.open('Role deleted successfully', 'Close', {
-              duration: 3000,
-            });
-            this.loadRoles();
-          },
-          error: (error) => {
-            this.snackBar.open('Failed to delete role', 'Close', {
-              duration: 5000,
-              panelClass: ['error-snackbar'],
-            });
-          },
-        });
-      }
-    });
+  onSearch(query: string): void {
+    this.searchTerm.set(query);
+  }
+
+  onRowAction(role: Role, action: 'edit' | 'delete' | 'view'): void {
+    if (action === 'edit') {
+      this.openRoleForm(role);
+    } else if (action === 'delete') {
+      this.confirmDeleteRole(role);
+    } else if (action === 'view') {
+      this.openRoleView(role);
+    }
+    this.selectedRole.set(null); // Close menu
+  }
+
+  onRowSelected(role: any, event: MouseEvent): void {
+    this.selectedRole.set(role);
+    this.menuPosition.set({ x: event.clientX, y: event.clientY });
+    event.stopPropagation();
+  }
+
+  confirmDeleteRole(role: Role): void {
+    this.roleToDelete.set(role);
+    this.showConfirmDialog.set(true);
+  }
+
+  cancelDelete(): void {
+    this.showConfirmDialog.set(false);
+    this.roleToDelete.set(null);
+  }
+
+  deleteRole(): void {
+    const role = this.roleToDelete();
+    if (!role) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.roleService
+      .deleteRole(role.id)
+      .pipe(
+        catchError((err) => {
+          this.error.set('Failed to delete role. Please try again.');
+          console.error('Error deleting role:', err);
+          return of(null);
+        })
+      )
+      .subscribe(() => {
+        this.showConfirmDialog.set(false);
+        this.roleToDelete.set(null);
+        this.loadRoles();
+      });
   }
 }

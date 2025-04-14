@@ -1,0 +1,659 @@
+@import '../../../../styles.scss';
+
+.data-table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.data-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+
+  .data-table-title {
+    display: flex;
+    align-items: center;
+
+    i {
+      font-size: 20px;
+      color: $primary-color;
+      margin-right: 12px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+  }
+
+  .data-table-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .search-container {
+      position: relative;
+
+      input {
+        width: 240px;
+        height: 36px;
+        padding: 0 16px 0 36px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+      }
+
+      i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 16px;
+      }
+    }
+
+    .btn-filter {
+      display: flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 16px;
+      background-color: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+
+      i {
+        margin-right: 8px;
+        font-size: 16px;
+      }
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+}
+
+.data-table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  th {
+    color: #666;
+    font-weight: 500;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+
+    &:first-child {
+      padding-left: 24px;
+    }
+
+    &:last-child {
+      padding-right: 24px;
+    }
+
+    &.sortable-header {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-right: 28px;
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      .sort-icon {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        opacity: 0.6;
+      }
+
+      &:hover .sort-icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  td {
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:first-child {
+      padding-left: 24px;
+    }
+
+    &:last-child {
+      padding-right: 24px;
+    }
+
+    &.text-right {
+      text-align: right;
+    }
+  }
+
+  tr {
+    &.even-row {
+      background-color: #f9f9f9;
+    }
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .loading-row, .empty-row {
+    text-align: center;
+    padding: 32px;
+    color: #666;
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(0, 176, 80, 0.2);
+      border-top-color: $primary-color;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+  }
+
+  .actions-cell {
+    text-align: center;
+    width: 60px;
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      i {
+        font-size: 18px;
+        color: #666;
+      }
+    }
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+
+    i {
+      font-size: 8px;
+      margin-right: 6px;
+    }
+
+    &.status-delivery {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: #3B82F6;
+    }
+
+    &.status-complete {
+      background-color: rgba(0, 176, 80, 0.1);
+      color: $primary-color;
+    }
+
+    &.status-pending {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+  }
+}
+
+// Add styles for the action menu
+.action-menu-panel {
+  min-width: 160px;
+}
+
+.text-danger {
+  color: $danger;
+}
+
+mat-menu {
+  padding: 0;
+}
+
+button.mat-menu-item {
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+
+  mat-icon {
+    margin-right: 8px;
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+
+  &:hover {
+    background-color: $light-bg;
+  }
+}
+
+// Mobile card view
+.mobile-card-view {
+  display: none;
+}
+
+.data-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background-color: white;
+  overflow: hidden;
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .card-actions {
+      .btn-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+
+        i {
+          font-size: 18px;
+          color: #666;
+        }
+      }
+    }
+  }
+
+  .card-content {
+    padding: 16px;
+
+    .card-row {
+      display: flex;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .card-label {
+        width: 40%;
+        font-size: 13px;
+        color: #666;
+        padding-right: 12px;
+      }
+
+      .card-value {
+        width: 60%;
+        font-size: 13px;
+        color: #333;
+        font-weight: 500;
+
+        &.text-right {
+          text-align: right;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 4px 8px;
+          border-radius: 16px;
+          font-size: 12px;
+          font-weight: 500;
+
+          i {
+            font-size: 8px;
+            margin-right: 6px;
+          }
+
+          &.status-delivery {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+          }
+
+          &.status-complete {
+            background-color: rgba(0, 176, 80, 0.1);
+            color: $primary-color;
+          }
+
+          &.status-pending {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+          }
+        }
+      }
+    }
+  }
+
+  &.even-card {
+    background-color: #fafafa;
+  }
+}
+
+// Pagination styles
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+
+  .pagination-info {
+    color: #666;
+    font-size: 14px;
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .page-size-selector {
+      select {
+        height: 32px;
+        padding: 0 8px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background-color: white;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+      }
+    }
+
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .pagination-button {
+        min-width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background-color: white;
+        color: #666;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+          background-color: #f5f5f5;
+          border-color: #d0d0d0;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        &.active {
+          background-color: $primary-color;
+          border-color: $primary-color;
+          color: white;
+        }
+
+        i {
+          font-size: 14px;
+        }
+      }
+
+      .pagination-ellipsis {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        color: #666;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Icons
+.icon-box, .icon-search, .icon-filter, .icon-more, .icon-circle,
+.icon-sort, .icon-sort-asc, .icon-sort-desc,
+.icon-chevron-left, .icon-chevron-right, .icon-chevrons-left, .icon-chevrons-right {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
+
+.icon-box {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>');
+}
+
+.icon-search {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+}
+
+.icon-filter {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>');
+}
+
+.icon-more {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>');
+}
+
+.icon-circle {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>');
+}
+
+.icon-sort {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 9l3 3-3 3"></path></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 9l3 3-3 3"></path></svg>');
+  transform: rotate(90deg);
+}
+
+.icon-sort-asc {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>');
+}
+
+.icon-sort-desc {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+}
+
+.icon-chevron-left {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>');
+}
+
+.icon-chevron-right {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>');
+}
+
+.icon-chevrons-left {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>');
+}
+
+.icon-chevrons-right {
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>');
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>');
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .data-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .data-table-actions {
+      width: 100%;
+      justify-content: space-between;
+
+      .search-container {
+        flex: 1;
+        margin-right: 12px;
+
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  // Hide the table view and show the card view
+  .data-table-wrapper {
+    display: none;
+  }
+
+  .mobile-card-view {
+    display: block;
+    padding: 16px;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 16px;
+
+    .pagination-info {
+      text-align: center;
+    }
+
+    .pagination-controls {
+      flex-direction: column;
+      width: 100%;
+      gap: 12px;
+
+      .page-size-selector {
+        width: 100%;
+
+        select {
+          width: 100%;
+        }
+      }
+
+      .pagination-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .data-table-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+
+    .search-container {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .btn-filter {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .pagination-buttons {
+    .pagination-button:not(.active) span {
+      display: none;
+    }
+  }
+
+  .card-row {
+    flex-direction: column;
+
+    .card-label, .card-value {
+      width: 100%;
+    }
+
+    .card-label {
+      margin-bottom: 4px;
+    }
+
+    .card-value.text-right {
+      text-align: left;
+    }
+  }
+}

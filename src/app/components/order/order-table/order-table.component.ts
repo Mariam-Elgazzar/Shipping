@@ -4,16 +4,20 @@ import { FormsModule } from "@angular/forms"
  import {Order} from "../../../models/order.model"
 import { FilterOptions } from "../../../models/order.model"
 import  { OrderService } from "../../../services/order.service"
+
 import { OrderDetailsComponent } from "../order-details/order-details.component"
 import { AddOrderModalComponent } from "../add-order-modal/add-order-modal.component"
 import { EditOrderModalComponent } from "../edit-order-modal/edit-order-modal.component"
 
+
 // Update the Order interface to include statusNotes
+
 
 
 @Component({
   selector: "app-order-table",
   standalone: true,
+
   imports: [CommonModule, FormsModule, OrderDetailsComponent, AddOrderModalComponent, EditOrderModalComponent],
   templateUrl: "./order-table.component.html",
   styleUrls: ["./order-table.component.scss"],
@@ -183,16 +187,8 @@ export class OrderTableComponent implements OnInit, OnDestroy {
     },
   ]
 
-  filteredOrders: Order[] = []
-  searchTerm = ""
-  selectedDate = "23 March 2024"
 
-  // For action menu
-  activeActionMenu: string | null = null
-
-  // For order details modal
-  selectedOrderId: string | null = null
-  isOrderDetailsVisible = false
+    
 
   // For date picker
   showDatePicker = false
@@ -328,8 +324,9 @@ export class OrderTableComponent implements OnInit, OnDestroy {
       this.activeActionMenu = null
       this.showAssignMerchantModal = false
       this.showStatusModal = false
+    
     }
-  }
+
 
   // Update the filterOrders method to include government and city filters
   filterOrders(): void {
@@ -398,10 +395,35 @@ export class OrderTableComponent implements OnInit, OnDestroy {
 
         return true
       })
-    }
 
-    this.filteredOrders = filtered
+    }
+  `,
+  ],
+})
+export class OrderTableComponent implements OnInit {
+  orders: Order[] = []
+  filteredOrders: Order[] = []
+  selectedOrders: string[] = []
+  activeActionMenu: string | null = null
+  searchTerm = ""
+
+  // For order details modal
+  selectedOrderId: string | null = null
+  isOrderDetailsVisible = false
+
+  constructor(private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    this.loadOrders()
+
+    // Close action menu when clicking outside
+    document.addEventListener("click", (event) => {
+      if (this.activeActionMenu && !(event.target as HTMLElement).closest(".action-btn")) {
+        this.activeActionMenu = null
+      }
+    })
   }
+
 
   // Add a helper method to parse the order date string
   parseOrderDate(dateStr: string): Date {
@@ -614,6 +636,21 @@ export class OrderTableComponent implements OnInit, OnDestroy {
         menu.style.zIndex = "1050"
       }
     })
+
+  }
+
+  toggleOrderSelection(orderId: string): void {
+    const index = this.selectedOrders.indexOf(orderId)
+
+    if (index === -1) {
+      this.selectedOrders.push(orderId)
+    } else {
+      this.selectedOrders.splice(index, 1)
+    }
+  }
+
+  showActionMenu(orderId: string): void {
+    this.activeActionMenu = this.activeActionMenu === orderId ? null : orderId
   }
 
   viewOrderDetails(orderId: string): void {
@@ -637,15 +674,15 @@ export class OrderTableComponent implements OnInit, OnDestroy {
     this.showEditOrderModal = false
     this.selectedOrderId = null
     this.selectedOrderData = null
+
   }
 
   deleteOrder(orderId: string): void {
     if (confirm("Are you sure you want to delete this order?")) {
       this.orderService.deleteOrder(orderId).subscribe(
         () => {
-          // Remove the order from the arrays
           this.orders = this.orders.filter((order) => order.id !== orderId)
-          this.filterOrders() // Re-apply filters to update the view
+          this.filteredOrders = this.filteredOrders.filter((order) => order.id !== orderId)
         },
         (error) => {
           console.error("Error deleting order:", error)

@@ -1,18 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
-import { UserService } from '../../services/user.service';
-import { LocationService } from '../../services/location.service';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { UserService } from '../../../services/user.service';
+import { LocationService } from '../../../services/location.service';
 // import { Delivery, SaleTypeEnum } from '../../models/delivery.model';
-import { User } from '../../models/user.model';
-import { DeliveryService } from '../../services/delivery.service';
-import { Delivery, SaleTypeEnum } from '../../models/delivery.model';
+import { User } from '../../../models/user.model';
+import { DeliveryService } from '../../../services/delivery.service';
+import { Delivery, SaleTypeEnum } from '../../../models/delivery.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-delivery',
   templateUrl: './delivery.component.html',
   styleUrls: ['./delivery.component.scss'],
-  standalone: true,  // إضافة هذا السطر لتعريف الكومبوننت كـ "standalone"
-  imports: [ReactiveFormsModule] 
+  standalone: true, // إضافة هذا السطر لتعريف الكومبوننت كـ "standalone"
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class DeliveryComponent implements OnInit {
   deliveryForm: FormGroup;
@@ -37,31 +43,42 @@ export class DeliveryComponent implements OnInit {
       userId: ['', Validators.required],
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', this.isEditing ? [] : [Validators.required, Validators.minLength(6)]],
+      password: [
+        '',
+        this.isEditing ? [] : [Validators.required, Validators.minLength(6)],
+      ],
       branch: ['', Validators.required],
       government: ['', Validators.required],
       city: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)]],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
+      ],
       address: ['', Validators.required],
       saleType: [SaleTypeEnum.Percentage, Validators.required],
-      salePercentage: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      salePercentage: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
       empId: ['', Validators.required],
     });
 
     // Listen for government changes to update cities
-    this.deliveryForm.get('government')?.valueChanges.subscribe((government) => {
-      if (government) {
-        this.availableCities = this.cities[government] || [];
-        this.deliveryForm.get('city')?.setValue('');
-      }
-    });
+    this.deliveryForm
+      .get('government')
+      ?.valueChanges.subscribe((government) => {
+        if (government) {
+          this.availableCities = this.cities[government] || [];
+          this.deliveryForm.get('city')?.setValue('');
+        }
+      });
   }
 
   ngOnInit(): void {
     this.loadUsers();
     this.loadEmployees();
     this.loadLocations();
-    this.loadDeliveries();
+    // this.loadDeliveries();
   }
 
   loadUsers(): void {
@@ -109,19 +126,19 @@ export class DeliveryComponent implements OnInit {
     });
   }
 
-  loadDeliveries(): void {
-    this.isLoading = true;
-    this.deliveryService.getDeliveries().subscribe({
-      next: (deliveries) => {
-        this.deliveries = deliveries;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading deliveries', error);
-        this.isLoading = false;
-      },
-    });
-  }
+  // loadDeliveries(): void {
+  //   this.isLoading = true;
+  //   this.deliveryService.getDeliveries().subscribe({
+  //     next: (deliveries) => {
+  //       this.deliveries = deliveries;
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading deliveries', error);
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
 
   onSubmit(): void {
     if (this.deliveryForm.invalid) {
@@ -139,43 +156,45 @@ export class DeliveryComponent implements OnInit {
       if (!deliveryData.password) {
         delete deliveryData.password;
       }
-      this.updateDelivery(deliveryData);
+      // this.updateDelivery(deliveryData);
     } else {
-      this.createDelivery(deliveryData);
+      // this.createDelivery(deliveryData);
     }
   }
 
-  createDelivery(delivery: Delivery): void {
-    this.isLoading = true;
-    this.deliveryService.createDelivery(delivery).subscribe({
-      next: () => {
-        this.resetForm();
-        this.loadDeliveries();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error creating delivery', error);
-        this.isLoading = false;
-      },
-    });
-  }
+  // createDelivery(delivery: Delivery): void {
+  //   this.isLoading = true;
+  //   this.deliveryService.createDelivery(delivery).subscribe({
+  //     next: () => {
+  //       this.resetForm();
+  //       this.loadDeliveries();
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error creating delivery', error);
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
 
-  updateDelivery(delivery: Delivery): void {
-    if (!this.currentDeliveryId) return;
+  // updateDelivery(delivery: Delivery): void {
+  //   if (!this.currentDeliveryId) return;
 
-    this.isLoading = true;
-    this.deliveryService.updateDelivery(this.currentDeliveryId, delivery).subscribe({
-      next: () => {
-        this.resetForm();
-        this.loadDeliveries();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error updating delivery', error);
-        this.isLoading = false;
-      },
-    });
-  }
+  //   this.isLoading = true;
+  //   this.deliveryService
+  //     .updateDelivery(this.currentDeliveryId, delivery)
+  //     .subscribe({
+  //       next: () => {
+  //         this.resetForm();
+  //         this.loadDeliveries();
+  //         this.isLoading = false;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error updating delivery', error);
+  //         this.isLoading = false;
+  //       },
+  //     });
+  // }
 
   editDelivery(delivery: Delivery): void {
     this.isEditing = true;
@@ -202,7 +221,9 @@ export class DeliveryComponent implements OnInit {
     // Update password validator
     const passwordControl = this.deliveryForm.get('password');
     if (passwordControl) {
-      passwordControl.setValidators(this.isEditing ? [] : [Validators.required, Validators.minLength(6)]);
+      passwordControl.setValidators(
+        this.isEditing ? [] : [Validators.required, Validators.minLength(6)]
+      );
       passwordControl.updateValueAndValidity();
     }
   }
@@ -236,7 +257,7 @@ export class DeliveryComponent implements OnInit {
       this.isLoading = true;
       this.deliveryService.deleteDelivery(userId).subscribe({
         next: () => {
-          this.loadDeliveries();
+          // this.loadDeliveries();
           this.isLoading = false;
         },
         error: (error) => {

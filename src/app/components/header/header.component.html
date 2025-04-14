@@ -1,49 +1,58 @@
-<mat-toolbar class="header">
+<header class="header">
   <div class="logo-container">
-    <mat-icon>local_shipping</mat-icon>
+    <img src="/images/logo.png" alt="Shipping Pro Logo" class="logo-image">
     <span class="app-title">Shipping Pro</span>
   </div>
-  
-  <div class="nav-links">
-    <a mat-button routerLink="/dashboard" routerLinkActive="active-link">
+
+  <!-- Mobile menu toggle button -->
+  <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+    <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+  </button>
+
+  <nav class="nav-links" [class.mobile-nav-open]="isMobileMenuOpen">
+    <a routerLink="/dashboard" routerLinkActive="active-link">
       <mat-icon>dashboard</mat-icon>
       <span>Overview</span>
     </a>
-    <a mat-button routerLink="/analytics" routerLinkActive="active-link">
+    <a routerLink="/analytics" routerLinkActive="active-link">
       <mat-icon>analytics</mat-icon>
-      <span>Analytics</span>
+      <span>Analytic</span>
     </a>
-    <a mat-button routerLink="/couriers" routerLinkActive="active-link">
-      <mat-icon>directions_run</mat-icon>
+    <a routerLink="/couriers" routerLinkActive="active-link">
+      <mat-icon>local_shipping</mat-icon>
       <span>Courier</span>
     </a>
-    <a mat-button routerLink="/shipments" routerLinkActive="active-link">
-      <mat-icon>local_shipping</mat-icon>
+    <a routerLink="/shipments" routerLinkActive="active-link">
+      <mat-icon>track_changes</mat-icon>
       <span>Tracking</span>
     </a>
-    <a mat-button routerLink="/inventory" routerLinkActive="active-link">
-      <mat-icon>inventory_2</mat-icon>
+    <a routerLink="/inventory" routerLinkActive="active-link">
+      <mat-icon>inventory</mat-icon>
       <span>Inventory</span>
     </a>
-    <a mat-button routerLink="/trucks" routerLinkActive="active-link">
-      <mat-icon>fire_truck</mat-icon>
+    <a routerLink="/trucks" routerLinkActive="active-link">
+      <mat-icon>local_shipping</mat-icon>
       <span>Truck</span>
     </a>
-  </div>
-  
+  </nav>
+
   <div class="user-section">
-    <button mat-icon-button class="notification-button">
+    <button class="notification-button">
       <mat-icon>notifications</mat-icon>
+      <span class="notification-indicator"></span>
     </button>
-    
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
-      <div class="avatar">JD</div>
+
+    <button class="user-button" [matMenuTriggerFor]="userMenu">
+      <div class="avatar">
+        <img src="/images/target.jpg" alt="User Avatar">
+      </div>
       <div class="user-info">
         <span class="user-name">John Doe</span>
         <span class="user-role">Admin</span>
       </div>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
-    
+
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item>
         <mat-icon>person</mat-icon>
@@ -54,9 +63,12 @@
         <span>Settings</span>
       </button>
       <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
+        <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>
     </mat-menu>
   </div>
-</mat-toolbar>
+</header>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()"></div>

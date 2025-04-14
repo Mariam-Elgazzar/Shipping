@@ -1,0 +1,103 @@
+<div class="permissions-list-container">
+  <div class="header-actions">
+    <h1>Permissions</h1>
+    <!-- <div class="breadcrumb">
+      <a routerLink="/dashboard">Dashboard</a>
+      <span class="separator">/</span>
+      <span>Permissions</span>
+    </div> -->
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button"
+        (click)="addPermission()"
+      >
+        <mat-icon>add</mat-icon>
+        Add Permission
+      </button>
+
+      <div class="search-filters">
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="Search permissions"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+          />
+          <mat-icon>search</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="permissions-list-table">
+        <thead>
+          <tr>
+            <th class="number-column">#</th>
+            <th class="name-column">Permission Name</th>
+            <th class="date-column">Date Added</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="!loading">
+            <tr
+              *ngFor="let permission of filteredPermissions; let i = index"
+              [ngClass]="{ 'even-row': i % 2 === 0 }"
+            >
+              <td class="number-column">{{ permission.id }}</td>
+              <td class="name-column">{{ permission.name }}</td>
+              <td class="date-column">{{ permission.dateAdded }}</td>
+              <td class="actions-column">
+                <div class="action-buttons">
+                  <button
+                    mat-mini-fab
+                    color="primary"
+                    class="action-button view-button"
+                    (click)="viewPermission(permission)"
+                    matTooltip="View"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    mat-mini-fab
+                    color="accent"
+                    class="action-button edit-button"
+                    (click)="editPermission(permission)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-mini-fab
+                    color="warn"
+                    class="action-button delete-button"
+                    (click)="deletePermission(permission)"
+                    matTooltip="Delete"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr *ngIf="loading">
+            <td colspan="4" class="loading-cell">
+              <mat-spinner diameter="40"></mat-spinner>
+              <span>Loading permissions...</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="!loading && filteredPermissions.length === 0">
+            <td colspan="4" class="empty-cell">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

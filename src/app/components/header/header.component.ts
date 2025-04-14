@@ -6,15 +6,27 @@ import { MatNavList } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [MatIcon, MatNavList, MatDialogModule, MatToolbar, MatMenuModule],
+  imports: [CommonModule, MatIcon, MatDialogModule, MatMenuModule],
+  standalone: true,
 })
 export class HeaderComponent {
+  isMobileMenuOpen = false;
+
   constructor(private router: Router, public authService: AuthService) {}
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
 
   logout(): void {
     this.authService.logout();

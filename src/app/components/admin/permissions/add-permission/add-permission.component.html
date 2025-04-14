@@ -1,0 +1,84 @@
+<div class="create-permission-container">
+  <div class="card">
+    <div class="card-content">
+      <div class="header-actions">
+        <h1>Create New Permission</h1>
+      </div>
+
+      <form [formGroup]="permissionForm" (ngSubmit)="onSubmit()">
+        <!-- Permission Name Field -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="permissionName"
+              >Permission Name <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              id="permissionName"
+              formControlName="permissionName"
+              placeholder="Enter permission name"
+              [ngClass]="{
+                'is-invalid':
+                  permissionNameControl?.invalid &&
+                  permissionNameControl?.touched
+              }"
+            />
+            <div
+              class="error-message"
+              *ngIf="
+                permissionNameControl?.invalid && permissionNameControl?.touched
+              "
+            >
+              <span *ngIf="permissionNameControl?.errors?.['required']"
+                >Permission name is required</span
+              >
+              <span *ngIf="permissionNameControl?.errors?.['minlength']"
+                >Permission name must be at least 3 characters</span
+              >
+              <span *ngIf="permissionNameControl?.errors?.['maxlength']"
+                >Permission name cannot exceed 50 characters</span
+              >
+              <span *ngIf="permissionNameControl?.errors?.['pattern']"
+                >Permission name must contain only letters and spaces</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Updated Field (Read-only) -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="lastUpdated">Last Updated</label>
+            <input
+              type="text"
+              id="lastUpdated"
+              formControlName="lastUpdated"
+              readonly
+              [ngClass]="{ 'read-only': true }"
+              [value]="
+                lastUpdatedControl?.value
+                  ? formatDateToDDMMYYYY(lastUpdatedControl?.value)
+                  : 'N/A'
+              "
+            />
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="goBack()">
+            <i class="icon-arrow-left"></i>
+            Back
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <div class="spinner" *ngIf="loading"></div>
+            <span *ngIf="!loading">
+              <i class="icon-save"></i>
+              Save
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="couriers-container">
+  <h1>Courier</h1>
+
+  <!-- Stats Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Total Courier</div>
+        <div class="stat-value">{{ totalCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon active">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Active</div>
+        <div class="stat-value">{{ activeCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon inactive">
+        <mat-icon>access_time</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Inactive</div>
+        <div class="stat-value">{{ inactiveCouriers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon deactive">
+        <mat-icon>block</mat-icon>
+      </div>
+      <div class="stat-info">
+        <div class="stat-label">Deactive</div>
+        <div class="stat-value">{{ deactiveCouriers }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Couriers Table -->
+  <app-data-table
+    [title]="tableTitle"
+    [columns]="tableColumns"
+    [data]="couriersData"
+    [loading]="loading"
+    [actionPermissions]="actionPermissions"
+    (search)="onSearch($event)"
+    (filter)="onFilter()"
+    (actionView)="onViewCourier($event)"
+    (actionEdit)="onEditCourier($event)"
+    (actionDelete)="onDeleteCourier($event)"
+    (actionContact)="onContactCourier($event)"
+  >
+  </app-data-table>
+
+  <!-- Add New Courier Button -->
+  <button
+    *ngIf="authService.hasPermission('couriers:create')"
+    class="add-courier-btn"
+    mat-fab
+    color="primary"
+    (click)="addNewCourier()"
+    aria-label="Add new courier"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

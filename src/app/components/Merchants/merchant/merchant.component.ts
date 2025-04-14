@@ -1,17 +1,23 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MerchantService } from "../../services/merchant.service";
-import { UserService } from "../../services/user.service";
-import { LocationService } from "../../services/location.service";
-import { Merchant } from "../../models/merchant.model";
-import { User } from "../../models/user.model";
- 
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MerchantService } from '../../../services/merchant.service';
+import { UserService } from '../../../services/user.service';
+import { LocationService } from '../../../services/location.service';
+import { Merchant } from '../../../models/merchant.model';
+import { User } from '../../../models/user.model';
+import { CommonModule } from '@angular/common';
+
 @Component({
-  selector: "app-merchant",
-  templateUrl: "./merchant.component.html",
-  styleUrls: ["./merchant.component.scss"],
-  standalone: true,  // إضافة هذا السطر لتعريف الكومبوننت كـ "standalone"
-  imports: [ReactiveFormsModule] 
+  selector: 'app-merchant',
+  templateUrl: './merchant.component.html',
+  styleUrls: ['./merchant.component.scss'],
+  standalone: true, // إضافة هذا السطر لتعريف الكومبوننت كـ "standalone"
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class MerchantComponent implements OnInit {
   merchantForm!: FormGroup;
@@ -22,7 +28,7 @@ export class MerchantComponent implements OnInit {
   isLoading = false;
   isEditing = false;
   currentMerchantId: string | null = null;
-
+  merchants: Merchant[] = [];
   constructor(
     private fb: FormBuilder,
     private merchantService: MerchantService,
@@ -38,23 +44,31 @@ export class MerchantComponent implements OnInit {
 
   private initForm(): void {
     this.merchantForm = this.fb.group({
-      userId: ["", Validators.required],
-      name: ["", [Validators.required, Validators.minLength(3)]],
-      email: ["", [Validators.required, Validators.email]],
-      password: ["", this.isEditing ? [] : [Validators.required, Validators.minLength(6)]],
-      branch: ["", Validators.required],
-      phoneNumber: ["", [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)]],
-      address: ["", Validators.required],
-      government: ["", Validators.required],
-      city: ["", Validators.required],
+      userId: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        this.isEditing ? [] : [Validators.required, Validators.minLength(6)],
+      ],
+      branch: ['', Validators.required],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
+      ],
+      address: ['', Validators.required],
+      government: ['', Validators.required],
+      city: ['', Validators.required],
       cost_Rejection: [0, [Validators.required, Validators.min(0)]],
       bickup: [0, [Validators.required, Validators.min(0)]],
     });
 
-    this.merchantForm.get("government")?.valueChanges.subscribe(government => {
-      this.availableCities = this.cities[government] || [];
-      this.merchantForm.get("city")?.setValue("");
-    });
+    this.merchantForm
+      .get('government')
+      ?.valueChanges.subscribe((government) => {
+        this.availableCities = this.cities[government] || [];
+        this.merchantForm.get('city')?.setValue('');
+      });
   }
 
   loadUsers(): void {
@@ -65,9 +79,9 @@ export class MerchantComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error("Error loading users", err);
+        console.error('Error loading users', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -77,8 +91,8 @@ export class MerchantComponent implements OnInit {
         this.governments = govs;
       },
       error: (err) => {
-        console.error("Error loading governments", err);
-      }
+        console.error('Error loading governments', err);
+      },
     });
 
     this.locationService.getCities().subscribe({
@@ -86,14 +100,16 @@ export class MerchantComponent implements OnInit {
         this.cities = c;
       },
       error: (err) => {
-        console.error("Error loading cities", err);
-      }
+        console.error('Error loading cities', err);
+      },
     });
   }
 
   onSubmit(): void {
     if (this.merchantForm.invalid) {
-      Object.values(this.merchantForm.controls).forEach(control => control.markAsTouched());
+      Object.values(this.merchantForm.controls).forEach((control) =>
+        control.markAsTouched()
+      );
       return;
     }
 
@@ -117,9 +133,9 @@ export class MerchantComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error("Error creating merchant", err);
+        console.error('Error creating merchant', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -127,23 +143,25 @@ export class MerchantComponent implements OnInit {
     if (!this.currentMerchantId) return;
 
     this.isLoading = true;
-    this.merchantService.updateMerchant(this.currentMerchantId, merchant).subscribe({
-      next: () => {
-        this.resetForm();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error("Error updating merchant", err);
-        this.isLoading = false;
-      }
-    });
+    this.merchantService
+      .updateMerchant(this.currentMerchantId, merchant)
+      .subscribe({
+        next: () => {
+          this.resetForm();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error updating merchant', err);
+          this.isLoading = false;
+        },
+      });
   }
 
   editMerchant(merchant: Merchant): void {
     this.isEditing = true;
     this.currentMerchantId = merchant.userId;
 
-    this.merchantForm.get("government")?.setValue(merchant.government);
+    this.merchantForm.get('government')?.setValue(merchant.government);
 
     this.merchantForm.patchValue({
       userId: merchant.userId,
@@ -154,27 +172,29 @@ export class MerchantComponent implements OnInit {
       address: merchant.address,
       city: merchant.city,
       cost_Rejection: merchant.cost_Rejection,
-      bickup: merchant.bickup
+      bickup: merchant.bickup,
     });
 
-    const passwordControl = this.merchantForm.get("password");
+    const passwordControl = this.merchantForm.get('password');
     if (passwordControl) {
-      passwordControl.setValidators(this.isEditing ? [] : [Validators.required, Validators.minLength(6)]);
+      passwordControl.setValidators(
+        this.isEditing ? [] : [Validators.required, Validators.minLength(6)]
+      );
       passwordControl.updateValueAndValidity();
     }
   }
 
   resetForm(): void {
     this.merchantForm.reset({
-      userId: "",
-      name: "",
-      email: "",
-      password: "",
-      branch: "",
-      phoneNumber: "",
-      address: "",
-      government: "",
-      city: "",
+      userId: '',
+      name: '',
+      email: '',
+      password: '',
+      branch: '',
+      phoneNumber: '',
+      address: '',
+      government: '',
+      city: '',
       cost_Rejection: 0,
       bickup: 0,
     });

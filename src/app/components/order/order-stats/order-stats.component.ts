@@ -5,9 +5,11 @@ import { CommonModule } from "@angular/common"
   selector: "app-order-stats",
   standalone: true,
   imports: [CommonModule],
+
   templateUrl: "./order-stats.component.html",
   styleUrls: [
     "./order-stats.component.scss",
+
   ],
 })
 
