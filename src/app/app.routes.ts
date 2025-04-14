@@ -25,6 +25,7 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
 import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
+import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -57,6 +58,11 @@ export const routes: Routes = [
     path: 'merchantdetails',
     component: MerchantDetailsComponent,
   },
+
+  {
+    path: 'merchantUpdate',
+    component: MerchantUpdateComponent,
+  },
   {
     path: 'Employeestable',
     component: EmployeeListComponent,
@@ -65,6 +71,7 @@ export const routes: Routes = [
     path: 'Employeedetails',
     component: EmployeeDetailsComponent,
   },
+  
 
   {
     path: 'deliverys',
