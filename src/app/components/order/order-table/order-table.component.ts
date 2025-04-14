@@ -1,15 +1,53 @@
 import { Component,  OnInit,  OnDestroy } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
- import {Order} from "../../../models/order.model"
-import { FilterOptions } from "../../../models/order.model"
 import  { OrderService } from "../../../services/order.service"
 import { OrderDetailsComponent } from "../order-details/order-details.component"
 import { AddOrderModalComponent } from "../add-order-modal/add-order-modal.component"
 import { EditOrderModalComponent } from "../edit-order-modal/edit-order-modal.component"
 
-// Update the Order interface to include statusNotes
+// Update the Order interface to include products and notes
+interface Order {
+  id: string
+  date: string
+  customerName: string
+  government: string
+  city: string
+  orderCost: string
+  merchant: string
+  category?: string
+  origin?: string
+  destination?: string
+  arrivalDate?: string
+  weight?: string
+  lastLocation?: string
+  customerPhone?: string
+  customerEmail?: string
+  shippingType?: string
+  payWay?: string
+  status?: string
+  assignedMerchant?: string
+  statusNotes?: string
+  products?: Array<{
+    name: string
+    quantity: number
+    weight: string
+  }>
+  notes?: string
+}
 
+// Update the FilterOptions interface to include government and city
+interface FilterOptions {
+  categories: string[]
+  governments: string[]
+  cities: string[]
+  merchants: string[]
+  dateRange: {
+    start: string | null
+    end: string | null
+  }
+  locations: string[]
+}
 
 @Component({
   selector: "app-order-table",
@@ -540,6 +578,7 @@ export class OrderTableComponent implements OnInit, OnDestroy {
 
   // Add a method to save the status change
   saveStatusChange(): void {
+    
     if (!this.selectedOrderId || !this.selectedStatus) {
       return
     }

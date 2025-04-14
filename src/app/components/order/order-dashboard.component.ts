@@ -8,8 +8,8 @@ import { OrderTableComponent } from "./order-table/order-table.component"
   standalone: true,
   imports: [CommonModule, OrderStatsComponent, OrderTableComponent],
   templateUrl:"./order-dashboard.component.html",
-  styleUrls: ["./order-dashboard.component.scss"], 
- 
+  styleUrls: ["./order-dashboard.component.scss"],
+
 })
 export class OrderDashboardComponent implements OnInit {
   constructor() {}
