@@ -1,165 +1,166 @@
-// .stats-container {
-//   display: grid;
-//   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-//   gap: 20px;
-// }
 
-// .stats-card {
-//   background-color: white;
-//   border-radius: 8px;
-//   padding: 16px;
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-//   height: 100%;
-// }
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+  }
 
-// .vehicles-card {
-//   background-color: #00a76f;
-//   color: white;
-// }
+  .stats-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    height: 100%;
+  }
 
-// .card-header {
-//   display: flex;
-//   align-items: center;
-//   gap: 8px;
-//   margin-bottom: 16px;
+  .vehicles-card {
+    background-color: #00a76f;
+    color: white;
+  }
 
-//   h3 {
-//     font-size: 16px;
-//     font-weight: 500;
-//     margin: 0;
-//   }
-// }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
 
-// .icon-badge {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   width: 32px;
-//   height: 32px;
-//   border-radius: 50%;
-//   background-color: rgba(255, 255, 255, 0.2);
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
 
-//   svg {
-//     color: white;
-//   }
-// }
+  .icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
 
-// .card-content {
-//   display: flex;
-//   justify-content: space-between;
-// }
+    svg {
+      color: white;
+    }
+  }
 
-// .content-left {
-//   display: flex;
-//   flex-direction: column;
-// }
+  .card-content {
+    display: flex;
+    justify-content: space-between;
+  }
 
-// .stats-label {
-//   font-size: 14px;
-//   opacity: 0.8;
-//   margin-bottom: 8px;
-// }
+  .content-left {
+    display: flex;
+    flex-direction: column;
+  }
 
-// .stats-value {
-//   font-size: 36px;
-//   font-weight: 600;
-//   margin-bottom: 4px;
-// }
+  .stats-label {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
 
-// .stats-change {
-//   font-size: 14px;
-//   margin-bottom: 16px;
+  .stats-value {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
 
-//   &.positive {
-//     color: white;
-//   }
-// }
+  .stats-change {
+    font-size: 14px;
+    margin-bottom: 16px;
 
-// .view-detail-btn {
-//   display: flex;
-//   align-items: center;
-//   gap: 4px;
-//   background-color: rgba(255, 255, 255, 0.2);
-//   border: none;
-//   color: white;
-//   padding: 8px 16px;
-//   border-radius: 4px;
-//   font-size: 14px;
-//   cursor: pointer;
+    &.positive {
+      color: white;
+    }
+  }
 
-//   &:hover {
-//     background-color: rgba(255, 255, 255, 0.3);
-//   }
-// }
+  .view-detail-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
 
-// .content-right {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// }
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
 
-// .vehicle-image {
-//   max-width: 180px;
-//   height: auto;
-// }
+  .content-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-// .delivery-chart-card {
-//   background-color: #00a76f;
-//   color: white;
-// }
+  .vehicle-image {
+    max-width: 180px;
+    height: auto;
+  }
 
-// .chart-content {
-//   display: flex;
-//   flex-direction: column;
-//   height: 100%;
-// }
+  .delivery-chart-card {
+    background-color: #00a76f;
+    color: white;
+  }
 
-// .chart-stats {
-//   display: flex;
-//   justify-content: space-between;
-//   margin-bottom: 16px;
-// }
+  .chart-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-// .chart-stat {
-//   .stat-label {
-//     font-size: 14px;
-//     opacity: 0.8;
-//   }
+  .chart-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
 
-//   .stat-value {
-//     font-size: 28px;
-//     font-weight: 600;
-//   }
-// }
+  .chart-stat {
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.8;
+    }
 
-// .chart-visualization {
-//   flex: 1;
-//   display: flex;
-//   position: relative;
-// }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+    }
+  }
 
-// .chart-bars {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: flex-end;
-//   width: 100%;
-//   height: 150px;
-// }
+  .chart-visualization {
+    flex: 1;
+    display: flex;
+    position: relative;
+  }
 
-// .chart-bar {
-//   width: 20px;
-//   background-color: rgba(255, 255, 255, 0.6);
-//   border-radius: 4px 4px 0 0;
-// }
+  .chart-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 150px;
+  }
 
-// .chart-y-axis {
-//   position: absolute;
-//   right: 0;
-//   top: 0;
-//   height: 100%;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-//   font-size: 12px;
-//   opacity: 0.7;
-// }
+  .chart-bar {
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 4px 4px 0 0;
+  }
+
+  .chart-y-axis {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 12px;
+    opacity: 0.7;
+  }

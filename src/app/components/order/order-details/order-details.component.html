@@ -1,0 +1,87 @@
+
+<div class="modal-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Order Details</h2>
+      <button class="close-btn" (click)="onClose()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-content" *ngIf="orderDetails">
+      <div class="order-section">
+        <h3>Order Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Order ID</div>
+            <div class="info-value">{{ orderDetails.id }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Category</div>
+            <div class="info-value">{{ orderDetails.category }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Weight</div>
+            <div class="info-value">{{ orderDetails.weight }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-section">
+        <h3>Location Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Origin</div>
+            <div class="info-value">{{ orderDetails.origin }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Destination</div>
+            <div class="info-value">{{ orderDetails.destination }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Last Location</div>
+            <div class="info-value">{{ orderDetails.lastLocation }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-section">
+        <h3>Delivery Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Arrival Date</div>
+            <div class="info-value">{{ orderDetails.arrivalDate }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Status</div>
+            <div class="info-value">
+              <span class="status-badge">In Transit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-section" *ngIf="orderDetails.trackingHistory?.length">
+        <h3>Tracking History</h3>
+        <div class="history-timeline">
+          <div class="timeline-item" *ngFor="let history of orderDetails.trackingHistory">
+            <div class="timeline-dot" [ngClass]="history.status.toLowerCase()"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">{{ history.date }}</div>
+              <div class="timeline-title">{{ history.title }}</div>
+              <div class="timeline-description">{{ history.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="secondary-btn" (click)="onClose()">Close</button>
+      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
+    </div>
+  </div>
+</div>
