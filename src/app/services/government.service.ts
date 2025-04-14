@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of, throwError } from 'rxjs';
-// import { Government } from '../models/Government.model';
-// import { environment } from '../../environments/environment';
+import { delay, Observable, of, throwError } from 'rxjs'; 
 export interface Government {
   id: string | '';
   GovernmentName: string;
