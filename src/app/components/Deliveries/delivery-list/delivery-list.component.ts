@@ -25,7 +25,7 @@ interface Delivery {
     CommonModule,
     FormsModule,
     RouterLink,
-    RouterLinkActive,
+    // RouterLinkActive,
     DeliveryDetailsComponent,
   ],
   templateUrl: './delivery-list.component.html',

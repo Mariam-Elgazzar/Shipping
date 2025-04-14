@@ -24,6 +24,8 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 // import { EmployeeListComponent } from './components/Employee/employee-list/employee-list.component';
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
+\import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
+import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
 import { CityListComponent } from './components/city/city-list/city-list.component';
 import { CityDetailsComponent } from './components/city/city-details/city-details.component';
 import { GovernmentListComponent } from './components/government/government-list/government-list.component';
@@ -61,6 +63,11 @@ export const routes: Routes = [
     path: 'merchantdetails',
     component: MerchantDetailsComponent,
   },
+
+  {
+    path: 'merchantUpdate',
+    component: MerchantUpdateComponent,
+  },
   {
     path: 'Citys',
     component: CreateCityComponent,
@@ -97,6 +104,7 @@ export const routes: Routes = [
     path: 'Employeedetails',
     component: EmployeeDetailsComponent,
   },
+  
 
   {
     path: 'deliverys',
@@ -109,6 +117,10 @@ export const routes: Routes = [
   {
     path: 'DeliveryListComponent',
     component: DeliveryListComponent,
+  },
+  {
+    path: 'DeliveryUpdate',
+    component: DeliveryUpdateComponent,
   },
 
   {
