@@ -1,0 +1,201 @@
+<div class="City-table-container">
+  <div class="table-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
+      <h3>Citys</h3>
+    </div>
+
+    <div class="header-actions">
+      <button class="add-btn" [routerLink]="['/Citys']">
+        <!-- routerLinkActive="router-link-active" -->
+        Add New City
+      </button>
+
+      <div class="search-box">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search something"
+          [(ngModel)]="searchTerm"
+          (input)="filterCitys()"
+        />
+      </div>
+
+      <!-- <button class="filter-btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon
+            points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+          ></polygon>
+        </svg>
+        Filter
+      </button> -->
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="City-table">
+      <thead>
+        <tr>
+          <th class="checkbox-col">
+            <input type="checkbox" (change)="toggleSelectAll($event)" />
+          </th>
+          <th>Government</th>
+          <th>City</th>
+          <th>Cost</th>
+          <th>Pick up Cost</th>
+
+          <th>Status</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let City of filteredCitys">
+          <td class="checkbox-col">
+            <input
+              type="checkbox"
+              [checked]="selectedCitys.includes(City.id)"
+              (change)="toggleCitySelection(City.id)"
+            />
+          </td>
+          <td>{{ City.goverenmentName }}</td>
+          <td>{{ City.cityName }}</td>
+          <td>{{ City.cost }}</td>
+          <td>{{ City.pickupCost }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="City.status.toLowerCase()">
+              {{ City.status }}
+            </span>
+          </td>
+          <td class="actions-col">
+            <button class="action-btn" (click)="showActionMenu(City.id)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+
+            <div class="action-menu" *ngIf="activeActionMenu === City.id">
+              <button class="menu-item" (click)="viewCityDetails(City.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                View
+              </button>
+              <button class="menu-item" (click)="editCity(City.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                  ></path>
+                  <path
+                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                  ></path>
+                </svg>
+                Edit
+              </button>
+              <button class="menu-item delete" (click)="deleteCity(City.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
+                </svg>
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--  City Details Modal -->
+  <app-City-details
+    *ngIf="selectedCityId"
+    [CityId]="selectedCityId"
+    [isVisible]="isCityDetailsVisible"
+    (close)="closeCityDetails()"
+  >
+  </app-City-details>
+</div>

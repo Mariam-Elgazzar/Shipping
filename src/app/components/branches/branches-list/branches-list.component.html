@@ -1,0 +1,94 @@
+<div class="Branchs-list-container">
+  <div class="header-actions">
+    <h1>Branchs</h1>
+    <!-- <div class="breadcrumb">
+      <a routerLink="/dashboard">Dashboard</a>
+      <span class="separator">/</span>
+      <span>Branchs</span>
+    </div> -->
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <button
+        mat-raised-button
+        color="primary"
+        class="add-button"
+        (click)="addBranch()"
+      >
+        <mat-icon>add</mat-icon>
+        Add Branch
+      </button>
+
+      <div class="search-filters">
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="Search Branchs"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+          />
+          <mat-icon>search</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="Branchs-list-table">
+        <thead>
+          <tr>
+            <th class="number-column">#</th>
+            <th class="name-column">Branch Name</th>
+            <th class="date-column">Date Added</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="!loading">
+            <tr
+              *ngFor="let Branch of filteredBranchs; let i = index"
+              [ngClass]="{ 'even-row': i % 2 === 0 }"
+            >
+              <td class="number-column">{{ Branch.id }}</td>
+              <td class="name-column">{{ Branch.name }}</td>
+              <td class="date-column">{{ Branch.dateAdded }}</td>
+              <td class="actions-column">
+                <div class="action-buttons">
+                  <button
+                    mat-mini-fab
+                    color="accent"
+                    class="action-button edit-button"
+                    (click)="editBranch(Branch)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-mini-fab
+                    color="warn"
+                    class="action-button delete-button"
+                    (click)="deleteBranch(Branch)"
+                    matTooltip="Delete"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr *ngIf="loading">
+            <td colspan="4" class="loading-cell">
+              <mat-spinner diameter="40"></mat-spinner>
+              <span>Loading Branchs...</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="!loading && filteredBranchs.length === 0">
+            <td colspan="4" class="empty-cell">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

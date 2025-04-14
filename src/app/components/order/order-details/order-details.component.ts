@@ -13,8 +13,10 @@ interface OrderProduct {
   selector: "app-order-details",
   standalone: true,
   imports: [CommonModule],
+
   templateUrl:"./order-details.component.html",
   styleUrls: ["./order-details.component.scss"],
+
 })
 export class OrderDetailsComponent implements OnChanges {
   @Input() orderId: string | null = null

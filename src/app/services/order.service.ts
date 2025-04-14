@@ -1,10 +1,13 @@
+
 import { Injectable } from "@angular/core"
 import { Observable, of, delay } from "rxjs"
 
+
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class OrderService {
+
   constructor() {}
 
   getOrders(): Observable<any[]> {
@@ -53,5 +56,6 @@ export class OrderService {
 
   deleteOrder(orderId: string): Observable<boolean> {
     return of(true).pipe(delay(300))
+
   }
 }

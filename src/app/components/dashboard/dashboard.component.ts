@@ -73,9 +73,9 @@ export class DashboardComponent implements OnInit {
       this.calculateStats(shipments);
     });
 
-    this.orderService.getPendingOrders().subscribe((orders) => {
-      this.pendingOrders = orders;
-    });
+    // this.orderService.getPendingOrders().subscribe((orders) => {
+    //   this.pendingOrders = orders;
+    // });
   }
 
   calculateStats(shipments: Shipment[]): void {
