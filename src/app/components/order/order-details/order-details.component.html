@@ -24,8 +24,30 @@
             <div class="info-value">{{ orderDetails.category }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Weight</div>
+            <div class="info-label">Total Weight</div>
             <div class="info-value">{{ orderDetails.weight }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Order Cost</div>
+            <div class="info-value">{{ orderDetails.orderCost }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-section">
+        <h3>Customer Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Customer Name</div>
+            <div class="info-value">{{ orderDetails.customerName }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Customer Phone</div>
+            <div class="info-value">{{ orderDetails.customerPhone }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Customer Email</div>
+            <div class="info-value">{{ orderDetails.customerEmail }}</div>
           </div>
         </div>
       </div>
@@ -42,6 +64,14 @@
             <div class="info-value">{{ orderDetails.destination }}</div>
           </div>
           <div class="info-item">
+            <div class="info-label">Government</div>
+            <div class="info-value">{{ orderDetails.government }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">City</div>
+            <div class="info-value">{{ orderDetails.city }}</div>
+          </div>
+          <div class="info-item">
             <div class="info-label">Last Location</div>
             <div class="info-value">{{ orderDetails.lastLocation }}</div>
           </div>
@@ -56,11 +86,55 @@
             <div class="info-value">{{ orderDetails.arrivalDate }}</div>
           </div>
           <div class="info-item">
+            <div class="info-label">Shipping Type</div>
+            <div class="info-value">{{ orderDetails.shippingType }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Payment Method</div>
+            <div class="info-value">{{ orderDetails.payWay }}</div>
+          </div>
+          <div class="info-item">
             <div class="info-label">Status</div>
             <div class="info-value">
-              <span class="status-badge">In Transit</span>
+              <span class="status-badge" [ngClass]="getStatusClass(orderDetails.status || 'New')">
+                {{ orderDetails.status || 'New' }}
+              </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Product Information Section -->
+      <div class="order-section">
+        <h3>Product Information</h3>
+        <div class="product-table-container">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of orderDetails.products">
+                <td>{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.weight }}</td>
+              </tr>
+              <tr *ngIf="!orderDetails.products || orderDetails.products.length === 0">
+                <td colspan="3" class="empty-message">No products found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Notes Section -->
+      <div class="order-section" *ngIf="orderDetails.notes">
+        <h3>Notes</h3>
+        <div class="notes-container">
+          {{ orderDetails.notes }}
         </div>
       </div>
 
@@ -81,7 +155,6 @@
 
     <div class="modal-footer">
       <button class="secondary-btn" (click)="onClose()">Close</button>
-      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
     </div>
   </div>
 </div>

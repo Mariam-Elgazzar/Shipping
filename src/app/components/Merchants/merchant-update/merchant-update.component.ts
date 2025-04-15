@@ -45,15 +45,15 @@ export class MerchantUpdateComponent implements OnInit {
   loadMerchantData(): void {
     if (!this.merchantId) return;
     this.isLoading = true;
-    this.merchantService.getMerchantDetails(this.merchantId).subscribe({
+    this.merchantService.getMerchantById(this.merchantId).subscribe({
       next: (merchant) => {
         this.merchantForm.patchValue({
           name: merchant.name,
           email: merchant.email,
-          phone: merchant.phone,
-          branchLocation: merchant.branchLocation,
-          branchName: merchant.branchName,
-          status: merchant.status,
+          // phone: merchant.phone,
+          // branchLocation: merchant.branchLocation,
+          // branchName: merchant.branchName,
+          // status: merchant.status,
         });
         this.isLoading = false;
       },
@@ -79,7 +79,7 @@ export class MerchantUpdateComponent implements OnInit {
   updateMerchant(merchant: any): void {
     if (!this.merchantId) return;
     this.isLoading = true;
-    this.merchantService.updateMerchant(this.merchantId, merchant).subscribe({
+    this.merchantService.updateMerchant( merchant).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/merchants']);

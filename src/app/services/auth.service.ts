@@ -221,18 +221,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { User, LoginRequest, LoginResponse } from '../models/user.model';
+import { LoginRequest, LoginResponse } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl + '/auth';
+  private apiUrl = environment.apiUrl + '/Account';
   private tokenKey = 'auth_token';
   private userKey = 'user_data';
+  private userPermission = 'user_data_permission';
+  private userId = 'user_data_id';
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject = new BehaviorSubject<LoginResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
@@ -241,9 +243,21 @@ export class AuthService {
 
   private loadUserFromStorage(): void {
     const userData = localStorage.getItem(this.userKey);
-    if (userData) {
+    const permissionData = localStorage.getItem(this.userPermission);
+    const idData = localStorage.getItem(this.userId);
+
+    if (userData && permissionData && idData) {
       try {
-        const user = JSON.parse(userData);
+        const role = JSON.parse(userData);
+        const permission = JSON.parse(permissionData);
+        const id = JSON.parse(idData);
+        const user: LoginResponse = {
+          id,
+          message: '',
+          token: localStorage.getItem(this.tokenKey) || '',
+          role,
+          permission,
+        };
         this.currentUserSubject.next(user);
       } catch (e) {
         console.error('Error parsing user data from localStorage', e);
@@ -252,28 +266,31 @@ export class AuthService {
     }
   }
 
-  login(loginRequest: LoginRequest): Observable<User> {
+  login(loginRequest: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/login`, loginRequest)
+      .post<LoginResponse>(`${this.apiUrl}/Login`, loginRequest)
       .pipe(
         tap((response) => {
           localStorage.setItem(this.tokenKey, response.token);
-          localStorage.setItem(this.userKey, JSON.stringify(response.user));
-          this.currentUserSubject.next(response.user);
+          localStorage.setItem(this.userKey, JSON.stringify(response.role));
+          localStorage.setItem(
+            this.userPermission,
+            JSON.stringify(response.permission)
+          );
+          localStorage.setItem(this.userId, JSON.stringify(response.id));
+          this.currentUserSubject.next(response);
         }),
-        map((response) => response.user),
         catchError(this.handleError)
       );
   }
 
   logout(): void {
-    // Optional: Notify backend about logout
     this.http
       .post(`${this.apiUrl}/logout`, {})
       .pipe(catchError(this.handleError))
       .subscribe({
         next: () => this.clearSession(),
-        error: () => this.clearSession(), // Clear session even if API call fails
+        error: () => this.clearSession(),
       });
   }
 
@@ -288,16 +305,6 @@ export class AuthService {
       );
   }
 
-  getCurrentUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/profile`).pipe(
-      tap((user) => {
-        localStorage.setItem(this.userKey, JSON.stringify(user));
-        this.currentUserSubject.next(user);
-      }),
-      catchError(this.handleError)
-    );
-  }
-
   isLoggedIn(): boolean {
     return !!this.getToken() && !!this.currentUserSubject.value;
   }
@@ -306,29 +313,29 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  getCurrentUser(): User | null {
+  getCurrentUser(): LoginResponse | null {
     return this.currentUserSubject.value;
   }
 
   hasPermission(permissionCode: string): boolean {
     const user = this.currentUserSubject.value;
-    if (!user) return false;
+    if (!user || !user.permission) return false;
 
-    return user.roles.some((role) =>
-      role.permissions.some((permission) => permission.code === permissionCode)
-    );
+    return user.permission.values.includes(permissionCode);
   }
 
   hasRole(roleName: string): boolean {
     const user = this.currentUserSubject.value;
-    if (!user) return false;
+    if (!user || !user.role) return false;
 
-    return user.roles.some((role) => role.name === roleName);
+    return user.role === roleName;
   }
 
   private clearSession(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem(this.userPermission);
+    localStorage.removeItem(this.userId);
     this.currentUserSubject.next(null);
   }
 
@@ -340,10 +347,8 @@ export class AuthService {
     } else if (error.status === 403) {
       errorMessage = 'Access denied';
     } else if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       errorMessage = error.error?.message || `Server error: ${error.status}`;
     }
 

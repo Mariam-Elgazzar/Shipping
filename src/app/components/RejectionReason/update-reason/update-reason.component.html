@@ -1,0 +1,51 @@
+<div class="update-reason-container">
+  <div class="card">
+    <div class="card-content">
+      <div class="header-actions">
+        <h1>Update Rejection Reason</h1>
+      </div>
+
+      <div *ngIf="loadingData" class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Loading reason data...</p>
+      </div>
+
+      <form *ngIf="!loadingData" [formGroup]="reasonForm" (ngSubmit)="onSubmit()">
+        <!-- Rejection Reason Input -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reason">Rejection Reason <span class="required">*</span></label>
+            <input
+              type="text"
+              id="reason"
+              formControlName="reason"
+              placeholder="Enter rejection reason"
+              [ngClass]="{'is-invalid': reasonControl?.invalid && reasonControl?.touched}"
+            >
+            <div class="error-message" *ngIf="reasonControl?.invalid && reasonControl?.touched">
+              <span *ngIf="reasonControl?.errors?.['required']">Rejection reason is required</span>
+              <span *ngIf="reasonControl?.errors?.['minlength']">Reason must be at least 5 characters</span>
+              <span *ngIf="reasonControl?.errors?.['maxlength']">Reason cannot exceed 200 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Cancel</span>
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <div class="spinner" *ngIf="loading"></div>
+            <span *ngIf="!loading">
+              <mat-icon>save</mat-icon>
+              <span>Update Reason</span>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

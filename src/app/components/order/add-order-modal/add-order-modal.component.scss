@@ -1,4 +1,5 @@
 
+
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -16,10 +17,18 @@
       background-color: white;
       border-radius: 8px;
       width: 90%;
-      max-width: 500px;
+      max-width: 800px;
       max-height: 90vh;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      overflow: hidden; /* نخفي أي overflow هنا */
+    }
+    .modal-scroll-body {
+      padding: 24px;
+      overflow-y: auto;
+      max-height: calc(90vh - 160px); /* أقل من المودال نفسه عشان يفضل فيه مساحة للهيدر والفوتر */
+      flex-grow: 1;
     }
 
     .modal-header {
@@ -71,13 +80,29 @@
 
     .modal-content {
       padding: 24px;
+    }
+
+    .form-section {
+      margin-bottom: 24px;
+
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+
+    .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 16px;
     }
 
     .form-group {
-      margin-bottom: 8px;
+      margin-bottom: 16px;
 
       label {
         display: block;
@@ -87,7 +112,7 @@
         margin-bottom: 6px;
       }
 
-      input, select {
+      input, select, textarea {
         width: 100%;
         padding: 8px 12px;
         border: 1px solid #e2e8f0;
@@ -104,6 +129,14 @@
           color: #94a3b8;
         }
       }
+
+      textarea {
+        resize: vertical;
+      }
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
     }
 
     .select-wrapper {
@@ -122,6 +155,90 @@
         appearance: none;
         padding-right: 30px;
       }
+    }
+
+    .required {
+      color: #e11d48;
+    }
+
+    .error-message {
+      color: #e11d48;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .product-table {
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .product-table-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      background-color: #f8fafc;
+      padding: 12px;
+      font-weight: 600;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .product-row {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      align-items: center;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .product-name, .product-quantity, .product-weight {
+      padding-right: 8px;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #e11d48;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #fee2e2;
+        border-radius: 4px;
+      }
+    }
+
+    .add-product-row {
+      padding: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .add-product-btn {
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0284c7;
+      }
+    }
+
+    .order-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
     }
 
     .modal-footer {
@@ -158,5 +275,9 @@
       &:hover {
         background-color: #065f46;
       }
+
+      &:disabled {
+        background-color: #94a3b8;
+        cursor: not-allowed;
+      }
     }
-  

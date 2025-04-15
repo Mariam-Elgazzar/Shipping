@@ -1,54 +1,65 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MerchantService } from '../../../services/merchant.service';
+import { City, MerchantResponse } from '../../../models/merchant.model';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-merchant-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './merchant-details.component.html',
-
   styleUrls: ['./merchant-details.component.scss'],
 })
-export class MerchantDetailsComponent implements OnChanges {
-  @Input() merchantId: string | null = null;
+export class MerchantDetailsComponent {
+  @Input({ required: true }) merchantId!: string;
   @Input() isVisible = false;
   @Output() close = new EventEmitter<void>();
+  @Output() edit = new EventEmitter<string>();
 
-  merchantDetails: any = null;
+  merchant = signal<MerchantResponse | null>(null);
+  cities = signal<City[]>([]);
+  isLoading = signal(false);
+  errorMessage = signal('');
 
-  constructor(private merchantService: MerchantService) {}
+  constructor(
+    private merchantService: MerchantService,
+    private router: Router
+  ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['merchantId'] && this.merchantId) {
-      this.loadMerchantDetails();
+  ngOnChanges(): void {
+    if (this.isVisible && this.merchantId) {
+      this.loadMerchant();
+      this.loadCities();
     }
   }
 
-  loadMerchantDetails(): void {
-    if (!this.merchantId) return;
-
-    this.merchantService.getMerchantDetails(this.merchantId).subscribe(
-      (details) => {
-        this.merchantDetails = details;
+  loadMerchant(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.merchantService.getMerchantById(this.merchantId).subscribe({
+      next: (merchant: MerchantResponse) => {
+        this.merchant.set(merchant);
+        this.isLoading.set(false);
       },
-      (error) => {
-        console.error('Error loading merchant details:', error);
-      }
-    );
+      error: (err) => {
+        this.errorMessage.set(err.message || 'Failed to load merchant details');
+        this.isLoading.set(false);
+      },
+    });
   }
 
-  onOverlayClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
-      this.onClose();
-    }
+  loadCities(): void {
+    this.merchantService.getCities().subscribe({
+      next: (cities) => this.cities.set(cities),
+      error: (err) => this.errorMessage.set('Failed to load cities'),
+    });
+  }
+
+  getCityName(cityId: number): string {
+    const city = this.cities().find((c) => c.id === cityId);
+    return city ? city.name : 'Unknown';
   }
 
   onClose(): void {
@@ -56,6 +67,13 @@ export class MerchantDetailsComponent implements OnChanges {
   }
 
   onEdit(): void {
-    console.log('Edit merchant details:', this.merchantId);
+    this.edit.emit(this.merchantId);
+    this.router.navigate([`/merchants/edit/${this.merchantId}`]);
+  }
+
+  onOverlayClick(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
+      this.onClose();
+    }
   }
 }
