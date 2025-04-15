@@ -18,7 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
+    // RouterLink,
     MatProgressSpinnerModule,
   ],
   templateUrl: './merchant.component.html',

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
-  PaginatedPricingResponse,
+  Pricing,
   PricingResponse,
   CreatePricingResponse,
   PricingRequest,
@@ -14,30 +14,14 @@ import {
   providedIn: 'root',
 })
 export class PricingService {
-  private readonly apiUrl = `${environment.apiUrl}/Pricings`;
+  private readonly apiUrl = `${environment.apiUrl}/Standard`;
 
   constructor(private http: HttpClient) {}
 
-  getAllPricings(
-    pageIndex: number,
-    pageSize: number
-  ): Observable<PaginatedPricingResponse> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString());
-
+  getAllPricings(): Observable<Pricing[]> {
     return this.http
-      .get<PaginatedPricingResponse>(`${this.apiUrl}/GetALL`, { params })
-      .pipe(
-        map((response) => ({
-          ...response,
-          pageIndex: response.pageIndex,
-          pageSize: response.pageSize,
-          totalCount: response.totalCount,
-          data: response.data,
-        })),
-        catchError(this.handleError)
-      );
+      .get<Pricing[]>(`${this.apiUrl}/GetALL`)
+      .pipe(catchError(this.handleError));
   }
 
   getPricingById(id: number): Observable<PricingResponse> {
@@ -48,16 +32,23 @@ export class PricingService {
 
   createPricing(request: PricingRequest): Observable<CreatePricingResponse> {
     return this.http
-      .post<CreatePricingResponse>(`${this.apiUrl}/Add`, request)
+      .post<CreatePricingResponse>(`${this.apiUrl}/create`, request)
       .pipe(catchError(this.handleError));
   }
+
+  // updatePricing(request: PricingRequest & { id: number }): Observable<PricingResponse> {
+  //   return this.http
+  //     .put<PricingResponse>(`${this.apiUrl}/standard/update`, request)
+  //     .pipe(catchError(this.handleError));
+  // }
+
 
   updatePricing(request: PricingRequest & { id: number }): Observable<PricingResponse> {
+    // Include the pricing id in the URL
     return this.http
-      .put<PricingResponse>(`${this.apiUrl}/Update`, request)
+      .put<PricingResponse>(`${this.apiUrl}/update/${request.id}`, request)
       .pipe(catchError(this.handleError));
   }
-
   deletePricing(id: number): Observable<void> {
     return this.http
       .delete<void>(`${this.apiUrl}/Delete/${id}`)

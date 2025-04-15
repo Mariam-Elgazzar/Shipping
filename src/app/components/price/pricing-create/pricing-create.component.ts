@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PricingService } from '../../../services/pricing.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { PricingRequest } from '../../../models/pricing.model';
+import { PricingService } from '../../../services/pricing.service';
 
 @Component({
   selector: 'app-pricing-create',
@@ -23,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ],
 })
-export class PricingAddComponent implements OnInit {
+export class PricingCreateComponent implements OnInit {
   pricingForm!: FormGroup;
   isLoading = false;
 
@@ -51,25 +52,25 @@ export class PricingAddComponent implements OnInit {
       return;
     }
 
-    const pricingData = this.pricingForm.value;
+    const pricingData: PricingRequest = this.pricingForm.value;
     this.createPricing(pricingData);
   }
 
-  createPricing(pricing: { standardWeight: number; villagePrice: number; kGprice: number }): void {
+  createPricing(pricing: PricingRequest): void {
     this.isLoading = true;
     this.pricingService.createPricing(pricing).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/pricings']);
       },
-      error: (err) => {
-        console.error('Error creating pricing', err);
-        this.isLoading = false;
-      },
+      // error: (err) => {
+      //   console.error('Error creating pricing', err);
+      //   this.isLoading = false;
+      // },
     });
   }
 
   cancel(): void {
-    this.router.navigate(['/pricings']);
+    this.router.navigate(['/price/list']);
   }
 }

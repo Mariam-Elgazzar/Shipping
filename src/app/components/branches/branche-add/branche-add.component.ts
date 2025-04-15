@@ -61,7 +61,7 @@ export class BrancheAddComponent implements OnInit {
     this.branchesService.createBranch(branch).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/branches']);
+        this.router.navigate(['/branch']);
       },
       error: (err) => {
         console.error('Error creating branch', err);
@@ -71,6 +71,6 @@ export class BrancheAddComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/branches']);
+    this.router.navigate(['/branch']);
   }
 }

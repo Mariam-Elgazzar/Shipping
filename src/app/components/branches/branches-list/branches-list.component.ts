@@ -60,11 +60,11 @@ export class BranchesListComponent implements OnInit {
   }
 
   addBranch(): void {
-    this.router.navigate(['/branches/add']);
+    this.router.navigate(['/branch/add']);
   }
 
   editBranch(branch: Branch): void {
-    this.router.navigate(['/branches', branch.id, 'edit']);
+    this.router.navigate(['/branch/edit', branch.id]);
   }
 
   deleteBranch(branch: Branch): void {

@@ -6,13 +6,6 @@ export interface Pricing {
   isDeleted: boolean;
 }
 
-export interface PaginatedPricingResponse {
-  data: Pricing[];
-  pageIndex: number;
-  pageSize: number;
-  totalCount: number;
-}
-
 export interface PricingResponse {
   id: number;
   standardWeight: number;
