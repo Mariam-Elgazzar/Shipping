@@ -9,26 +9,26 @@
       class="login-form auth-form"
     >
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="email">Email</label>
         <input
           type="text"
-          id="username"
-          formControlName="username"
-          placeholder="Input your username here"
+          id="email"
+          formControlName="email"
+          placeholder="Input your email here"
           [ngClass]="{
             'is-invalid':
-              loginForm.controls['username'].invalid &&
-              loginForm.controls['username'].touched
+              loginForm.controls['email'].invalid &&
+              loginForm.controls['email'].touched
           }"
         />
         <div
           class="error-message"
           *ngIf="
-            loginForm.controls['username'].invalid &&
-            loginForm.controls['username'].touched
+            loginForm.controls['email'].invalid &&
+            loginForm.controls['email'].touched
           "
         >
-          Username is required
+          Email is required
         </div>
       </div>
 
@@ -113,6 +113,7 @@
     </form>
   </div>
 </div>
+
 <!-- <div class="auth-form-container">
   <h2>Welcome Back!</h2>
   <p>We can assign tasks, set deadlines, and track progress effortlessly.</p>

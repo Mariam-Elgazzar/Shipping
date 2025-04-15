@@ -23,8 +23,7 @@
     </div>
 
     <div class="header-actions">
-      <button class="add-btn" [routerLink]="['/merchants']">
-        <!-- routerLinkActive="router-link-active" -->
+      <button class="add-btn" [routerLink]="['/merchants/new']">
         Add New Merchant
       </button>
 
@@ -45,46 +44,255 @@
         </svg>
         <input
           type="text"
-          placeholder="Search something"
+          placeholder="Search by name, phone, or store"
           [(ngModel)]="searchTerm"
           (input)="filterMerchants()"
         />
       </div>
-
-      <!-- <button class="filter-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polygon
-            points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-          ></polygon>
-        </svg>
-        Filter
-      </button> -->
     </div>
   </div>
+
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
   <div class="table-wrapper">
     <table class="Merchant-table">
       <thead>
         <tr>
           <th class="checkbox-col">
-            <input type="checkbox" (change)="toggleSelectAll($event)" />
+            <input
+              type="checkbox"
+              (change)="toggleSelectAll($event)"
+              [checked]="
+                filteredMerchants.length > 0 &&
+                selectedMerchants.length === filteredMerchants.length
+              "
+            />
           </th>
-          <th>Merchant Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Branch Location</th>
-          <th>Branch Name</th>
-          <th>Status</th>
+          <th
+            class="sortable"
+            (click)="toggleSort('name')"
+            [class.sorted]="sortColumn === 'name'"
+          >
+            Merchant Name
+            <span class="sort-icon" *ngIf="sortColumn === 'name'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('email')"
+            [class.sorted]="sortColumn === 'email'"
+          >
+            Email
+            <span class="sort-icon" *ngIf="sortColumn === 'email'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('phoneNumber')"
+            [class.sorted]="sortColumn === 'phoneNumber'"
+          >
+            Phone
+            <span class="sort-icon" *ngIf="sortColumn === 'phoneNumber'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('storeName')"
+            [class.sorted]="sortColumn === 'storeName'"
+          >
+            Store Name
+            <span class="sort-icon" *ngIf="sortColumn === 'storeName'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('rejectedOrderPercentage')"
+            [class.sorted]="sortColumn === 'rejectedOrderPercentage'"
+          >
+            Rejection (%)
+            <span
+              class="sort-icon"
+              *ngIf="sortColumn === 'rejectedOrderPercentage'"
+            >
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('specialPickUp')"
+            [class.sorted]="sortColumn === 'specialPickUp'"
+          >
+            Special Pickup
+            <span class="sort-icon" *ngIf="sortColumn === 'specialPickUp'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
           <th class="actions-col">Actions</th>
         </tr>
       </thead>
@@ -99,17 +307,10 @@
           </td>
           <td>{{ merchant.name }}</td>
           <td>{{ merchant.email }}</td>
-          <td>{{ merchant.phone }}</td>
-          <td>{{ merchant.branchLocation }}</td>
-          <td>{{ merchant.branchName }}</td>
-          <td>
-            <span
-              class="status-badge"
-              [ngClass]="merchant.status.toLowerCase()"
-            >
-              {{ merchant.status }}
-            </span>
-          </td>
+          <td>{{ merchant.phoneNumber }}</td>
+          <td>{{ merchant.storeName }}</td>
+          <td>{{ merchant.rejectedOrderPercentage }}</td>
+          <td>{{ merchant.specialPickUp }}</td>
           <td class="actions-col">
             <button class="action-btn" (click)="showActionMenu(merchant.id)">
               <svg
@@ -150,7 +351,7 @@
                 </svg>
                 View
               </button>
-              <button class="menu-item" (click)="editMerchant(merchant.id)">
+              <button class="menu-item" (click)="editMerchant(merchant)">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -200,12 +401,136 @@
     </table>
   </div>
 
-  <!--  merchant Details Modal -->
+  <div
+    class="pagination-container"
+    *ngIf="!isLoading && filteredMerchants.length > 0"
+  >
+    <div class="pagination-info">
+      Showing {{ displayRange.start }} to {{ displayRange.end }} of
+      {{ displayRange.total }} entries
+    </div>
+
+    <div class="pagination-controls">
+      <div class="page-size-selector">
+        <select (change)="changePageSize($event)">
+          <option
+            *ngFor="let size of pageSizeOptions"
+            [value]="size"
+            [selected]="pageSize === size"
+          >
+            {{ size }} per page
+          </option>
+        </select>
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="firstPage()"
+          aria-label="First page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="11 17 6 12 11 7"></polyline>
+            <polyline points="18 17 13 12 18 7"></polyline>
+          </svg>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+          aria-label="Previous page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <span *ngIf="page < 0" class="pagination-ellipsis">...</span>
+          <button
+            *ngIf="page > 0"
+            class="pagination-button"
+            [class.active]="currentPage === page"
+            (click)="goToPage(page)"
+          >
+            <span>{{ page }}</span>
+          </button>
+        </ng-container>
+
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+          aria-label="Next page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="lastPage()"
+          aria-label="Last page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="13 17 18 12 13 7"></polyline>
+            <polyline points="6 17 11 12 6 7"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
   <app-merchant-details
-    *ngIf="selectedMerchantId"
+    *ngIf="selectedMerchantId && isMerchantDetailsVisible"
     [merchantId]="selectedMerchantId"
     [isVisible]="isMerchantDetailsVisible"
     (close)="closeMerchantDetails()"
-  >
-  </app-merchant-details>
+  ></app-merchant-details>
 </div>

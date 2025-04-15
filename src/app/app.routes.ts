@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ShipmentsComponent } from './components/shipments/shipments.component';
 import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
-import { AuthGuard } from './guards/auth.guard';
+// import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './components/shared/unauthorized/unauthorized.component';
 import { OrderDashboardComponent } from './components/order/order-dashboard.component';
 import { CreateCityComponent } from './components/city/create-city/create-city.component';
@@ -12,7 +12,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
-import { MerchantComponent } from './components/Merchants/add-merchant/merchant.component';
+// import { MerchantComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
 import { PermissionsMatrixComponent } from './components/admin/permissions/permissions-matrix/permissions-matrix.component';
@@ -24,21 +24,22 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 // import { EmployeeListComponent } from './components/Employee/employee-list/employee-list.component';
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
-\import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
-import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
+import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
+// import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
 import { CityListComponent } from './components/city/city-list/city-list.component';
 import { CityDetailsComponent } from './components/city/city-details/city-details.component';
 import { GovernmentListComponent } from './components/government/government-list/government-list.component';
 import { GovernmentDetailsComponent } from './components/government/government-details/government-details.component';
 import { BranchsListComponent } from './components/branches/branches-list/branches-list.component';
+import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
-    data: { requiredPermission: 'dashboard:view' },
+    // canActivate: [AuthGuard],
+    // data: { requiredPermission: 'dashboard:view' },
   },
   { path: 'create-city', component: CreateCityComponent },
   { path: 'create-government', component: CreateGovernmentComponent },
@@ -51,10 +52,10 @@ export const routes: Routes = [
 
   // { path: 'CourierManagement', component: CourierManagementComponent },
   // { path: 'Courierslist', component: CouriersListComponent },
-  {
-    path: 'merchants',
-    component: MerchantComponent,
-  },
+  { path: 'merchants', component: MerchantListComponent },
+  { path: 'merchants/new', component: MerchantFormComponent },
+  { path: 'merchants/edit/:id', component: MerchantFormComponent },
+
   {
     path: 'merchantstable',
     component: MerchantListComponent,
@@ -66,7 +67,11 @@ export const routes: Routes = [
 
   {
     path: 'merchantUpdate',
-    component: MerchantUpdateComponent,
+    component: MerchantDetailsComponent,
+  },
+  {
+    path: 'merchantAdd',
+    component: MerchantDetailsComponent,
   },
   {
     path: 'Citys',
@@ -104,7 +109,6 @@ export const routes: Routes = [
     path: 'Employeedetails',
     component: EmployeeDetailsComponent,
   },
-  
 
   {
     path: 'deliverys',
@@ -143,7 +147,7 @@ export const routes: Routes = [
   {
     path: 'permissions-list',
     component: PermissionsListComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'add-permission',
@@ -153,7 +157,7 @@ export const routes: Routes = [
   {
     path: 'permissions-matrix',
     component: PermissionsMatrixComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   // {
   //   path: 'reports',
@@ -168,8 +172,8 @@ export const routes: Routes = [
   {
     path: 'admin/roles',
     component: RolesListComponent,
-    canActivate: [AuthGuard],
-    data: { requiredPermission: 'roles:manage' },
+    // canActivate: [AuthGuard],
+    // data: { requiredPermission: 'roles:manage' },
   },
   {
     path: 'login',

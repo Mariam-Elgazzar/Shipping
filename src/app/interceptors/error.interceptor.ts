@@ -8,7 +8,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       console.error('HTTP Error:', error);
       // Handle specific errors (e.g., 401 redirect to login)
       if (error.status === 401) {
-        window.location.href = '/auth/login';
+        window.location.href = '/Account/login';
       }
       return throwError(() => error);
     })

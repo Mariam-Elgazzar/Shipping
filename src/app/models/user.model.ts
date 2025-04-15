@@ -54,13 +54,16 @@ export interface Permission {
 }
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface LoginResponse {
+  id: string;
+  message: string;
   token: string;
-  user: User;
+  role: string | null;
+  permission: { name: string; values: string[] } | null;
 }
 // export interface User {
 //   id: string

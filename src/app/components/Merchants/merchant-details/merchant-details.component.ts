@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MerchantService } from '../../../services/merchant.service';
+// import { MerchantService } from '../merchant-update/merchant-update.component';
+// import { MerchantService } from '../../../services/merchant.service';
 
 @Component({
   selector: 'app-merchant-details',
@@ -35,14 +37,14 @@ export class MerchantDetailsComponent implements OnChanges {
   loadMerchantDetails(): void {
     if (!this.merchantId) return;
 
-    this.merchantService.getMerchantDetails(this.merchantId).subscribe(
-      (details) => {
-        this.merchantDetails = details;
-      },
-      (error) => {
-        console.error('Error loading merchant details:', error);
-      }
-    );
+    // this.merchantService.getMerchantDetails(this.merchantId).subscribe(
+    //   (details) => {
+    //     this.merchantDetails = details;
+    //   },
+    //   (error) => {
+    //     console.error('Error loading merchant details:', error);
+    //   }
+    // );
   }
 
   onOverlayClick(event: MouseEvent): void {

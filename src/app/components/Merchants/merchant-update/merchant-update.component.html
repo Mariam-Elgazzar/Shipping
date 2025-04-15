@@ -1,91 +1,200 @@
 <div class="merchant-update-container">
-    <div class="header">
-      <h2>
-        <i class="icon-edit"></i>
-        Update Merchant
-      </h2>
-      <button class="btn btn-back" (click)="router.navigate(['/merchants'])">
-        <i class="icon-arrow-left"></i> Back to List
+  <div class="header">
+    <h2>
+      <i class="icon-edit"></i>
+      Update Merchant
+    </h2>
+    <button class="btn btn-back" (click)="router.navigate(['/merchants'])">
+      <i class="icon-arrow-left"></i> Back to List
+    </button>
+  </div>
+
+  <form
+    [formGroup]="merchantForm"
+    (ngSubmit)="onSubmit()"
+    *ngIf="!isLoading; else loading"
+  >
+    <div class="form-grid">
+      <!-- Basic Information -->
+      <div class="form-group">
+        <label for="name">Name*</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('name')?.invalid &&
+            merchantForm.get('name')?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('name')?.invalid &&
+            merchantForm.get('name')?.touched
+          "
+        >
+          <span *ngIf="merchantForm.get('name')?.errors?.['required']"
+            >Name is required</span
+          >
+          <span *ngIf="merchantForm.get('name')?.errors?.['minlength']"
+            >Name must be at least 3 characters</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email*</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('email')?.invalid &&
+            merchantForm.get('email')?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('email')?.invalid &&
+            merchantForm.get('email')?.touched
+          "
+        >
+          <span *ngIf="merchantForm.get('email')?.errors?.['required']"
+            >Email is required</span
+          >
+          <span *ngIf="merchantForm.get('email')?.errors?.['email']"
+            >Please enter a valid email</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone*</label>
+        <input
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('phone')?.invalid &&
+            merchantForm.get('phone')?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('phone')?.invalid &&
+            merchantForm.get('phone')?.touched
+          "
+        >
+          <span *ngIf="merchantForm.get('phone')?.errors?.['required']"
+            >Phone number is required</span
+          >
+          <span *ngIf="merchantForm.get('phone')?.errors?.['pattern']"
+            >Please enter a valid phone number</span
+          >
+        </div>
+      </div>
+
+      <!-- Branch Information -->
+      <div class="form-group">
+        <label for="branchLocation">Branch Location*</label>
+        <input
+          type="text"
+          id="branchLocation"
+          formControlName="branchLocation"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('branchLocation')?.invalid &&
+            merchantForm.get('branchLocation')?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('branchLocation')?.invalid &&
+            merchantForm.get('branchLocation')?.touched
+          "
+        >
+          Branch Location is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="branchName">Branch Name*</label>
+        <input
+          type="text"
+          id="branchName"
+          formControlName="branchName"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('branchName')?.invalid &&
+            merchantForm.get('branchName')?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('branchName')?.invalid &&
+            merchantForm.get('branchName')?.touched
+          "
+        >
+          Branch Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status*</label>
+        <select
+          id="status"
+          formControlName="status"
+          class="form-control"
+          required
+          [class.is-invalid]="
+            merchantForm.get('status')?.invalid &&
+            merchantForm.get('status')?.touched
+          "
+        >
+          <option value="">Select Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            merchantForm.get('status')?.invalid &&
+            merchantForm.get('status')?.touched
+          "
+        >
+          Status is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-cancel" (click)="cancel()">
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-submit"
+        [disabled]="merchantForm.invalid || isLoading"
+      >
+        {{ isLoading ? "Updating..." : "Update Merchant" }}
       </button>
     </div>
-  
-    <form [formGroup]="merchantForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading; else loading">
-      <div class="form-grid">
-        <!-- Basic Information -->
-        <div class="form-group">
-          <label for="name">Name*</label>
-          <input type="text" id="name" formControlName="name" class="form-control" required
-            [class.is-invalid]="merchantForm.get('name')?.invalid && merchantForm.get('name')?.touched">
-          <div class="invalid-feedback" *ngIf="merchantForm.get('name')?.invalid && merchantForm.get('name')?.touched">
-            <span *ngIf="merchantForm.get('name')?.errors?.['required']">Name is required</span>
-            <span *ngIf="merchantForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
-          </div>
-        </div>
-  
-        <div class="form-group">
-          <label for="email">Email*</label>
-          <input type="email" id="email" formControlName="email" class="form-control" required
-            [class.is-invalid]="merchantForm.get('email')?.invalid && merchantForm.get('email')?.touched">
-          <div class="invalid-feedback" *ngIf="merchantForm.get('email')?.invalid && merchantForm.get('email')?.touched">
-            <span *ngIf="merchantForm.get('email')?.errors?.['required']">Email is required</span>
-            <span *ngIf="merchantForm.get('email')?.errors?.['email']">Please enter a valid email</span>
-          </div>
-        </div>
-  
-        <div class="form-group">
-          <label for="phone">Phone*</label>
-          <input type="tel" id="phone" formControlName="phone" class="form-control" required
-            [class.is-invalid]="merchantForm.get('phone')?.invalid && merchantForm.get('phone')?.touched">
-          <div class="invalid-feedback" *ngIf="merchantForm.get('phone')?.invalid && merchantForm.get('phone')?.touched">
-            <span *ngIf="merchantForm.get('phone')?.errors?.['required']">Phone number is required</span>
-            <span *ngIf="merchantForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
-          </div>
-        </div>
-  
-        <!-- Branch Information -->
-        <div class="form-group">
-          <label for="branchLocation">Branch Location*</label>
-          <input type="text" id="branchLocation" formControlName="branchLocation" class="form-control" required
-            [class.is-invalid]="merchantForm.get('branchLocation')?.invalid && merchantForm.get('branchLocation')?.touched">
-          <div class="invalid-feedback" *ngIf="merchantForm.get('branchLocation')?.invalid && merchantForm.get('branchLocation')?.touched">
-            Branch Location is required
-          </div>
-        </div>
-  
-        <div class="form-group">
-          <label for="branchName">Branch Name*</label>
-          <input type="text" id="branchName" formControlName="branchName" class="form-control" required
-            [class.is-invalid]="merchantForm.get('branchName')?.invalid && merchantForm.get('branchName')?.touched">
-          <div class="invalid-feedback" *ngIf="merchantForm.get('branchName')?.invalid && merchantForm.get('branchName')?.touched">
-            Branch Name is required
-          </div>
-        </div>
-  
-        <div class="form-group">
-          <label for="status">Status*</label>
-          <select id="status" formControlName="status" class="form-control" required
-            [class.is-invalid]="merchantForm.get('status')?.invalid && merchantForm.get('status')?.touched">
-            <option value="">Select Status</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
-          <div class="invalid-feedback" *ngIf="merchantForm.get('status')?.invalid && merchantForm.get('status')?.touched">
-            Status is required
-          </div>
-        </div>
-      </div>
-  
-      <div class="form-actions">
-        <button type="button" class="btn btn-cancel" (click)="cancel()">Cancel</button>
-        <button type="submit" class="btn btn-submit" [disabled]="merchantForm.invalid || isLoading">
-          {{ isLoading ? 'Updating...' : 'Update Merchant' }}
-        </button>
-      </div>
-    </form>
-  
-    <ng-template #loading>
-      <div class="loading-spinner">
-        <i class="icon-spinner"></i> Loading...
-      </div>
-    </ng-template>
-  </div>
+  </form>
+
+  <ng-template #loading>
+    <div class="loading-spinner"><i class="icon-spinner"></i> Loading...</div>
+  </ng-template>
+</div>

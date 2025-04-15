@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -47,7 +48,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]], // Changed to email with email validator
       password: ['', Validators.required],
       rememberMe: [false],
     });
@@ -65,24 +66,22 @@ export class LoginFormComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-
     this.loading = true;
     this.errorMessage = '';
-
-    this.authService
-      .login({
-        username: this.loginForm.controls['username'].value,
-        password: this.loginForm.controls['password'].value,
-      })
-      .subscribe({
-        next: () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error: (error) => {
-          this.errorMessage = error.message || 'Login failed';
-          this.loading = false;
-        },
-      });
+    const loginRequest = {
+      email: this.loginForm.controls['email'].value,
+      password: this.loginForm.controls['password'].value,
+    };
+    this.authService.login(loginRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.router.navigate([this.returnUrl]);
+      },
+      error: (error) => {
+        this.errorMessage = error.message || 'Login failed';
+        this.loading = false;
+      },
+    });
   }
 
   togglePasswordVisibility(): void {
