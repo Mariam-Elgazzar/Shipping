@@ -1,0 +1,335 @@
+@import '../../../../styles.scss';
+
+.display-reasons-container {
+  padding: $spacing-lg;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    font-size: $font-size-xl;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+
+    a {
+      color: $primary-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .separator {
+      margin: 0 8px;
+      color: #9CA3AF;
+    }
+
+    span:last-child {
+      color: #6B7280;
+    }
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1px solid $border-color;
+
+  .add-button {
+    background-color: $primary-color;
+    border: none;
+    font-size: larger;
+    padding: 8px 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: darken($primary-color, 5%);
+    }
+  }
+
+  .search-filters {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .search-container {
+    position: relative;
+
+    input {
+      width: 240px;
+      height: 36px;
+      padding: 0 36px 0 12px;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+
+    mat-icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+      font-size: 20px;
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.reasons-list-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
+
+  th {
+    font-weight: 600;
+    color: $text-secondary;
+    font-size: 14px;
+    background-color: #F9FAFB;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  td {
+    font-size: 14px;
+    color: $text-primary;
+  }
+
+  .number-column {
+    width: 60px;
+    text-align: center;
+  }
+
+  .name-column {
+    text-align: left;
+  }
+
+  .date-column {
+    width: 180px;
+    text-align: center;
+  }
+
+  .actions-column {
+    width: 180px;
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    .action-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      mat-icon {
+        font-size: 20px;
+        height: 18px;
+        width: 20px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .view-button {
+      background-color: #5e9afc;
+    }
+
+    .edit-button {
+      background-color: #f9be57;
+    }
+
+    .delete-button {
+      background-color: #f66666;
+    }
+  }
+
+  .even-row {
+    background-color: #F9FAFB;
+  }
+
+  .loading-cell, .empty-cell {
+    text-align: center;
+    padding: 40px 0;
+
+    mat-spinner {
+      margin: 0 auto 16px;
+    }
+  }
+}
+
+// Confirmation dialog
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+
+  h2 {
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  p {
+    margin-bottom: 24px;
+    color: #4B5563;
+    font-size: 14px;
+  }
+
+  .confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .cancel-button {
+      background-color: #f3f4f6;
+      color: #4b5563;
+
+      &:hover {
+        background-color: #e5e7eb;
+      }
+    }
+
+    .delete-button {
+      background-color: #f66666;
+      color: white;
+
+      &:hover {
+        background-color: darken(#f66666, 5%);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .search-filters {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 12px;
+    }
+
+    .search-container {
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .add-button {
+      width: 100%;
+    }
+  }
+
+  .reasons-list-table {
+    min-width: 600px;
+  }
+
+  .confirm-dialog {
+    max-width: 90%;
+    padding: 16px;
+
+    .confirm-actions {
+      flex-direction: column-reverse;
+
+      button {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}

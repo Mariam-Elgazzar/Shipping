@@ -1,6 +1,7 @@
+// This file contains the EditOrderModalComponent which is responsible for displaying and editing order details in a modal dialog.
 import { Component, EventEmitter, Input, Output,  OnChanges,  SimpleChanges } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule } from "@angular/forms"
+import { FormArray,  FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
 
 interface OrderFormData {
   id: string
@@ -15,16 +16,22 @@ interface OrderFormData {
   shippingType: string
   payWay: string
   orderCost: string
+  products: Array<{
+    name: string
+    quantity: number
+    weight: string
+  }>
+  notes?: string
 }
 
 @Component({
   selector: "app-edit-order-modal",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: "./edit-order-modal.component.html",
- styleUrls: [
-    "./edit-order-modal.component.scss",]
+  styleUrls: ["./edit-order-modal.component.scss"],
 })
+
 export class EditOrderModalComponent implements OnChanges {
   @Input() isVisible = false
   @Input() orderId: string | null = null
@@ -32,20 +39,7 @@ export class EditOrderModalComponent implements OnChanges {
   @Output() close = new EventEmitter<void>()
   @Output() save = new EventEmitter<OrderFormData>()
 
-  formData: OrderFormData = {
-    id: "",
-    orderType: "",
-    merchantName: "",
-    customerName: "",
-    customerPhone: "",
-    government: "",
-    city: "",
-    customerEmail: "",
-    branch: "",
-    shippingType: "",
-    payWay: "",
-    orderCost: "",
-  }
+  orderForm: FormGroup
 
   // Mock data for dropdowns
   merchants = [
@@ -79,7 +73,43 @@ export class EditOrderModalComponent implements OnChanges {
   shippingTypes = ["Standard", "Express", "Same Day", "International"]
   paymentMethods = ["Cash on Delivery", "Credit Card", "Debit Card", "Bank Transfer", "Digital Wallet"]
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {
+    this.orderForm = this.createOrderForm()
+  }
+
+  get productsArray(): FormArray {
+    return this.orderForm.get("products") as FormArray
+  }
+
+  createOrderForm(): FormGroup {
+    return this.fb.group({
+      id: [""],
+      orderType: ["", Validators.required],
+      merchantName: ["", Validators.required],
+      customerName: ["", Validators.required],
+      customerPhone: [
+        "",
+        [Validators.required, Validators.pattern(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/)],
+      ],
+      government: ["", Validators.required],
+      city: ["", Validators.required],
+      customerEmail: ["", Validators.email],
+      branch: ["", Validators.required],
+      shippingType: ["", Validators.required],
+      payWay: ["", Validators.required],
+      orderCost: ["", [Validators.required, Validators.pattern(/^\$?\d+(\.\d{1,2})?$/)]],
+      products: this.fb.array([this.createProductFormGroup()]),
+      notes: [""],
+    })
+  }
+
+  createProductFormGroup(): FormGroup {
+    return this.fb.group({
+      name: ["", Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      weight: ["", Validators.required],
+    })
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     // When orderData changes, update the form
@@ -89,7 +119,16 @@ export class EditOrderModalComponent implements OnChanges {
   }
 
   populateForm(order: any): void {
-    this.formData = {
+    // Reset the form and create a new one
+    this.orderForm = this.createOrderForm()
+
+    // Update cities based on selected government
+    if (order.government) {
+      this.cities = this.citiesByGovernment[order.government] || []
+    }
+
+    // Set basic order details
+    this.orderForm.patchValue({
       id: order.id || "",
       orderType: order.category || "",
       merchantName: order.merchant || "",
@@ -102,11 +141,26 @@ export class EditOrderModalComponent implements OnChanges {
       shippingType: order.shippingType || "",
       payWay: order.payWay || "",
       orderCost: order.orderCost || "",
-    }
+      notes: order.notes || "",
+    })
 
-    // Update cities based on selected government
-    if (this.formData.government) {
-      this.cities = this.citiesByGovernment[this.formData.government] || []
+    // Handle products
+    if (order.products && order.products.length > 0) {
+      // Clear the default product
+      while (this.productsArray.length) {
+        this.productsArray.removeAt(0)
+      }
+
+      // Add each product from the order
+      order.products.forEach((product: any) => {
+        this.productsArray.push(
+          this.fb.group({
+            name: [product.name, Validators.required],
+            quantity: [product.quantity, [Validators.required, Validators.min(1)]],
+            weight: [product.weight, Validators.required],
+          }),
+        )
+      })
     }
   }
 
@@ -121,33 +175,50 @@ export class EditOrderModalComponent implements OnChanges {
   }
 
   onGovernmentChange(): void {
-    if (this.formData.government) {
-      this.cities = this.citiesByGovernment[this.formData.government] || []
-      if (!this.cities.includes(this.formData.city)) {
-        this.formData.city = "" // Reset city when government changes and current city is not in the new list
+    const governmentValue = this.orderForm.get("government")?.value
+    if (governmentValue) {
+      this.cities = this.citiesByGovernment[governmentValue] || []
+
+      // Reset city if it's not in the new list
+      const cityControl = this.orderForm.get("city")
+      if (cityControl && !this.cities.includes(cityControl.value)) {
+        cityControl.setValue("")
       }
     } else {
       this.cities = []
     }
   }
 
-  onSubmit(): void {
-    // Validate form
-    if (this.validateForm()) {
-      this.save.emit({ ...this.formData })
-      this.onClose()
+  addProduct(): void {
+    this.productsArray.push(this.createProductFormGroup())
+  }
+
+  removeProduct(index: number): void {
+    if (this.productsArray.length > 1) {
+      this.productsArray.removeAt(index)
     }
   }
 
-  validateForm(): boolean {
-    // Add validation logic here
-    // For now, just check if required fields are filled
-    return (
-      !!this.formData.orderType &&
-      !!this.formData.merchantName &&
-      !!this.formData.customerName &&
-      !!this.formData.government &&
-      !!this.formData.city
-    )
+  onSubmit(): void {
+    if (this.orderForm.invalid) {
+      // Mark all fields as touched to show validation errors
+      this.markFormGroupTouched(this.orderForm)
+      return
+    }
+
+    const formData = this.orderForm.value
+    this.save.emit(formData)
+  }
+
+  // Helper method to mark all controls in a form group as touched
+  markFormGroupTouched(formGroup: FormGroup | FormArray): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.get(key)
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.markFormGroupTouched(control)
+      } else if (control) {
+        control.markAsTouched()
+      }
+    })
   }
 }
