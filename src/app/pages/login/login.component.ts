@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { ResetPasswordComponent } from '../../components/auth/reset-password/reset-password.component';
 
 @Component({
   selector: 'app-auth-layout',

@@ -1,20 +1,74 @@
+@import '../../../../../styles.scss';
+
 .roles-container {
-  padding: 24px;
+  padding: $spacing-lg;
 }
 
 .header-actions {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    font-size: $font-size-xl;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+}
+
+// Modal overlay for confirm dialog
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: $text-primary;
+  }
+
+  p {
+    margin-bottom: 24px;
+    color: $text-secondary;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+}
+
+.card {
+  @include card;
+
+  &-content {
+    padding: $spacing-lg;
+  }
 }
 
 .filter-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  
-  .filter-field {
+  @include flex(row, flex-start, center);
+  margin-bottom: $spacing-md;
+
+  .search-field {
     flex: 1;
   }
 }
@@ -22,46 +76,212 @@
 .table-container {
   position: relative;
   min-height: 200px;
-  
-  table {
-    width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: $spacing-sm $spacing-md;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
   }
-  
-  .permissions-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    border-radius: 12px;
-    background-color: rgba(0, 176, 80, 0.1);
-    color: var(--primary-color);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 0 8px;
+
+  th {
+    font-weight: 600;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    user-select: none;
+
+    i {
+      margin-left: $spacing-xs;
+      font-size: $font-size-xs;
+    }
   }
-  
-  .loading-shade {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+  td {
+    color: $text-primary;
+    font-size: $font-size-sm;
   }
-  
-  .no-data {
-    text-align: center;
-    padding: 20px;
-    color: var(--text-secondary);
+
+  tbody tr {
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $light-bg;
+    }
   }
 }
 
-.mat-column-actions {
+.permissions-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: $border-radius-full;
+  background-color: rgba($primary-color, 0.1);
+  color: $primary-color;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  padding: 0 $spacing-sm;
+}
+
+.actions-cell {
   width: 60px;
   text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    padding: $spacing-xs;
+    cursor: pointer;
+    color: $text-secondary;
+    border-radius: $border-radius-sm;
+
+    &:hover {
+      background-color: $light-bg;
+      color: $text-primary;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 10;
+    display: none;
+    min-width: 160px;
+    padding: $spacing-sm 0;
+    margin: $spacing-xs 0 0;
+    background-color: white;
+    border-radius: $border-radius-sm;
+    box-shadow: $shadow-lg;
+
+    &.show {
+      display: block;
+    }
+  }
+
+  .dropdown-item {
+    @include flex(row, flex-start, center);
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+    color: $text-primary;
+    cursor: pointer;
+
+    i {
+      margin-right: $spacing-sm;
+      font-size: $font-size-md;
+    }
+
+    &:hover {
+      background-color: $light-bg;
+    }
+
+    &.text-danger {
+      color: $danger;
+    }
+  }
+}
+
+.pagination {
+  @include flex(row, space-between, center);
+  padding-top: $spacing-md;
+
+  .pagination-info {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .pagination-controls {
+    @include flex(row, center, center);
+
+    .btn-icon {
+      background: none;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      padding: $spacing-xs;
+      cursor: pointer;
+      color: $text-secondary;
+
+      &:hover:not(:disabled) {
+        background-color: $light-bg;
+        color: $text-primary;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .pagination-pages {
+      @include flex(row, center, center);
+      margin: 0 $spacing-sm;
+
+      .btn-page {
+        min-width: 32px;
+        height: 32px;
+        @include flex(row, center, center);
+        margin: 0 2px;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        background: none;
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        cursor: pointer;
+
+        &:hover:not(.active) {
+          background-color: $light-bg;
+        }
+
+        &.active {
+          background-color: $primary-color;
+          color: white;
+          border-color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(white, 0.7);
+  @include flex(row, center, center);
+  z-index: 5;
+
+  .spinner {
+    @include spinner(40px, 3px, $primary-color);
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: $spacing-xl 0;
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    button {
+      width: 100%;
+    }
+  }
 }

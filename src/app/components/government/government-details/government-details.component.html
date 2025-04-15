@@ -1,0 +1,135 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Government Details</h2>
+      <button class="close-btn" (click)="onClose()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-content" *ngIf="GovernmentDetails">
+      <div class="Government-section">
+        <h3>Government Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Government</div>
+            <div class="info-value">{{ GovernmentDetails.GovernmentName }}</div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Charge Cost</div>
+            <div class="info-value">{{ GovernmentDetails.cost }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">pickupCost</div>
+            <div class="info-value">{{ GovernmentDetails.pickupCost }}</div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Status</div>
+            <div class="info-value">
+              <span
+                class="status-badge"
+                [ngClass]="GovernmentDetails.status.toLowerCase()"
+              >
+                {{ GovernmentDetails.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="Government-section">
+        <h3>Driver Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Driver Name</div>
+            <div class="info-value">{{ GovernmentDetails.driverName }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone Number</div>
+            <div class="info-value">
+              {{ GovernmentDetails.driverPhone || "N/A" }}
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">License Number</div>
+            <div class="info-value">
+              {{ GovernmentDetails.licenseNumber || "N/A" }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="Government-section">
+        <h3>Delivery Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Last Location</div>
+            <div class="info-value">{{ GovernmentDetails.lastLocation }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Delivery Schedule</div>
+            <div class="info-value">
+              {{ GovernmentDetails.deliverySchedule }}
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Delivery Status</div>
+            <div class="info-value">
+              <span
+                class="status-badge"
+                [ngClass]="GovernmentDetails.deliveryStatus.toLowerCase()"
+              >
+                {{ GovernmentDetails.deliveryStatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="Government-section"
+        *ngIf="GovernmentDetails.deliveryHistory?.length"
+      >
+        <h3>Delivery History</h3>
+        <div class="history-timeline">
+          <div
+            class="timeline-item"
+            *ngFor="let history of GovernmentDetails.deliveryHistory"
+          >
+            <div
+              class="timeline-dot"
+              [ngClass]="history.status.toLowerCase()"
+            ></div>
+            <div class="timeline-content">
+              <div class="timeline-date">{{ history.date }}</div>
+              <div class="timeline-title">{{ history.title }}</div>
+              <div class="timeline-description">
+                {{ history.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="secondary-btn" (click)="onClose()">Close</button>
+      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
+    </div>
+  </div>
+</div>
