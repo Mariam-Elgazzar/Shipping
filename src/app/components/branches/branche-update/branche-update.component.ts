@@ -88,7 +88,7 @@ export class BranchesUpdateComponent implements OnInit {
     this.branchesService.updateBranch(this.branchId, branch).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/branches']);
+        this.router.navigate(['/branch']);
       },
       error: (err) => {
         console.error('Error updating branch', err);
@@ -98,6 +98,6 @@ export class BranchesUpdateComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/branches']);
+    this.router.navigate(['/branch']);
   }
 }

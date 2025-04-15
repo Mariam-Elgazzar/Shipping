@@ -7,8 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { PricingService } from '../../../services/pricing.service';
+import { PricingService} from '../../../services/pricing.service';
 import { Pricing } from '../../../models/pricing.model';
 
 @Component({
@@ -25,7 +24,6 @@ import { Pricing } from '../../../models/pricing.model';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatInputModule,
-    MatPaginatorModule,
   ],
 })
 export class PricingListComponent implements OnInit {
@@ -33,11 +31,8 @@ export class PricingListComponent implements OnInit {
   filteredPricings: Pricing[] = [];
   searchQuery: string = '';
   loading: boolean = false;
-  pageIndex: number = 0;
-  pageSize: number = 10;
-  totalCount: number = 0;
 
-  constructor(private pricingService: PricingService, public router: Router) {}
+  constructor(private pricingService: PricingService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadPricings();
@@ -45,13 +40,10 @@ export class PricingListComponent implements OnInit {
 
   loadPricings(): void {
     this.loading = true;
-    this.pricingService.getAllPricings(this.pageIndex, this.pageSize).subscribe({
-      next: (response) => {
-        this.pricings = response.data;
+    this.pricingService.getAllPricings().subscribe({
+      next: (pricings) => {
+        this.pricings = pricings.filter((p) => !p.isDeleted);
         this.filteredPricings = [...this.pricings];
-        this.pageIndex = response.pageIndex;
-        this.pageSize = response.pageSize;
-        this.totalCount = response.totalCount;
         this.loading = false;
       },
       error: (err) => {
@@ -59,12 +51,6 @@ export class PricingListComponent implements OnInit {
         this.loading = false;
       },
     });
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadPricings();
   }
 
   onSearch(): void {
@@ -75,15 +61,15 @@ export class PricingListComponent implements OnInit {
   }
 
   addPricing(): void {
-    this.router.navigate(['/pricings/add']);
+    this.router.navigate(['price/add']);
   }
 
-  viewPricing(pricing: Pricing): void {
-    this.router.navigate(['/pricings', pricing.id]);
-  }
+  // viewPricing(pricing: Pricing): void {
+  //   this.router.navigate(['/price/edit', pricing.id]);
+  // }
 
   editPricing(pricing: Pricing): void {
-    this.router.navigate(['/pricings', pricing.id, 'edit']);
+    this.router.navigate([`price/edit/${pricing.id}`]);
   }
 
   deletePricing(pricing: Pricing): void {
