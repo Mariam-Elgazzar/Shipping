@@ -25,16 +25,11 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
 import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
-<<<<<<< HEAD
 import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
-=======
-// import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
->>>>>>> origin/main
 import { CityListComponent } from './components/city/city-list/city-list.component';
 import { CityDetailsComponent } from './components/city/city-details/city-details.component';
 import { GovernmentListComponent } from './components/government/government-list/government-list.component';
 import { GovernmentDetailsComponent } from './components/government/government-details/government-details.component';
-<<<<<<< HEAD
 import { BranchesListComponent } from './components/branches/branches-list/branches-list.component';
 import { CityUpdateComponent } from './components/city/city-update/city-update.component';
 import { CityAddComponent } from './components/city/city-add/city-add.component';
@@ -43,14 +38,15 @@ import { EmployeeAddComponent } from './components/Employee/employee-add/employe
 import { EmployeeUpdateComponent } from './components/Employee/employee-update/employee-update.component';
 import { BrancheAddComponent } from './components/branches/branche-add/branche-add.component';
 import { BranchesUpdateComponent } from './components/branches/branche-update/branche-update.component';
-
-// path: 'branches/:id/edit'
-=======
-import { BranchsListComponent } from './components/branches/branches-list/branches-list.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
->>>>>>> origin/main
+import { PricingAddComponent } from './components/price/pricing-create/pricing-create.component';
+import { PricingListComponent } from './components/price/pricing-list/pricing-list.component';
+import { PricingDetailsComponent } from './components/price/pricing-details/pricing-details.component';
+import { PricingUpdateComponent } from './components/price/pricing-update/pricing-update.component';
+
+// path: 'branches/:id/edit'
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -75,13 +71,8 @@ export const routes: Routes = [
   { path: 'merchants/create', component: MerchantFormComponent },
   { path: 'merchants/edit/:id', component: MerchantFormComponent },
   {
-<<<<<<< HEAD
     path: 'merchant',
-    component: MerchantComponent,
-=======
-    path: 'merchants',
-    component: MerchantListComponent /* Your Merchant List Component */,
->>>>>>> origin/main
+    component: MerchantFormComponent,
   },
   { path: '', redirectTo: '/merchants', pathMatch: 'full' },
 
@@ -95,19 +86,8 @@ export const routes: Routes = [
   },
 
   {
-<<<<<<< HEAD
     path: 'merchant/Update',
     component: MerchantUpdateComponent,
-=======
-    path: 'deliverys',
-    component: OrderDashboardComponent,
-  },
-
-  { path: 'merchantUpdate', component: MerchantDetailsComponent },
-  {
-    path: 'merchantAdd',
-    component: MerchantDetailsComponent,
->>>>>>> origin/main
   },
   // {
   //   path: 'City/add',
@@ -169,13 +149,10 @@ export const routes: Routes = [
     path: 'Employee/details',
     component: EmployeeDetailsComponent,
   },
-<<<<<<< HEAD
   {
     path: 'Employee/:id/update',
     component: EmployeeUpdateComponent,
   },
-=======
->>>>>>> origin/main
 
   {
     path: 'deliverys',
@@ -194,6 +171,22 @@ export const routes: Routes = [
     component: DeliveryUpdateComponent,
   },
 
+  {
+    path:'price/add',
+    component:PricingAddComponent
+  },
+  {
+    path:'price/list',
+    component:PricingListComponent
+  },
+  {
+    path:'price/details',
+    component:PricingDetailsComponent
+  },
+  {
+    path:'price/update/:id',
+    component:PricingUpdateComponent
+  },
   {
     path: 'shipments',
     component: ShipmentsComponent,
