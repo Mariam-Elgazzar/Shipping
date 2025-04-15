@@ -6,7 +6,7 @@ import { ResetPasswordComponent } from '../../components/auth/reset-password/res
   selector: 'app-auth-layout',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [RouterOutlet,ResetPasswordComponent],
+  imports: [RouterOutlet],
 })
 export class LoginComponent {
   constructor(private router: Router) {}

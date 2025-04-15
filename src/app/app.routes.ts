@@ -17,6 +17,7 @@ import { ResetPasswordComponent } from './components/auth/reset-password/reset-p
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
 import { MerchantComponent } from './components/merchant/merchant.component';
 import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
+import { OrderReportComponent } from './components/reports/order-report.component';
 // import { DeliveryComponent } from './components/delivery/delivery.component';
 
 export const routes: Routes = [
@@ -44,7 +45,7 @@ export const routes: Routes = [
     path: 'deliverys',
      component:OrderDashboardComponent
   },
-
+  { path: "reports/orders", component: OrderReportComponent },
 
   {
     path: 'shipments',
