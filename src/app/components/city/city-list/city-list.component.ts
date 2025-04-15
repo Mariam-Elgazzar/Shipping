@@ -16,7 +16,6 @@ import { City, CityService } from '../../../services/City.service';
     CommonModule,
     FormsModule,
     RouterLink,
-    RouterLinkActive,
     CityDetailsComponent,
   ],
   templateUrl: './City-list.component.html',

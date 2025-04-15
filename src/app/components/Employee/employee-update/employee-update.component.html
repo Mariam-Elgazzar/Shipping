@@ -1,0 +1,90 @@
+<div class="employee-update-container">
+    <div class="header">
+      <h2>
+        <i class="icon-edit"></i>
+        Update Employee
+      </h2>
+      <button class="btn btn-back" (click)="router.navigate(['/employees'])">
+        <i class="icon-arrow-left"></i> Back to List
+      </button>
+    </div>
+  
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading; else loading">
+      <div class="form-grid">
+        <!-- Employee Information -->
+        <div class="form-group">
+          <label for="name">Name*</label>
+          <input type="text" id="name" formControlName="name" class="form-control" required
+            [class.is-invalid]="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched">
+          <div class="invalid-feedback" *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched">
+            <span *ngIf="employeeForm.get('name')?.errors?.['required']">Name is required</span>
+            <span *ngIf="employeeForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="email">Email*</label>
+          <input type="email" id="email" formControlName="email" class="form-control" required
+            [class.is-invalid]="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+          <div class="invalid-feedback" *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+            <span *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="employeeForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="phone">Phone*</label>
+          <input type="tel" id="phone" formControlName="phone" class="form-control" required
+            [class.is-invalid]="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched">
+          <div class="invalid-feedback" *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched">
+            <span *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone number is required</span>
+            <span *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number (10-15 digits)</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="branchName">Branch Name*</label>
+          <input type="text" id="branchName" formControlName="branchName" class="form-control" required
+            [class.is-invalid]="employeeForm.get('branchName')?.invalid && employeeForm.get('branchName')?.touched">
+          <div class="invalid-feedback" *ngIf="employeeForm.get('branchName')?.invalid && employeeForm.get('branchName')?.touched">
+            Branch Name is required
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="permission">Permission*</label>
+          <input type="text" id="permission" formControlName="permission" class="form-control" required
+            [class.is-invalid]="employeeForm.get('permission')?.invalid && employeeForm.get('permission')?.touched">
+          <div class="invalid-feedback" *ngIf="employeeForm.get('permission')?.invalid && employeeForm.get('permission')?.touched">
+            Permission is required
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="status">Status*</label>
+          <select id="status" formControlName="status" class="form-control" required
+            [class.is-invalid]="employeeForm.get('status')?.invalid && employeeForm.get('status')?.touched">
+            <option value="">Select Status</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="employeeForm.get('status')?.invalid && employeeForm.get('status')?.touched">
+            Status is required
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-submit" [disabled]="employeeForm.invalid || isLoading">
+          {{ isLoading ? 'Updating...' : 'Update Employee' }}
+        </button>
+      </div>
+    </form>
+  
+    <ng-template #loading>
+      <div class="loading-spinner">
+        <i class="icon-spinner"></i> Loading...
+      </div>
+    </ng-template>
+  </div>

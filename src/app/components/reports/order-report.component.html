@@ -1,0 +1,126 @@
+<div class="order-report-container">
+  <div class="report-header">
+    <h2>Order Reports by Status</h2>
+
+    <div class="filters-container">
+      <div class="status-filter">
+        <label>Status</label>
+        <select [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+
+      <form [formGroup]="dateRangeForm" class="date-range-filter">
+        <div class="date-from">
+          <label>From</label>
+          <input
+            type="date"
+            formControlName="fromDate"
+            (change)="onDateRangeChange()"
+          >
+        </div>
+
+        <div class="date-to">
+          <label>To</label>
+          <input
+            type="date"
+            formControlName="toDate"
+            (change)="onDateRangeChange()"
+          >
+        </div>
+
+        <button type="button" class="search-btn" (click)="search()">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-controls">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search..."
+      >
+    </div>
+
+    <div class="entries-selector">
+      <span>Show</span>
+      <select [(ngModel)]="entriesPerPage" (change)="onEntriesChange()">
+        <option *ngFor="let option of entriesOptions" [value]="option">{{ option }}</option>
+      </select>
+      <span>entries</span>
+    </div>
+  </div>
+
+  <div class="responsive-table">
+    <table class="order-report-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Merchant</th>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Governorate</th>
+          <th>City</th>
+          <th>Order Cost</th>
+          <th>Received</th>
+          <th>Shipping</th>
+          <th>Paid Shipping</th>
+          <th>Company Value</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="paginatedOrders.length === 0">
+          <td colspan="14" class="no-data">No data available in table</td>
+        </tr>
+        <tr *ngFor="let order of paginatedOrders; let i = index">
+          <td data-label="#">{{ (currentPage - 1) * entriesPerPage + i + 1 }}</td>
+          <td data-label="ID">{{ order.id }}</td>
+          <td data-label="Status">
+            <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+              {{ order.status }}
+            </span>
+          </td>
+          <td data-label="Merchant">{{ order.merchant }}</td>
+          <td data-label="Customer">{{ order.customer }}</td>
+          <td data-label="Phone">{{ order.phone }}</td>
+          <td data-label="Governorate">{{ order.governorate }}</td>
+          <td data-label="City">{{ order.city }}</td>
+          <td data-label="Order Cost">{{ order.orderCost | currency }}</td>
+          <td data-label="Received">{{ order.receivedAmount | currency }}</td>
+          <td data-label="Shipping">{{ order.shippingCost | currency }}</td>
+          <td data-label="Paid Shipping">{{ order.paidShippingValue | currency }}</td>
+          <td data-label="Company Value">{{ order.companyValue | currency }}</td>
+          <td data-label="Date">{{ order.date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <div class="pagination-controls">
+      <button
+        class="prev-btn"
+        [disabled]="currentPage === 1"
+        (click)="prevPage()"
+      >
+        <span>←</span>
+      </button>
+      <button
+        class="next-btn"
+        [disabled]="currentPage === totalPages || totalPages === 0"
+        (click)="nextPage()"
+      >
+        <span>→</span>
+      </button>
+    </div>
+
+    <div class="showing-info">
+      {{ showingInfo }}
+    </div>
+  </div>
+</div>

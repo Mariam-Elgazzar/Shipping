@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of } from 'rxjs';
-// import { Employee } from '../models/Employee.model';
-// import { environment } from '../../environments/environment';
+import { delay, Observable, of } from 'rxjs'; 
 interface Employee {
   id: string;
   name: string;
