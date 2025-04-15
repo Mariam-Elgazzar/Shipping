@@ -1,0 +1,352 @@
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal-container {
+      background-color: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      overflow: hidden; /* نخفي أي overflow هنا */
+    }
+    .modal-scroll-body {
+      padding: 24px;
+      overflow-y: auto;
+      max-height: calc(90vh - 160px); /* أقل من المودال نفسه عشان يفضل فيه مساحة للهيدر والفوتر */
+      flex-grow: 1;
+    }
+    
+    .modal-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 0 12px;
+      }
+    }
+    
+    .header-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #f1f5f9;
+    
+      svg {
+        color: #1e293b;
+      }
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #64748b;
+      margin-left: auto;
+    
+      &:hover {
+        color: #1e293b;
+      }
+    }
+    
+    .modal-description {
+      padding: 0 24px 16px;
+      color: #64748b;
+      font-size: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .modal-content {
+      padding: 24px;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1e293b;
+        margin-bottom: 6px;
+      }
+    
+      input, select, textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #1e293b;
+    
+        &:focus {
+          outline: none;
+          border-color: #064e3b;
+        }
+    
+        &::placeholder {
+          color: #94a3b8;
+        }
+      }
+    
+      textarea {
+        resize: vertical;
+      }
+    }
+    
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .select-wrapper {
+      position: relative;
+    
+      svg {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #64748b;
+      }
+    
+      select {
+        appearance: none;
+        padding-right: 30px;
+      }
+    }
+    
+    .required {
+      color: #e11d48;
+    }
+    
+    .error-message {
+      color: #e11d48;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    
+    .product-table {
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .product-table-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      background-color: #f8fafc;
+      padding: 12px;
+      font-weight: 600;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .product-row {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 0.5fr;
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      align-items: center;
+    
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    .product-name, .product-quantity, .product-weight {
+      padding-right: 8px;
+    }
+    
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #e11d48;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    
+      &:hover {
+        background-color: #fee2e2;
+        border-radius: 4px;
+      }
+    }
+    
+    .add-product-row {
+      padding: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .add-product-btn {
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    
+      &:hover {
+        background-color: #0284c7;
+      }
+    }
+    
+    .order-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px;
+      border-top: 1px solid #f0f0f0;
+    }
+    
+    .cancel-btn {
+      background-color: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      color: #1e293b;
+      cursor: pointer;
+    
+      &:hover {
+        background-color: #f8fafc;
+      }
+    }
+    
+    .create-btn {
+      background-color: #064e3b;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+    
+      &:hover {
+        background-color: #065f46;
+      }
+    
+      &:disabled {
+        background-color: #94a3b8;
+        cursor: not-allowed;
+      }
+    }
+    
+    /* Toggle Switch Styles */
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .toggle-switch-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-top: 5px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e2e8f0;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: #064e3b;
+    }
+    
+    input:focus + .toggle-slider {
+      box-shadow: 0 0 1px #064e3b;
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Add styling for the surcharge note */
+    .surcharge-note {
+      margin-left: 10px;
+      font-size: 12px;
+      color: #064e3b;
+      font-weight: 500;
+    }
+    

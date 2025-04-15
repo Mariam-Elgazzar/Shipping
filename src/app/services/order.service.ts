@@ -1,96 +1,61 @@
+
 import { Injectable } from "@angular/core"
-import   { HttpClient } from "@angular/common/http"
-import {   Observable, of } from "rxjs"
-import   { Order } from "../models/order.model"
+import { Observable, of, delay } from "rxjs"
+
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class OrderService {
-  // In a real app, this would be an API URL
-  private apiUrl = "/api/orders"
 
-  // Mock data for demo purposes
-  private mockOrders: Order[] = [
-    {
-      id: "1",
-      orderId: "ORD-2023-001",
-      customerName: "John Smith",
-      customerEmail: "john@example.com",
-      items: [
-        { id: "1", name: "Product A", quantity: 2, price: 19.99 },
-        { id: "2", name: "Product B", quantity: 1, price: 29.99 },
-      ],
-      total: 69.97,
-      date: new Date("2023-04-14"),
-      status: "Processing",
-      shippingAddress: "123 Main St, New York, NY 10001",
-      billingAddress: "123 Main St, New York, NY 10001",
-      paymentMethod: "Credit Card",
-    },
-    {
-      id: "2",
-      orderId: "ORD-2023-002",
-      customerName: "Jane Doe",
-      customerEmail: "jane@example.com",
-      items: [{ id: "3", name: "Product C", quantity: 3, price: 15.99 }],
-      total: 47.97,
-      date: new Date("2023-04-15"),
-      status: "Pending",
-      shippingAddress: "456 Oak Ave, Chicago, IL 60601",
-      billingAddress: "456 Oak Ave, Chicago, IL 60601",
-      paymentMethod: "PayPal",
-    },
-  ]
+  constructor() {}
 
-  constructor(private http: HttpClient) {}
-
-  getOrders(): Observable<Order[]> {
-    // In a real app, this would be an HTTP request
-    // return this.http.get<Order[]>(this.apiUrl);
-    return of(this.mockOrders)
+  getOrders(): Observable<any[]> {
+    return of([
+      {
+        id: "MHGJ3-0",
+        category: "Electronic",                  
+        origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+        destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+        arrivalDate: "5:00 pm",
+        weight: "10 kg",
+        lastLocation: "Warehouse A",
+      },
+      {
+        id: "MHGJ3-2",
+        category: "Fashion",
+        origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+        destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+        arrivalDate: "5:00 pm",
+        weight: "10 kg",
+        lastLocation: "Warehouse A",
+      },
+      {
+        id: "MHGJ3-0",
+        category: "Food",
+        origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+        destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+        arrivalDate: "5:00 pm",
+        weight: "10 kg",
+        lastLocation: "Warehouse A",
+      },
+    ]).pipe(delay(500))
   }
 
-  getPendingOrders(): Observable<Order[]> {
-    // In a real app, this would filter by status
-    return of(this.mockOrders.filter((o) => o.status === "Pending"))
+  getOrderDetails(orderId: string): Observable<any> {
+    return of({
+      id: orderId,
+      category: "Electronic",
+      origin: "2775 Ash Dr, San Jose, South Dakota 83475",
+      destination: "1901 Thornridge Cir, Shiloh, New Jersey 81063",
+      arrivalDate: "5:00 pm",
+      weight: "10 kg",
+      lastLocation: "Warehouse A",
+    }).pipe(delay(300))
   }
 
-  getOrder(id: string): Observable<Order> {
-    // In a real app, this would be an HTTP request
-    // return this.http.get<Order>(`${this.apiUrl}/${id}`);
-    const order = this.mockOrders.find((o) => o.id === id)
-    return of(order as Order)
-  }
+  deleteOrder(orderId: string): Observable<boolean> {
+    return of(true).pipe(delay(300))
 
-  createOrder(order: Order): Observable<Order> {
-    // In a real app, this would be an HTTP request
-    // return this.http.post<Order>(this.apiUrl, order);
-    const newOrder = {
-      ...order,
-      id: (this.mockOrders.length + 1).toString(),
-    }
-    this.mockOrders.push(newOrder)
-    return of(newOrder)
-  }
-
-  updateOrder(order: Order): Observable<Order> {
-    // In a real app, this would be an HTTP request
-    // return this.http.put<Order>(`${this.apiUrl}/${order.id}`, order);
-    const index = this.mockOrders.findIndex((o) => o.id === order.id)
-    if (index !== -1) {
-      this.mockOrders[index] = order
-    }
-    return of(order)
-  }
-
-  deleteOrder(id: string): Observable<void> {
-    // In a real app, this would be an HTTP request
-    // return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    const index = this.mockOrders.findIndex((o) => o.id === id)
-    if (index !== -1) {
-      this.mockOrders.splice(index, 1)
-    }
-    return of(undefined)
   }
 }

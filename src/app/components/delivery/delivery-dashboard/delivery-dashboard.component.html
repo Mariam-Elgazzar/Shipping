@@ -1,0 +1,24 @@
+<div class="delivery-dashboard">
+  <div class="header">
+    <h1>Orders</h1>
+    <div class="tabs">
+      <button
+        [class.active]="activeTab === 'receive'"
+        (click)="setActiveTab('receive')">
+        Receive
+      </button>
+      <button
+        [class.active]="activeTab === 'deliver'"
+        (click)="setActiveTab('deliver')">
+        Deliver
+      </button>
+      <button
+        [class.active]="activeTab === 'finished'"
+        (click)="setActiveTab('finished')">
+        Finished
+      </button>
+    </div>
+  </div>
+
+  <app-delivery-order-table [statusFilter]="activeTab"></app-delivery-order-table>
+</div>

@@ -37,6 +37,9 @@ $font-size-md: 16px;
 $font-size-lg: 18px;
 $font-size-xl: 24px;
 $font-size-2xl: 30px;
+  $font-optical-sizing: auto;
+  $font-weight: 400;
+  $font-style: normal;
 
 // Mixins
 @mixin flex($direction: row, $justify: flex-start, $align: stretch, $gap: 0) {
@@ -82,10 +85,9 @@ $font-size-2xl: 30px;
 }
 
 @mixin input-base {
-  width: 100%;
+  width: 95%;
   padding: 10px 12px;
   border: 1px solid $border-color;
-  border-radius: $border-radius-sm;
   font-size: $font-size-sm;
   line-height: 1.5;
   transition: border-color 0.2s, box-shadow 0.2s;

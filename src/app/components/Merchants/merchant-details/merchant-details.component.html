@@ -1,0 +1,115 @@
+<div
+  class="modal-overlay"
+  [class.visible]="isVisible"
+  (click)="onOverlayClick($event)"
+>
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Merchant Details
+      </h2>
+      <button
+        class="close-btn"
+        (click)="onClose()"
+        aria-label="Close merchant details"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      } @else if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+      } @else if (merchant()) {
+      <div class="merchant-section">
+        <h3>Merchant Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Merchant Name</div>
+            <div class="info-value">{{ merchant()!.name }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ merchant()!.email }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-value">{{ merchant()!.phoneNumber }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Store Name</div>
+            <div class="info-value">{{ merchant()!.storeName }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Rejected Order Percentage</div>
+            <div class="info-value">
+              {{ merchant()!.rejectedOrderPercentage }}%
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Special Pickup Fee</div>
+            <div class="info-value">${{ merchant()!.specialPickUp }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Cities</div>
+            <div class="info-value">
+              @if (merchant()!.merchantCities.length > 0) { @for (cityId of
+              merchant()!.merchantCities; track cityId) {
+              {{ getCityName(cityId) }}
+              @if (!$last) { , } } } @else { None }
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Special Prices</div>
+            <div class="info-value">
+              @if (merchant()!.specialPrices.length > 0) { @for (price of
+              merchant()!.specialPrices; track $index) {
+              <div class="special-price-item">
+                {{ getCityName(price.cityId) }}: ${{ price.specialPrice }}
+              </div>
+              } } @else { None }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      }
+    </div>
+
+    <div class="modal-footer">
+      <button class="secondary-btn" (click)="onClose()">Close</button>
+      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
+    </div>
+  </div>
+</div>
