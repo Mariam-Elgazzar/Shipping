@@ -1,0 +1,86 @@
+<div class="stats-container">
+  <div class="stat-card">
+    <div class="stat-icon total">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <h3>Total Shipment</h3>
+      <div class="stat-value">{{ totalShipments.value }}</div>
+      <div class="stat-change" [ngClass]="{'positive': totalShipments.percentChange > 0, 'negative': totalShipments.percentChange < 0}">
+        {{ totalShipments.percentChange > 0 ? '+' : '' }}{{ totalShipments.percentChange }}% vs last month
+      </div>
+    </div>
+    <div class="stat-chart">
+      <svg viewBox="0 0 100 30" class="chart">
+        <polyline points="0,20 20,15 40,10 60,15 80,5 100,10" fill="none" stroke="#00a76f" stroke-width="2"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon complete">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <h3>Complete</h3>
+      <div class="stat-value">{{ completedShipments.value }}</div>
+      <div class="stat-change" [ngClass]="{'positive': completedShipments.percentChange > 0, 'negative': completedShipments.percentChange < 0}">
+        {{ completedShipments.percentChange > 0 ? '+' : '' }}{{ completedShipments.percentChange }}% vs last month
+      </div>
+    </div>
+    <div class="stat-chart">
+      <svg viewBox="0 0 100 30" class="chart">
+        <polyline points="0,15 20,10 40,5 60,10 80,5 100,10" fill="none" stroke="#00a76f" stroke-width="2"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon pending">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <h3>Pending</h3>
+      <div class="stat-value">{{ pendingShipments.value }}</div>
+      <div class="stat-change" [ngClass]="{'positive': pendingShipments.percentChange > 0, 'negative': pendingShipments.percentChange < 0}">
+        {{ pendingShipments.percentChange > 0 ? '+' : '' }}{{ pendingShipments.percentChange }}% vs last month
+      </div>
+    </div>
+    <div class="stat-chart">
+      <svg viewBox="0 0 100 30" class="chart">
+        <polyline points="0,15 20,10 40,15 60,10 80,15 100,10" fill="none" stroke="#00a76f" stroke-width="2"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon refund">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <h3>Refund</h3>
+      <div class="stat-value">{{ refundedShipments.value }}</div>
+      <div class="stat-change" [ngClass]="{'positive': refundedShipments.percentChange > 0, 'negative': refundedShipments.percentChange < 0}">
+        {{ refundedShipments.percentChange > 0 ? '+' : '' }}{{ refundedShipments.percentChange }}% vs last month
+      </div>
+    </div>
+    <div class="stat-chart">
+      <svg viewBox="0 0 100 30" class="chart">
+        <polyline points="0,10 20,15 40,20 60,15 80,20 100,25" fill="none" stroke="#ff4d4f" stroke-width="2"></polyline>
+      </svg>
+    </div>
+  </div>
+</div>

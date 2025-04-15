@@ -1,6 +1,7 @@
+
 import { Component, EventEmitter, Input, Output } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule,  FormBuilder, FormGroup, FormArray, Validators } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from "@angular/forms"
 
 interface Product {
   name: string
@@ -23,6 +24,8 @@ interface OrderFormData {
   totalWeight: number
   packageCost: number
   notes: string
+  scheduledDelivery: boolean
+  deliveryDate?: string
 }
 
 @Component({
@@ -54,6 +57,9 @@ export class AddOrderModalComponent {
   shippingTypes = ["Standard", "Express", "Same Day", "International"]
   paymentMethods = ["Cash on Delivery", "Credit Card", "Debit Card", "Bank Transfer", "Digital Wallet"]
 
+  // Add a constant for the delivery surcharge
+  private readonly SCHEDULED_DELIVERY_SURCHARGE = 50 // Amount to increase when toggle is on
+
   constructor(private fb: FormBuilder) {
     this.createForm()
   }
@@ -78,6 +84,36 @@ export class AddOrderModalComponent {
       packageCost: [0, [Validators.required, Validators.min(0.01)]],
       totalWeight: [0],
       notes: [""],
+      scheduledDelivery: [false],
+      deliveryDate: [""],
+    })
+
+    // Add conditional validation for deliveryDate based on scheduledDelivery
+    this.orderForm.get("scheduledDelivery")?.valueChanges.subscribe((value) => {
+      const deliveryDateControl = this.orderForm.get("deliveryDate")
+      const packageCostControl = this.orderForm.get("packageCost")
+
+      if (value) {
+        // When toggle is on, add required validation and increase cost
+        deliveryDateControl?.setValidators([Validators.required])
+
+        // Get current package cost and add surcharge
+        const currentCost = Number.parseFloat(packageCostControl?.value || 0)
+        if (currentCost > 0) {
+          packageCostControl?.setValue((currentCost + this.SCHEDULED_DELIVERY_SURCHARGE).toFixed(2))
+        }
+      } else {
+        // When toggle is off, remove validation and decrease cost
+        deliveryDateControl?.clearValidators()
+
+        // Get current package cost and remove surcharge
+        const currentCost = Number.parseFloat(packageCostControl?.value || 0)
+        if (currentCost >= this.SCHEDULED_DELIVERY_SURCHARGE) {
+          packageCostControl?.setValue((currentCost - this.SCHEDULED_DELIVERY_SURCHARGE).toFixed(2))
+        }
+      }
+
+      deliveryDateControl?.updateValueAndValidity()
     })
   }
 
@@ -176,4 +212,3 @@ export class AddOrderModalComponent {
     this.cities = []
   }
 }
-

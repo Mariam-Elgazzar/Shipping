@@ -1,0 +1,89 @@
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+  }
+
+  &.total {
+    background-color: rgba(0, 167, 111, 0.1);
+    svg { color: #00a76f; }
+  }
+
+  &.complete {
+    background-color: rgba(0, 167, 111, 0.1);
+    svg { color: #00a76f; }
+  }
+
+  &.pending {
+    background-color: rgba(0, 167, 111, 0.1);
+    svg { color: #00a76f; }
+  }
+
+  &.refund {
+    background-color: rgba(255, 77, 79, 0.1);
+    svg { color: #ff4d4f; }
+  }
+}
+
+.stat-content {
+  h3 {
+    font-size: 14px;
+    color: #637381;
+    margin: 0 0 8px 0;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #212b36;
+    margin-bottom: 4px;
+  }
+
+  .stat-change {
+    font-size: 12px;
+
+    &.positive {
+      color: #00a76f;
+    }
+
+    &.negative {
+      color: #ff4d4f;
+    }
+  }
+}
+
+.stat-chart {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 30px;
+  opacity: 0.5;
+}

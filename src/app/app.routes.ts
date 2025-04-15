@@ -40,23 +40,30 @@ import { BrancheAddComponent } from './components/branches/branche-add/branche-a
 import { BranchesUpdateComponent } from './components/branches/branche-update/branche-update.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
+
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PricingAddComponent } from './components/price/pricing-create/pricing-create.component';
 import { PricingListComponent } from './components/price/pricing-list/pricing-list.component';
 import { PricingDetailsComponent } from './components/price/pricing-details/pricing-details.component';
 import { PricingUpdateComponent } from './components/price/pricing-update/pricing-update.component';
 
-// path: 'branches/:id/edit'
+
+import { OrderReportComponent } from './components/reports/order-report.component';
+import { UpdateEmployeeComponent } from './components/Employee/update-employee/update-employee.component';
+
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
+  // {
+  //   path: 'dashboard',
+  //   component: DashboardComponent,
     // canActivate: [AuthGuard],
     // data: { requiredPermission: 'dashboard:view' },
+
   },
   { path: 'city/add', component: CreateCityComponent },
+
+
   { path: 'create-government', component: CreateGovernmentComponent },
   
   { path: 'orders', component: OrderDashboardComponent },
@@ -86,8 +93,17 @@ export const routes: Routes = [
   },
 
   {
-    path: 'merchant/Update',
-    component: MerchantUpdateComponent,
+
+    path: 'deliverys',
+    component: OrderDashboardComponent,
+  },
+  { path: "reports/orders", component: OrderReportComponent },
+
+  { path: 'merchantUpdate', component: MerchantDetailsComponent },
+  {
+    path: 'merchantAdd',
+    component: MerchantDetailsComponent,
+
   },
   // {
   //   path: 'City/add',
@@ -150,9 +166,11 @@ export const routes: Routes = [
     component: EmployeeDetailsComponent,
   },
   {
+
     path: 'Employee/:id/update',
     component: EmployeeUpdateComponent,
   },
+
 
   {
     path: 'deliverys',
@@ -166,6 +184,7 @@ export const routes: Routes = [
     path: 'Delivery/List',
     component: DeliveryListComponent,
   },
+
   {
     path: 'Delivery/:id/Update',
     component: DeliveryUpdateComponent,
