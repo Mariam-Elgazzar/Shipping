@@ -13,7 +13,7 @@ import { LoginFormComponent } from './components/auth/login-form/login-form.comp
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
 
-import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
+// import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
 import { PermissionsMatrixComponent } from './components/admin/permissions/permissions-matrix/permissions-matrix.component';
 import { AddPermissionComponent } from './components/admin/permissions/add-permission/add-permission.component';
@@ -24,7 +24,7 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 // import { EmployeeListComponent } from './components/Employee/employee-list/employee-list.component';
 import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
 import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
-import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
+// import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
 // import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
 import { CityListComponent } from './components/city/city-list/city-list.component';
 import { CityDetailsComponent } from './components/city/city-details/city-details.component';
@@ -34,6 +34,7 @@ import { BranchsListComponent } from './components/branches/branches-list/branch
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DeliveryFormComponent } from './components/Deliveries/add-delivery/delivery.component';
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -61,16 +62,11 @@ export const routes: Routes = [
     path: 'merchants',
     component: MerchantListComponent /* Your Merchant List Component */,
   },
-  { path: '', redirectTo: '/merchants', pathMatch: 'full' },
 
-  {
-    path: 'merchantstable',
-    component: MerchantListComponent,
-  },
-  {
-    path: 'merchantdetails',
-    component: MerchantDetailsComponent,
-  },
+  { path: 'delivery-reps', component: DeliveryListComponent },
+  { path: 'delivery-reps/add', component: DeliveryFormComponent },
+  { path: 'delivery-reps/edit/:id', component: DeliveryFormComponent },
+  { path: '', redirectTo: '/delivery-reps', pathMatch: 'full' },
 
   {
     path: 'deliverys',
@@ -120,20 +116,12 @@ export const routes: Routes = [
   },
 
   {
-    path: 'deliverys',
-    component: DeliveryComponent,
-  },
-  {
     path: 'DeliveryDetailsComponent',
     component: DeliveryDetailsComponent,
   },
   {
     path: 'DeliveryListComponent',
     component: DeliveryListComponent,
-  },
-  {
-    path: 'DeliveryUpdate',
-    component: DeliveryUpdateComponent,
   },
 
   {

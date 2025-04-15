@@ -1,27 +1,37 @@
-import { User } from './user.model';
-
-export enum SaleTypeEnum {
-  Percentage = 'Percentage',
-  FixedAmount = 'FixedAmount',
-  Commission = 'Commission',
+export interface PaginatedDeliveryResponse {
+  pageSize: number;
+  pageIndex: number;
+  totalCount: number;
+  data: DeliveryResponse[];
 }
 
-export interface Delivery {
-  userId: string;
-  name?: string; // Optional field for name
-  email?: string; // Optional field for email
-  password?: string; // Optional field for password
-  branch?: string; // Optional field for branch
-  government?: string; // Optional field for government
-  city?: string; // Optional field for city
-  phone?: string; // Optional field for phone
-  address?: string; // Optional field for address
-  saleType: SaleTypeEnum; // Sale type (Percentage, FixedAmount, Commission)
-  salePresentage: number; // Sale percentage
+export interface DeliveryResponse {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  discountType: number;
+  companyPercentage: number;
+  hiringDate: string;
+  governorates: string[];
+}
 
-  empId: string; // Employee ID associated with delivery
+export interface DeliveryRequest {
+  id?: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  password?: string;
+  discountType: number;
+  companyPercentage: number;
+  governorateIds: number[];
+}
 
-  // Navigation properties (optional)
-  user?: User;
-  employee?: User;
+export interface CreateDeliveryResponse {
+  message: string;
+}
+
+export interface City {
+  id: number;
+  name: string;
 }

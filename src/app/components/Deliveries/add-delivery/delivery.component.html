@@ -11,7 +11,7 @@
       <div class="card-header">
         <h2>
           <i class="icon-info-circle"></i>
-          {{ isEditing ? "Edit Delivery" : "New Delivery" }}
+          {{ isEditing() ? "Edit Delivery" : "New Delivery" }}
         </h2>
         <button *ngIf="isEditing" class="btn-close" (click)="cancel()">
           <i class="icon-close"></i>
@@ -32,9 +32,9 @@
               "
             >
               <option value="">Select User</option>
-              <option *ngFor="let user of users" [value]="user.id">
+              <!-- <option *ngFor="let user of users" [value]="user.id">
                 {{ user.username }}
-              </option>
+              </option> -->
             </select>
             <div
               class="invalid-feedback"
@@ -111,7 +111,7 @@
             <div class="form-group col-md-6">
               <label for="password"
                 >Password
-                {{ isEditing ? "(Leave blank to keep current)" : "" }}</label
+                {{ isEditing() ? "(Leave blank to keep current)" : "" }}</label
               >
               <input
                 type="password"
@@ -208,9 +208,9 @@
                 "
               >
                 <option value="">Select Government</option>
-                <option *ngFor="let gov of governments" [value]="gov">
+                <!-- <option *ngFor="let gov of governments" [value]="gov">
                   {{ gov }}
-                </option>
+                </option> -->
               </select>
               <div
                 class="invalid-feedback"
@@ -236,9 +236,9 @@
                 [disabled]="!deliveryForm.get('government')?.value"
               >
                 <option value="">Select City</option>
-                <option *ngFor="let city of availableCities" [value]="city">
+                <!-- <option *ngFor="let city of availableCities" [value]="city">
                   {{ city }}
-                </option>
+                </option> -->
               </select>
               <div
                 class="invalid-feedback"
@@ -288,9 +288,9 @@
                   deliveryForm.get('saleType')?.touched
                 "
               >
-                <option *ngFor="let type of saleTypes" [value]="type">
+                <!-- <option *ngFor="let type of saleTypes" [value]="type">
                   {{ getSaleTypeLabel(type) }}
-                </option>
+                </option> -->
               </select>
               <div
                 class="invalid-feedback"
@@ -356,9 +356,9 @@
               "
             >
               <option value="">Select Employee</option>
-              <option *ngFor="let employee of employees" [value]="employee.id">
+              <!-- <option *ngFor="let employee of employees" [value]="employee.id">
                 {{ employee.username }}
-              </option>
+              </option> -->
             </select>
             <div
               class="invalid-feedback"
@@ -380,7 +380,7 @@
               class="btn btn-primary"
               [disabled]="deliveryForm.invalid || isLoading"
             >
-              {{ isEditing ? "Update" : "Create" }}
+              {{ isEditing() ? "Update" : "Create" }}
             </button>
           </div>
         </form>
