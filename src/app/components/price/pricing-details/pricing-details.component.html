@@ -1,0 +1,48 @@
+<div class="pricing-details-container">
+  <div class="header">
+    <h2>
+      <mat-icon>info</mat-icon>
+      Pricing Details
+    </h2>
+    <button mat-stroked-button class="btn-back" (click)="backToList()">
+      <mat-icon>arrow_back</mat-icon> Back to List
+    </button>
+  </div>
+
+  <mat-card *ngIf="!isLoading && pricing; else loading" class="pricing-card">
+    <mat-card-content>
+      <div class="detail-row">
+        <span class="label">ID:</span>
+        <span class="value">{{ pricing.id }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Standard Weight (kg):</span>
+        <span class="value">{{ pricing.standardWeight }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Village Price:</span>
+        <span class="value">{{ pricing.villagePrice }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">KG Price:</span>
+        <span class="value">{{ pricing.kGprice }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Deleted:</span>
+        <span class="value">{{ pricing.isDeleted ? 'Yes' : 'No' }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="editPricing()">
+        <mat-icon>edit</mat-icon> Edit Pricing
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Loading...</span>
+    </div>
+  </ng-template>
+</div>

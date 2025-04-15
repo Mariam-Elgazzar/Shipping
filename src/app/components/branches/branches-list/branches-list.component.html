@@ -1,10 +1,10 @@
-<div class="Branchs-list-container">
+<div class="branches-list-container">
   <div class="header-actions">
-    <h1>Branchs</h1>
+    <h1>Branches</h1>
     <!-- <div class="breadcrumb">
       <a routerLink="/dashboard">Dashboard</a>
       <span class="separator">/</span>
-      <span>Branchs</span>
+      <span>Branches</span>
     </div> -->
   </div>
 
@@ -23,8 +23,9 @@
       <div class="search-filters">
         <div class="search-container">
           <input
+            matInput
             type="text"
-            placeholder="Search Branchs"
+            placeholder="Search Branches"
             [(ngModel)]="searchQuery"
             (keyup.enter)="onSearch()"
           />
@@ -34,7 +35,7 @@
     </div>
 
     <div class="table-container">
-      <table class="Branchs-list-table">
+      <table class="branches-list-table">
         <thead>
           <tr>
             <th class="number-column">#</th>
@@ -46,19 +47,19 @@
         <tbody>
           <ng-container *ngIf="!loading">
             <tr
-              *ngFor="let Branch of filteredBranchs; let i = index"
+              *ngFor="let branch of filteredBranchs; let i = index"
               [ngClass]="{ 'even-row': i % 2 === 0 }"
             >
-              <td class="number-column">{{ Branch.id }}</td>
-              <td class="name-column">{{ Branch.name }}</td>
-              <td class="date-column">{{ Branch.dateAdded }}</td>
+              <td class="number-column">{{ branch.id }}</td>
+              <td class="name-column">{{ branch.name }}</td>
+              <td class="date-column">{{ branch.dateAdded }}</td>
               <td class="actions-column">
                 <div class="action-buttons">
                   <button
                     mat-mini-fab
                     color="accent"
                     class="action-button edit-button"
-                    (click)="editBranch(Branch)"
+                    (click)="editBranch(branch)"
                     matTooltip="Edit"
                   >
                     <mat-icon>edit</mat-icon>
@@ -67,7 +68,7 @@
                     mat-mini-fab
                     color="warn"
                     class="action-button delete-button"
-                    (click)="deleteBranch(Branch)"
+                    (click)="deleteBranch(branch)"
                     matTooltip="Delete"
                   >
                     <mat-icon>delete</mat-icon>
@@ -80,7 +81,7 @@
           <tr *ngIf="loading">
             <td colspan="4" class="loading-cell">
               <mat-spinner diameter="40"></mat-spinner>
-              <span>Loading Branchs...</span>
+              <span>Loading Branches...</span>
             </td>
           </tr>
 

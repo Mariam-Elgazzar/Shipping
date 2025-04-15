@@ -1,0 +1,69 @@
+<div class="pricing-add-container">
+    <div class="header">
+      <h2>
+        <mat-icon>add</mat-icon>
+        Add Pricing
+      </h2>
+      <button mat-stroked-button class="btn-back" (click)="router.navigate(['/pricings'])">
+        <mat-icon>arrow_back</mat-icon> Back to List
+      </button>
+    </div>
+  
+    <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading; else loading">
+      <div class="form-grid">
+        <!-- Pricing Information -->
+        <div class="form-group">
+          <label for="standardWeight">Standard Weight (kg)*</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput id="standardWeight" formControlName="standardWeight" type="number" required>
+            <mat-error *ngIf="pricingForm.get('standardWeight')?.hasError('required')">
+              Standard Weight is required
+            </mat-error>
+            <mat-error *ngIf="pricingForm.get('standardWeight')?.hasError('min')">
+              Standard Weight must be non-negative
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-group">
+          <label for="villagePrice">Village Price*</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput id="villagePrice" formControlName="villagePrice" type="number" required>
+            <mat-error *ngIf="pricingForm.get('villagePrice')?.hasError('required')">
+              Village Price is required
+            </mat-error>
+            <mat-error *ngIf="pricingForm.get('villagePrice')?.hasError('min')">
+              Village Price must be non-negative
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-group">
+          <label for="kGprice">KG Price*</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput id="kGprice" formControlName="kGprice" type="number" required>
+            <mat-error *ngIf="pricingForm.get('kGprice')?.hasError('required')">
+              KG Price is required
+            </mat-error>
+            <mat-error *ngIf="pricingForm.get('kGprice')?.hasError('min')">
+              KG Price must be non-negative
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button mat-stroked-button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="pricingForm.invalid || isLoading">
+          {{ isLoading ? 'Adding...' : 'Add Pricing' }}
+        </button>
+      </div>
+    </form>
+  
+    <ng-template #loading>
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Loading...</span>
+      </div>
+    </ng-template>
+  </div>
