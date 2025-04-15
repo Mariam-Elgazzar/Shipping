@@ -40,12 +40,14 @@
             <line x1="12" y1="16" x2="12" y2="12"></line>
             <line x1="12" y1="8" x2="12" y2="8"></line>
           </svg>
-          {{ isEditing ? "Edit Merchant" : "New Merchant" }}
+          @if (isEditing()) { Edit Merchant } @else { New Merchant }
         </h2>
       </div>
 
       <div class="card-body">
-        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+        }
 
         <form [formGroup]="merchantForm" (ngSubmit)="onSubmit()">
           <div class="form-row">
@@ -62,20 +64,16 @@
                   merchantForm.get('name')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('name')?.invalid &&
-                  merchantForm.get('name')?.touched
-                "
-              >
-                <span *ngIf="merchantForm.get('name')?.errors?.['required']"
-                  >Name is required</span
-                >
-                <span *ngIf="merchantForm.get('name')?.errors?.['minlength']"
-                  >Name must be at least 3 characters</span
-                >
+              @if (merchantForm.get('name')?.invalid &&
+              merchantForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('name')?.errors?.['required']) {
+                <span>Name is required</span>
+                } @if (merchantForm.get('name')?.errors?.['minlength']) {
+                <span>Name must be at least 3 characters</span>
+                }
               </div>
+              }
             </div>
 
             <div class="form-group col-md-6">
@@ -91,20 +89,16 @@
                   merchantForm.get('email')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('email')?.invalid &&
-                  merchantForm.get('email')?.touched
-                "
-              >
-                <span *ngIf="merchantForm.get('email')?.errors?.['required']"
-                  >Email is required</span
-                >
-                <span *ngIf="merchantForm.get('email')?.errors?.['email']"
-                  >Please enter a valid email</span
-                >
+              @if (merchantForm.get('email')?.invalid &&
+              merchantForm.get('email')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('email')?.errors?.['required']) {
+                <span>Email is required</span>
+                } @if (merchantForm.get('email')?.errors?.['email']) {
+                <span>Please enter a valid email</span>
+                }
               </div>
+              }
             </div>
           </div>
 
@@ -122,22 +116,16 @@
                   merchantForm.get('phoneNumber')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('phoneNumber')?.invalid &&
-                  merchantForm.get('phoneNumber')?.touched
-                "
-              >
-                <span
-                  *ngIf="merchantForm.get('phoneNumber')?.errors?.['required']"
-                  >Phone number is required</span
-                >
-                <span
-                  *ngIf="merchantForm.get('phoneNumber')?.errors?.['pattern']"
-                  >Please enter a valid phone number</span
-                >
+              @if (merchantForm.get('phoneNumber')?.invalid &&
+              merchantForm.get('phoneNumber')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('phoneNumber')?.errors?.['required']) {
+                <span>Phone number is required</span>
+                } @if (merchantForm.get('phoneNumber')?.errors?.['pattern']) {
+                <span>Please enter a valid phone number</span>
+                }
               </div>
+              }
             </div>
 
             <div class="form-group col-md-6">
@@ -153,15 +141,10 @@
                   merchantForm.get('storeName')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('storeName')?.invalid &&
-                  merchantForm.get('storeName')?.touched
-                "
-              >
-                Store name is required
-              </div>
+              @if (merchantForm.get('storeName')?.invalid &&
+              merchantForm.get('storeName')?.touched) {
+              <div class="invalid-feedback">Store name is required</div>
+              }
             </div>
           </div>
 
@@ -183,22 +166,20 @@
                   merchantForm.get('rejectedOrderPercentage')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('rejectedOrderPercentage')?.invalid &&
-                  merchantForm.get('rejectedOrderPercentage')?.touched
-                "
-              >
-                <span
-                  *ngIf="merchantForm.get('rejectedOrderPercentage')?.errors?.['required']"
-                  >Percentage is required</span
-                >
-                <span
-                  *ngIf="merchantForm.get('rejectedOrderPercentage')?.errors?.['min'] || merchantForm.get('rejectedOrderPercentage')?.errors?.['max']"
-                  >Must be between 0 and 100</span
-                >
+              @if (merchantForm.get('rejectedOrderPercentage')?.invalid &&
+              merchantForm.get('rejectedOrderPercentage')?.touched) {
+              <div class="invalid-feedback">
+                @if
+                (merchantForm.get('rejectedOrderPercentage')?.errors?.['required'])
+                {
+                <span>Percentage is required</span>
+                } @if
+                (merchantForm.get('rejectedOrderPercentage')?.errors?.['min'] ||
+                merchantForm.get('rejectedOrderPercentage')?.errors?.['max']) {
+                <span>Must be between 0 and 100</span>
+                }
               </div>
+              }
             </div>
 
             <div class="form-group col-md-6">
@@ -215,21 +196,16 @@
                   merchantForm.get('specialPickUp')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  merchantForm.get('specialPickUp')?.invalid &&
-                  merchantForm.get('specialPickUp')?.touched
-                "
-              >
-                <span
-                  *ngIf="merchantForm.get('specialPickUp')?.errors?.['required']"
-                  >Special pickup fee is required</span
-                >
-                <span *ngIf="merchantForm.get('specialPickUp')?.errors?.['min']"
-                  >Must be 0 or greater</span
-                >
+              @if (merchantForm.get('specialPickUp')?.invalid &&
+              merchantForm.get('specialPickUp')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('specialPickUp')?.errors?.['required']) {
+                <span>Special pickup fee is required</span>
+                } @if (merchantForm.get('specialPickUp')?.errors?.['min']) {
+                <span>Must be 0 or greater</span>
+                }
               </div>
+              }
             </div>
           </div>
 
@@ -245,29 +221,22 @@
                 merchantForm.get('cityIds')?.touched
               "
             >
-              <option *ngFor="let city of cities" [value]="city.id">
-                {{ city.name }}
-              </option>
+              @for (city of cities(); track city.id) {
+              <option [value]="city.id">{{ city.name }}</option>
+              }
             </select>
-            <div
-              class="invalid-feedback"
-              *ngIf="
-                merchantForm.get('cityIds')?.invalid &&
-                merchantForm.get('cityIds')?.touched
-              "
-            >
-              At least one city is required
-            </div>
+            @if (merchantForm.get('cityIds')?.invalid &&
+            merchantForm.get('cityIds')?.touched) {
+            <div class="invalid-feedback">At least one city is required</div>
+            }
           </div>
 
           <div class="form-group">
             <label>Special Prices</label>
             <div class="special-prices">
-              <div
-                *ngFor="let price of specialPrices.controls; let i = index"
-                class="special-price-row"
-              >
-                <div class="form-row" [formGroupName]="i">
+              @for (price of specialPrices.controls; track $index) {
+              <div class="special-price-row" [formGroup]="price">
+                <div class="form-row">
                   <div class="form-group col-md-6">
                     <select
                       formControlName="cityId"
@@ -278,19 +247,14 @@
                       "
                     >
                       <option value="">Select City</option>
-                      <option *ngFor="let city of cities" [value]="city.id">
-                        {{ city.name }}
-                      </option>
+                      @for (city of cities(); track city.id) {
+                      <option [value]="city.id">{{ city.name }}</option>
+                      }
                     </select>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="
-                        price.get('cityId')?.invalid &&
-                        price.get('cityId')?.touched
-                      "
-                    >
-                      City is required
-                    </div>
+                    @if (price.get('cityId')?.invalid &&
+                    price.get('cityId')?.touched) {
+                    <div class="invalid-feedback">City is required</div>
+                    }
                   </div>
                   <div class="form-group col-md-4">
                     <input
@@ -304,31 +268,23 @@
                         price.get('specialPrice')?.touched
                       "
                     />
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="
-                        price.get('specialPrice')?.invalid &&
-                        price.get('specialPrice')?.touched
-                      "
-                    >
-                      <span
-                        *ngIf="price.get('specialPrice')?.errors?.['required']"
-                        >Price is required</span
-                      >
-                      <span *ngIf="price.get('specialPrice')?.errors?.['min']"
-                        >Must be 0 or greater</span
-                      >
+                    @if (price.get('specialPrice')?.invalid &&
+                    price.get('specialPrice')?.touched) {
+                    <div class="invalid-feedback">
+                      @if (price.get('specialPrice')?.errors?.['required']) {
+                      <span>Price is required</span>
+                      } @if (price.get('specialPrice')?.errors?.['min']) {
+                      <span>Must be 0 or greater</span>
+                      }
                     </div>
+                    }
                   </div>
                   <div class="form-group col-md-2">
                     <button
                       type="button"
                       class="btn btn-icon btn-danger"
-                      (click)="removeSpecialPrice(i)"
-                      [disabled]="
-                        specialPrices.length === 1 &&
-                        !specialPrices.controls[i].valid
-                      "
+                      (click)="removeSpecialPrice($index)"
+                      [disabled]="specialPrices.length === 1"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -348,6 +304,7 @@
                   </div>
                 </div>
               </div>
+              }
               <button
                 type="button"
                 class="btn btn-outline"
@@ -365,9 +322,9 @@
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="merchantForm.invalid || isLoading"
+              [disabled]="merchantForm.invalid || isLoading()"
             >
-              {{ isEditing ? "Update" : "Create" }}
+              @if (isEditing()) { Update } @else { Create }
             </button>
           </div>
         </form>
@@ -375,7 +332,9 @@
     </div>
   </div>
 
-  <div class="loading" *ngIf="isLoading">
+  @if (isLoading()) {
+  <div class="loading">
     <mat-spinner diameter="40"></mat-spinner>
   </div>
+  }
 </div>

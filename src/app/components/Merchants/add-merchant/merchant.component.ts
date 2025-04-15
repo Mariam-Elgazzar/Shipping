@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MerchantService } from '../../../services/merchant.service';
 import { City, MerchantResponse } from '../../../models/merchant.model';
-import { catchError, of } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -25,13 +24,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './merchant.component.html',
   styleUrls: ['./merchant.component.scss'],
 })
-export class MerchantFormComponent implements OnInit {
+export class MerchantFormComponent {
   merchantForm: FormGroup;
-  cities: City[] = [];
-  isLoading = false;
-  errorMessage = '';
-  isEditing = false;
-  merchantId: string | null = null;
+  cities = signal<City[]>([]);
+  isLoading = signal(false);
+  errorMessage = signal('');
+  isEditing = signal(false);
+  merchantId = signal<string | null>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -55,63 +54,53 @@ export class MerchantFormComponent implements OnInit {
       cityIds: [[], Validators.required],
       specialPrices: this.fb.array([]),
     });
+
+    // Initialize merchantId and isEditing
+    this.merchantId.set(this.route.snapshot.paramMap.get('id'));
+    this.isEditing.set(!!this.merchantId());
   }
 
   ngOnInit(): void {
-    this.merchantId = this.route.snapshot.paramMap.get('id');
-    this.isEditing = !!this.merchantId;
     this.loadCities();
-    if (!this.isEditing) {
+    if (!this.isEditing()) {
       this.addSpecialPrice(); // Ensure at least one special price in create mode
     }
-    if (this.isEditing && this.merchantId) {
-      this.loadMerchant(this.merchantId);
+    if (this.isEditing() && this.merchantId()) {
+      this.loadMerchant(this.merchantId()!);
     }
-    // Debug FormArray state
-    console.log('Initial specialPrices:', this.specialPrices.value);
   }
 
-  get specialPrices(): FormArray {
-    return this.merchantForm.get('specialPrices') as FormArray;
+  get specialPrices(): FormArray<FormGroup> {
+    return this.merchantForm.get('specialPrices') as FormArray<FormGroup>;
   }
 
   addSpecialPrice(cityId = '', specialPrice = 0): void {
-    this.specialPrices.push(
-      this.fb.group({
-        cityId: [cityId, Validators.required],
-        specialPrice: [specialPrice, [Validators.required, Validators.min(0)]],
-      })
-    );
-    // Debug after adding
-    console.log('Added specialPrice, new state:', this.specialPrices.value);
+    const specialPriceGroup = this.fb.group({
+      cityId: [cityId, Validators.required],
+      specialPrice: [specialPrice, [Validators.required, Validators.min(0)]],
+    });
+    this.specialPrices.push(specialPriceGroup);
   }
 
   removeSpecialPrice(index: number): void {
     if (this.specialPrices.length > 1) {
       this.specialPrices.removeAt(index);
-      // Debug after removing
-      console.log('Removed specialPrice, new state:', this.specialPrices.value);
     }
   }
 
   loadCities(): void {
     this.merchantService.getCities().subscribe({
-      next: (cities) => {
-        this.cities = cities;
-      },
-      error: (err) => {
-        this.errorMessage = 'Failed to load cities';
-      },
+      next: (cities) => this.cities.set(cities),
+      error: (err) => this.errorMessage.set('Failed to load cities'),
     });
   }
 
   loadMerchant(id: string): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
     this.merchantService.getMerchantById(id).subscribe({
       next: (merchant: MerchantResponse) => {
         this.merchantForm.patchValue({
-          id: merchant.id,
           name: merchant.name,
           email: merchant.email,
           phoneNumber: merchant.phoneNumber,
@@ -124,22 +113,21 @@ export class MerchantFormComponent implements OnInit {
         if (!merchant.specialPrices || merchant.specialPrices.length === 0) {
           this.addSpecialPrice(); // Ensure at least one entry
         } else {
-          merchant.specialPrices.forEach((sp) => {
+          merchant.specialPrices.forEach((sp) =>
             this.addSpecialPrice(
               sp.cityId ? sp.cityId.toString() : '',
               sp.specialPrice || 0
-            );
-          });
+            )
+          );
         }
-        this.isLoading = false;
-        // Debug after loading
-        console.log('Loaded merchant specialPrices:', this.specialPrices.value);
+        this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage =
+        this.errorMessage.set(
           err.message ||
-          `Failed to ${this.isEditing ? 'update' : 'create'} merchant`;
-        this.isLoading = false;
+            `Failed to ${this.isEditing() ? 'update' : 'create'} merchant`
+        );
+        this.isLoading.set(false);
       },
     });
   }
@@ -150,45 +138,38 @@ export class MerchantFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     const request = {
-      id: this.merchantId || undefined,
+      id: this.merchantId() || null,
       ...this.merchantForm.value,
+      password: 'P@ssword123',
       cityIds: this.merchantForm.value.cityIds.map(Number),
       specialPrices: this.specialPrices.value.map((sp: any) => ({
         cityId: Number(sp.cityId),
         specialPrice: Number(sp.specialPrice),
       })),
     };
-
+    console.log(request);
     const operation =
-      this.isEditing && this.merchantId
+      this.isEditing() && this.merchantId()
         ? this.merchantService.updateMerchant(request)
         : this.merchantService.createMerchant(request);
 
-    operation
-      .pipe
-      //   catchError((err: any) => {
-      //     this.errorMessage =
-      //       (err?.error?.message ||
-      //         err?.message ||
-      //         'An unexpected error occurred') +
-      //       ` while trying to ${
-      //         this.isEditing ? 'update' : 'create'
-      //       } the merchant.`;
-      //     this.isLoading = false;
-      //     return of(null);
-      //   })
-      // )
-      // .subscribe((response) => {
-      //   if (response) {
-      //     this.isLoading = false;
-      //     this.router.navigate(['/merchants']);
-      //   }
-      // }
-      ();
+    operation.subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/merchants']);
+      },
+      error: (err) => {
+        this.errorMessage.set(
+          err.message ||
+            `Failed to ${this.isEditing() ? 'update' : 'create'} merchant`
+        );
+        this.isLoading.set(false);
+      },
+    });
   }
 
   cancel(): void {

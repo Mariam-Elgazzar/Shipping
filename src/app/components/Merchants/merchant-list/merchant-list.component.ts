@@ -5,7 +5,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MerchantService } from '../../../services/merchant.service';
 import { MerchantDetailsComponent } from '../merchant-details/merchant-details.component';
 import {
-  Merchant,
+  MerchantResponse,
   PaginatedMerchantResponse,
 } from '../../../models/merchant.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -20,13 +20,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     RouterLinkActive,
     MerchantDetailsComponent,
     MatProgressSpinnerModule,
+    MerchantDetailsComponent,
   ],
   templateUrl: './merchant-list.component.html',
   styleUrls: ['./merchant-list.component.scss'],
 })
 export class MerchantListComponent implements OnInit {
   merchants: PaginatedMerchantResponse | null = null;
-  filteredMerchants: Merchant[] = [];
+  filteredMerchants: MerchantResponse[] = [];
   selectedMerchants: string[] = [];
   activeActionMenu: string | null = null;
   searchTerm = '';
@@ -35,7 +36,7 @@ export class MerchantListComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   pageSizeOptions = [5, 10, 25, 50];
-  sortColumn: keyof Merchant | '' = '';
+  sortColumn: keyof MerchantResponse | '' = '';
   sortDirection: 'asc' | 'desc' | '' = '';
   router: Router = new Router();
   selectedMerchantId: string | null = null;
@@ -116,14 +117,14 @@ export class MerchantListComponent implements OnInit {
     this.filteredMerchants = this.sortData(result);
   }
 
-  sortData(data: Merchant[]): Merchant[] {
+  sortData(data: MerchantResponse[]): MerchantResponse[] {
     if (!this.sortColumn || !this.sortDirection) {
       return data;
     }
 
     return [...data].sort((a, b) => {
-      const aValue = a[this.sortColumn as keyof Merchant];
-      const bValue = b[this.sortColumn as keyof Merchant];
+      const aValue = a[this.sortColumn as keyof MerchantResponse];
+      const bValue = b[this.sortColumn as keyof MerchantResponse];
 
       // Handle numbers
       if (typeof aValue === 'number' && typeof bValue === 'number') {
@@ -139,7 +140,7 @@ export class MerchantListComponent implements OnInit {
     });
   }
 
-  toggleSort(column: keyof Merchant): void {
+  toggleSort(column: keyof MerchantResponse): void {
     if (this.sortColumn === column) {
       if (this.sortDirection === 'asc') {
         this.sortDirection = 'desc';
@@ -188,7 +189,7 @@ export class MerchantListComponent implements OnInit {
     this.activeActionMenu = null;
   }
 
-  editMerchant(merchant: Merchant): void {
+  editMerchant(merchant: MerchantResponse): void {
     this.router.navigate([`/merchants/edit/${merchant.id}`]);
     this.activeActionMenu = null;
   }
@@ -199,10 +200,18 @@ export class MerchantListComponent implements OnInit {
       this.errorMessage = '';
       this.merchantService.deleteMerchant(merchantId).subscribe({
         next: () => {
-          this.loadMerchants();
           this.isLoading = false;
+          // console.log(merchantId);
+          // alert('Merchant deleted successfully');
+          // this.selectedMerchants = this.selectedMerchants.filter(
+          //   (id) => id !== merchantId
+          // );
+          this.loadMerchants();
         },
         error: (err) => {
+          // alert('Merchant falsed to delete');
+          // console.error(err);
+
           this.errorMessage = err.message || 'Failed to delete merchant';
           this.isLoading = false;
         },

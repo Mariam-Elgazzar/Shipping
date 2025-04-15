@@ -12,14 +12,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
-<<<<<<< HEAD
-// import { MerchantComponent } from './components/Merchants/add-merchant/merchant.component';
-=======
-import { MerchantComponent } from './components/merchant/merchant.component';
-import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
 
-import { MerchantComponent } from './components/Merchants/add-merchant/merchant.component';
->>>>>>> 98fd8ac750abb79b9a01566302d3bd649eac89f8
 import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
 import { PermissionsMatrixComponent } from './components/admin/permissions/permissions-matrix/permissions-matrix.component';
@@ -39,9 +32,11 @@ import { GovernmentListComponent } from './components/government/government-list
 import { GovernmentDetailsComponent } from './components/government/government-details/government-details.component';
 import { BranchsListComponent } from './components/branches/branches-list/branches-list.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
+import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -56,14 +51,17 @@ export const routes: Routes = [
 
   // { path: "orders", component: OrderDashboardComponent },
   //  { path: "delivery", component: DeliveryDashboardComponent },
-  { path: "delivery", component: DeliveryDashboardComponent },
-
+  { path: 'delivery', component: DeliveryDashboardComponent },
 
   // { path: 'CourierManagement', component: CourierManagementComponent },
   // { path: 'Courierslist', component: CouriersListComponent },
-  { path: 'merchants', component: MerchantListComponent },
-  { path: 'merchants/new', component: MerchantFormComponent },
+  { path: 'merchants/create', component: MerchantFormComponent },
   { path: 'merchants/edit/:id', component: MerchantFormComponent },
+  {
+    path: 'merchants',
+    component: MerchantListComponent /* Your Merchant List Component */,
+  },
+  { path: '', redirectTo: '/merchants', pathMatch: 'full' },
 
   {
     path: 'merchantstable',
@@ -75,12 +73,11 @@ export const routes: Routes = [
   },
 
   {
-
     path: 'deliverys',
-     component:OrderDashboardComponent
-    path: 'merchantUpdate',
-    component: MerchantDetailsComponent,
+    component: OrderDashboardComponent,
   },
+
+  { path: 'merchantUpdate', component: MerchantDetailsComponent },
   {
     path: 'merchantAdd',
     component: MerchantDetailsComponent,
@@ -145,7 +142,7 @@ export const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: { requiredPermission: 'shipments:view' },
   },
-  { path: "**", redirectTo: "" },
+  { path: '**', redirectTo: '' },
 
   // {
   //   path: 'shipments/:id',
@@ -210,7 +207,6 @@ export const routes: Routes = [
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },
-
 ];
 
 @NgModule({
