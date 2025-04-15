@@ -73,17 +73,16 @@
 //       this.calculateStats(shipments);
 //     });
 
-<<<<<<< HEAD
+
 //     this.orderService.getPendingOrders().subscribe((orders) => {
 //       this.pendingOrders = orders;
 //     });
 //   }
-=======
+
     // this.orderService.getPendingOrders().subscribe((orders) => {
     //   this.pendingOrders = orders;
     // });
-  }
->>>>>>> 1f559c4401b496044ff5f50e2240574234405e9a
+
 
 //   calculateStats(shipments: Shipment[]): void {
 //     this.stats.totalShipments = shipments.length;

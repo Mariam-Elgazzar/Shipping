@@ -23,8 +23,7 @@
     </div>
 
     <div class="header-actions">
-      <button class="add-btn" [routerLink]="['/Governments']">
-        <!-- routerLinkActive="router-link-active" -->
+      <button class="add-btn" [routerLink]="['/Government/add']">
         Add New Government
       </button>
 
@@ -50,25 +49,6 @@
           (input)="filterGovernments()"
         />
       </div>
-
-      <!-- <button class="filter-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polygon
-            points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-          ></polygon>
-        </svg>
-        Filter
-      </button> -->
     </div>
   </div>
 
@@ -80,15 +60,15 @@
             <input type="checkbox" (change)="toggleSelectAll($event)" />
           </th>
           <th>Government</th>
-          <th>Cost</th>
-          <th>Pick up Cost</th>
 
           <th>Status</th>
           <th class="actions-col">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let Government of filteredGovernments">
+        <!-- <tr *ngFor="let Government of filteredGovernments"> -->
+          <tr *ngFor="let Government of paginatedGovernments">
+
           <td class="checkbox-col">
             <input
               type="checkbox"
@@ -96,13 +76,16 @@
               (change)="toggleGovernmentSelection(Government.id)"
             />
           </td>
-          <td>{{ Government.GovernmentName }}</td>
-          <td>{{ Government.cost }}</td>
-          <td>{{ Government.pickupCost }}</td>
+          <td>{{ Government.name }}</td>
+
           <td>
-            <span class="status-badge" [ngClass]="Government.status.toLowerCase()">
-              {{ Government.status }}
-            </span>
+            <button
+              class="status-btn"
+              [ngClass]="Government.isDeleted ? 'inactive' : 'active'"
+              (click)="toggleStatus(Government)"
+            >
+              {{ Government.isDeleted ? 'Inactive' : 'Active' }}
+            </button>
           </td>
           <td class="actions-col">
             <button class="action-btn" (click)="showActionMenu(Government.id)">
@@ -179,7 +162,7 @@
                     d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
                   ></path>
                 </svg>
-                Delete
+                Change Status
               </button>
             </div>
           </td>
@@ -188,7 +171,21 @@
     </table>
   </div>
 
-  <!--  Government Details Modal -->
+  <div class="pagination">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+
+    <button
+      *ngFor="let page of [].constructor(totalPages); let i = index"
+      (click)="changePage(i + 1)"
+      [class.active]="currentPage === i + 1"
+    >
+      {{ i + 1 }}
+    </button>
+
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+
+
   <app-Government-details
     *ngIf="selectedGovernmentId"
     [GovernmentId]="selectedGovernmentId"
