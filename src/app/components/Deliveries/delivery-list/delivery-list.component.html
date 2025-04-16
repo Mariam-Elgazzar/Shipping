@@ -1,7 +1,7 @@
 <div class="delivery-table-container">
   <div class="table-header">
     <div class="header-left">
-      <div class="header-icon">
+      <span class="header-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -13,21 +13,14 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <path
+            d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
+          ></path>
         </svg>
-      </div>
-      <h3>deliverys</h3>
+      </span>
+      <h3>Delivery Representatives</h3>
     </div>
-
     <div class="header-actions">
-      <button class="add-btn" [routerLink]="['/deliverys']">
-        <!-- routerLinkActive="router-link-active" -->
-        Add New delivery
-      </button>
-
       <div class="search-box">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -45,73 +38,68 @@
         </svg>
         <input
           type="text"
-          placeholder="Search something"
-          [(ngModel)]="searchTerm"
-          (input)="filterDeliverys()"
+          placeholder="Search by name, email, or phone..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event); filterDeliveryReps()"
         />
       </div>
-
-      <!-- <button class="filter-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <polygon
-            points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-          ></polygon>
-        </svg>
-        Filter
-      </button> -->
+      <button class="add-btn" [routerLink]="['/delivery-reps/add']">
+        Add Delivery Rep
+      </button>
     </div>
   </div>
 
+  @if (isLoading()) {
+  <div class="loading">
+    <mat-progress-spinner
+      mode="indeterminate"
+      diameter="40"
+    ></mat-progress-spinner>
+  </div>
+  } @if (errorMessage()) {
+  <div class="error">{{ errorMessage() }}</div>
+  }
+
   <div class="table-wrapper">
+    @if (!isLoading() && filteredDeliveryReps().length > 0) {
     <table class="delivery-table">
       <thead>
         <tr>
           <th class="checkbox-col">
-            <input type="checkbox" (change)="toggleSelectAll($event)" />
+            <input
+              type="checkbox"
+              (change)="toggleSelectAll($event)"
+              [checked]="
+                filteredDeliveryReps().length > 0 &&
+                selectedDeliveryReps().length === filteredDeliveryReps().length
+              "
+            />
           </th>
-          <th>delivery Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Branch Location</th>
-          <th>Branch Name</th>
-          <th>Status</th>
+          <th (click)="toggleSort('name')">Name</th>
+          <th (click)="toggleSort('email')">Email</th>
+          <th (click)="toggleSort('phoneNumber')">Phone Number</th>
+          <th (click)="toggleSort('hiringDate')">Hiring Date</th>
+          <th>Governorates</th>
           <th class="actions-col">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let delivery of filteredDeliverys">
+        @for (rep of filteredDeliveryReps(); track rep.id) {
+        <tr>
           <td class="checkbox-col">
             <input
               type="checkbox"
-              [checked]="selectedDeliverys.includes(delivery.id)"
-              (change)="toggleDeliverySelection(delivery.id)"
+              [checked]="selectedDeliveryReps().includes(rep.id)"
+              (change)="toggleDeliveryRepSelection(rep.id)"
             />
           </td>
-          <td>{{ delivery.name }}</td>
-          <td>{{ delivery.email }}</td>
-          <td>{{ delivery.phone }}</td>
-          <td>{{ delivery.branchLocation }}</td>
-          <td>{{ delivery.branchName }}</td>
-          <td>
-            <span
-              class="status-badge"
-              [ngClass]="delivery.status.toLowerCase()"
-            >
-              {{ delivery.status }}
-            </span>
-          </td>
+          <td>{{ rep.name }}</td>
+          <td>{{ rep.email }}</td>
+          <td>{{ rep.phoneNumber }}</td>
+          <td>{{ rep.hiringDate | date : "shortDate" }}</td>
+          <td>{{ getUniqueGovernorates(rep.governorates) }}</td>
           <td class="actions-col">
-            <button class="action-btn" (click)="showActionMenu(delivery.id)">
+            <button class="action-btn" (click)="showActionMenu(rep.id)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -124,88 +112,76 @@
                 stroke-linejoin="round"
               >
                 <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="19" cy="12" r="1"></circle>
-                <circle cx="5" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
               </svg>
             </button>
-
-            <div class="action-menu" *ngIf="activeActionMenu === delivery.id">
+            @if (activeActionMenu() === rep.id) {
+            <div class="action-menu">
               <button
                 class="menu-item"
-                (click)="viewDeliveryDetails(delivery.id)"
+                (click)="viewDeliveryRepDetails(rep.id)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
                 View
               </button>
-              <button class="menu-item" (click)="editDelivery(delivery.id)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                  ></path>
-                  <path
-                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                  ></path>
-                </svg>
+              <button class="menu-item" (click)="editDeliveryRep(rep)">
                 Edit
               </button>
               <button
                 class="menu-item delete"
-                (click)="deleteDelivery(delivery.id)"
+                (click)="deleteDeliveryRep(rep.id)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path
-                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                  ></path>
-                </svg>
                 Delete
               </button>
             </div>
+            }
           </td>
         </tr>
+        }
       </tbody>
     </table>
+    } @else if (!isLoading()) {
+    <div class="no-data">No delivery representatives found.</div>
+    }
   </div>
 
-  <!--  delivery Details Modal -->
+  @if (deliveryReps() && deliveryReps()!.totalCount > 0) {
+  <div class="pagination">
+    <span
+      >Showing {{ displayRange().start }} - {{ displayRange().end }} of
+      {{ displayRange().total }}</span
+    >
+    <select (change)="changePageSize($event)">
+      @for (size of pageSizeOptions(); track size) {
+      <option [value]="size" [selected]="size === pageSize()">
+        {{ size }}
+      </option>
+      }
+    </select>
+    <button (click)="firstPage()" [disabled]="currentPage() === 1">
+      First
+    </button>
+    <button (click)="previousPage()" [disabled]="currentPage() === 1">
+      Prev
+    </button>
+    @for (page of getPageNumbers(); track page) { @if (page !== -1) {
+    <button (click)="goToPage(page)" [class.active]="page === currentPage()">
+      {{ page }}
+    </button>
+    } @else {
+    <span>...</span>
+    } }
+    <button (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+      Next
+    </button>
+    <button (click)="lastPage()" [disabled]="currentPage() === totalPages()">
+      Last
+    </button>
+  </div>
+  } @if (isDeliveryDetailsVisible() && selectedDeliveryRepId()) {
   <app-delivery-details
-    *ngIf="selectedDeliveryId"
-    [DeliveryId]="selectedDeliveryId"
-    [isVisible]="isDeliveryDetailsVisible"
+    [deliveryRepId]="selectedDeliveryRepId()!"
     (close)="closeDeliveryDetails()"
-  >
-  </app-delivery-details>
+  ></app-delivery-details>
+  }
 </div>

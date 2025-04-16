@@ -1,3 +1,109 @@
+
+<!-- <div class="pricing-list-container">
+    <div class="header-actions">
+      <h1>Pricings</h1>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <button
+          mat-raised-button
+          color="primary"
+          class="add-button"
+          (click)="addPricing()"
+        >
+          <mat-icon>add</mat-icon>
+          Add Pricing
+        </button>
+
+        <div class="search-filters">
+          <div class="search-container">
+            <mat-form-field appearance="outline" class="search-input">
+              <mat-label>Search by Standard Weight</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Search Pricings"
+                [(ngModel)]="searchQuery"
+                (keyup.enter)="onSearch()"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="pricing-list-table">
+          <thead>
+            <tr>
+              <th class="id-column">ID</th>
+              <th class="weight-column">Standard Weight (kg)</th>
+              <th class="village-price-column">Village Price</th>
+              <th class="kg-price-column">KG Price</th>
+              <th class="actions-column">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="!loading">
+              <tr
+                *ngFor="let pricing of filteredPricings; let i = index"
+                [ngClass]="{ 'even-row': i % 2 === 0 }"
+              >
+                <td class="id-column">{{ pricing.id }}</td>
+                <td class="weight-column">{{ pricing.standardWeight }}</td>
+                <td class="village-price-column">{{ pricing.villagePrice }}</td>
+                <td class="kg-price-column">{{ pricing.kGprice }}</td>
+                <td class="actions-column">
+                  <div class="action-buttons">
+                    <button
+                      mat-mini-fab
+                      color="primary"
+                      class="action-button view-button"
+                      (click)="viewPricing(pricing)"
+                      matTooltip="View Details"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button
+                      mat-mini-fab
+                      color="accent"
+                      class="action-button edit-button"
+                      (click)="editPricing(pricing)"
+                      matTooltip="Edit"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-mini-fab
+                      color="warn"
+                      class="action-button delete-button"
+                      (click)="deletePricing(pricing)"
+                      matTooltip="Delete"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+
+            <tr *ngIf="loading">
+              <td colspan="5" class="loading-cell">
+                <mat-spinner diameter="40"></mat-spinner>
+                <span>Loading Pricings...</span>
+              </td>
+            </tr>
+
+            <tr *ngIf="!loading && filteredPricings.length === 0">
+              <td colspan="5" class="empty-cell">No pricings available</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div> -->
+<!-- ======= merge-->
 <div class="pricing-list-container">
   <div class="header-actions">
     <h1>Pricings</h1>
@@ -102,3 +208,4 @@
     </div>
   </div>
 </div>
+

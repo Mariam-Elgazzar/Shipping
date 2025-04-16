@@ -1,82 +1,88 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of } from 'rxjs'; 
-interface Employee {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  branchName: string;
-  permission: string;
-  status: string;
-}
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import {
+  IAddEmployee,
+  IBranchParams,
+  IGetAllEmployee,
+  IGroupPages,
+  IUpdateEmployee,
+} from '../models/employee.model';
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
-  private mockEmployees: Employee[] = [
-    {
-      id: '1',
-      name: 'user1',
-      email: 'defgd@user1',
-      phone: 'user1',
-      permission: 'user1',
-      branchName: 'user1',
-      status: 'true',
-    },
-    {
-      id: '2',
-      name: 'user2',
-      email: 'user2@dghjffkmj',
-      phone: 'user2',
-      permission: 'user2',
-      branchName: 'user2',
-      status: 'false',
-    },
-    {
-      id: '3',
-      name: 'user2',
-      email: 'user2@dghjffkmj',
-      phone: 'user2',
-      permission: 'user2',
-      branchName: 'user2',
-      status: 'true',
-    },
-  ];
-  private apiUrl = '/api/Employees';
+  BaseUrl: string = environment.apiUrl + '/Employees';
+
   constructor(private http: HttpClient) {}
 
-  // getEmployees(): Observable<Employee[]> {
-  //   return this.http.get<Employee[]>(this.apiUrl);
-  // }
+  GetAll(params: IBranchParams): Observable<IGetAllEmployee[]> {
+    let httpParams = new HttpParams()
+      .set('PageSize', params.pageSize.toString())
+      .set('PageIndex', params.pageIndex.toString());
 
-  // getEmployeeById(userId: string): Observable<Employee> {
-  //   return this.http.get<Employee>(`${this.apiUrl}/${userId}`);
-  // }
+    if (params.SearchByName) {
+      httpParams = httpParams.set('SearchByName', params.SearchByName);
+    }
 
-  createEmployee(Employee: Employee): Observable<Employee> {
-    return this.http.post<Employee>(this.apiUrl, Employee);
+    return this.http
+      .get<IGetAllEmployee[]>(this.BaseUrl + '/Getall', { params: httpParams })
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching employees:', error);
+          return throwError(() => new Error('Failed to fetch employees.'));
+        })
+      );
   }
 
-  updateEmployee(userId: string, Employee: Employee): Observable<Employee> {
-    return this.http.put<Employee>(`${this.apiUrl}/${userId}`, Employee);
+  GetById(id: string): Observable<IUpdateEmployee> {
+    return this.http.get<IUpdateEmployee>(`${this.BaseUrl}/${id}`).pipe(
+      catchError((error) => {
+        console.error('Error fetching employee by ID:', error);
+        return throwError(() => new Error('Failed to fetch employee details.'));
+      })
+    );
   }
 
-  // deleteEmployee(userId: string): Observable<void> {
-  //   return this.http.delete<void>(`${this.apiUrl}/${userId}`);
-  // }
-
-  getEmployees(): Observable<any[]> {
-    return of(this.mockEmployees).pipe(delay(500));
+  DeleteEmployee(id: string): Observable<IGetAllEmployee> {
+    return this.http.delete<IGetAllEmployee>(`${this.BaseUrl}?id=${id}`).pipe(
+      catchError((error) => {
+        console.error('Error deleting employee:', error);
+        return throwError(() => new Error('Failed to delete employee.'));
+      })
+    );
   }
 
-  getEmployeeDetails(EmployeeId: string): Observable<any> {
-    const Employee = this.mockEmployees.find((o) => o.id === EmployeeId);
-    return of(Employee).pipe(delay(300));
+  AddEmployee(emp: IAddEmployee): Observable<string> {
+    return this.http.post<string>(this.BaseUrl, emp).pipe(
+      catchError((error) => {
+        console.error('Error adding employee:', error);
+        return throwError(() => new Error('Failed to add employee.'));
+      })
+    );
   }
 
-  deleteEmployee(EmployeeId: string): Observable<boolean> {
-    // In a real app, this would make an API call
-    return of(true).pipe(delay(300));
+  UpdateEmployee(
+    id: string,
+    Emp: IUpdateEmployee
+  ): Observable<IUpdateEmployee> {
+    return this.http.put<IUpdateEmployee>(`${this.BaseUrl}?id=${id}`, Emp).pipe(
+      catchError((error) => {
+        console.error('Error updating employee:', error);
+        return throwError(() => new Error('Failed to update employee.'));
+      })
+    );
+  }
+
+  GetAllGroup(): Observable<IGroupPages> {
+    return this.http.get<IGroupPages>(`${this.BaseUrl}/GetAll`).pipe(
+      catchError((error) => {
+        console.error('Error fetching groups:', error);
+        return throwError(() => new Error('Failed to fetch groups.'));
+      })
+    );
   }
 }

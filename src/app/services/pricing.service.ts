@@ -1,10 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
+
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
+
   Pricing,
+
   PricingResponse,
   CreatePricingResponse,
   PricingRequest,
@@ -14,6 +22,19 @@ import {
   providedIn: 'root',
 })
 export class PricingService {
+
+ // private readonly apiUrl = `${environment.apiUrl}/standard`;
+
+ // constructor(private http: HttpClient) {}
+
+  //getAllPricings(): Observable<PricingResponse[]> {
+   // return this.http.get<PricingResponse[]>(`${this.apiUrl}/GetALL`).pipe(
+     // map((response) => ({
+       // ...response,
+      //})),
+     // catchError(this.handleError)
+  //  );
+
   private readonly apiUrl = `${environment.apiUrl}/Standard`;
 
   constructor(private http: HttpClient) {}
@@ -22,6 +43,7 @@ export class PricingService {
     return this.http
       .get<Pricing[]>(`${this.apiUrl}/GetALL`)
       .pipe(catchError(this.handleError));
+
   }
 
   getPricingById(id: number): Observable<PricingResponse> {
@@ -36,6 +58,11 @@ export class PricingService {
       .pipe(catchError(this.handleError));
   }
 
+
+ // updatePricing(
+   // request: PricingRequest & { id: number }
+  //): Observable<PricingResponse> {
+
   // updatePricing(request: PricingRequest & { id: number }): Observable<PricingResponse> {
   //   return this.http
   //     .put<PricingResponse>(`${this.apiUrl}/standard/update`, request)
@@ -45,6 +72,7 @@ export class PricingService {
 
   updatePricing(request: PricingRequest & { id: number }): Observable<PricingResponse> {
     // Include the pricing id in the URL
+
     return this.http
       .put<PricingResponse>(`${this.apiUrl}/update/${request.id}`, request)
       .pipe(catchError(this.handleError));
