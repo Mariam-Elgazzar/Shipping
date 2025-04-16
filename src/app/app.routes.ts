@@ -28,6 +28,7 @@ import { UnauthorizedComponent } from './components/shared/unauthorized/unauthor
 import { NgModule } from '@angular/core';
 import { DeliveryListComponent } from './components/Deliveries/delivery-list/delivery-list.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
+import { OrderDashboardComponent } from './components/order/order-dashboard.component';
 
 // // import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 // import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
@@ -416,6 +417,7 @@ export const routes: Routes = [
     path: 'merchants',
     component: MerchantFormComponent,
   },
+  { path: 'orders', component: OrderDashboardComponent },
   {
     path: 'unauthorized',
     component: UnauthorizedComponent,

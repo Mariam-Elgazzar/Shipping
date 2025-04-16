@@ -1,9 +1,18 @@
-
 <div class="modal-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
   <div class="modal-container">
     <div class="modal-header">
       <div class="header-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="16"></line>
           <line x1="8" y1="12" x2="16" y2="12"></line>
@@ -11,253 +20,505 @@
       </div>
       <h2>New Order</h2>
       <button class="close-btn" (click)="onClose()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
-   <div class="modal-scroll-body">
+    <div class="modal-scroll-body">
+      <div class="modal-description">
+        Create a new order with customer and product details.
+      </div>
 
-    <div class="modal-description">
-      Create a new order with customer and product details.
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+        <div class="modal-content">
+          <div class="form-section">
+            <h3>Customer Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="orderType"
+                  >Order Type <span class="required">*</span></label
+                >
+                <div class="select-wrapper">
+                  <select id="orderType" formControlName="orderType">
+                    <option value="" disabled selected>
+                      Select order type
+                    </option>
+                    <option *ngFor="let type of orderTypes" [value]="type">
+                      {{ type }}
+                    </option>
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('orderType')?.invalid &&
+                    orderForm.get('orderType')?.touched
+                  "
+                >
+                  Order type is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="customerName"
+                  >Customer Name <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="customerName"
+                  formControlName="customerName"
+                  placeholder="Enter customer name"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('customerName')?.invalid &&
+                    orderForm.get('customerName')?.touched
+                  "
+                >
+                  Customer name is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="customerPhone1"
+                  >Customer Phone 1 <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="customerPhone1"
+                  formControlName="customerPhone1"
+                  placeholder="Enter primary phone"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('customerPhone1')?.invalid &&
+                    orderForm.get('customerPhone1')?.touched
+                  "
+                >
+                  <span
+                    *ngIf="orderForm.get('customerPhone1')?.errors?.['required']"
+                    >Phone number is required</span
+                  >
+                  <span
+                    *ngIf="orderForm.get('customerPhone1')?.errors?.['pattern']"
+                    >Enter a valid phone number (10-11 digits)</span
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="customerPhone2">Customer Phone 2</label>
+                <input
+                  type="text"
+                  id="customerPhone2"
+                  formControlName="customerPhone2"
+                  placeholder="Enter secondary phone"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('customerPhone2')?.invalid &&
+                    orderForm.get('customerPhone2')?.touched
+                  "
+                >
+                  <span
+                    *ngIf="orderForm.get('customerPhone2')?.errors?.['pattern']"
+                    >Enter a valid phone number (10-11 digits)</span
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="villageAndStreet"
+                  >Village/Street <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="villageAndStreet"
+                  formControlName="villageAndStreet"
+                  placeholder="Enter address"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('villageAndStreet')?.invalid &&
+                    orderForm.get('villageAndStreet')?.touched
+                  "
+                >
+                  Address is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="cityId">City <span class="required">*</span></label>
+                <div class="select-wrapper">
+                  <select id="cityId" formControlName="cityId">
+                    <option value="" disabled selected>Select city</option>
+                    <option *ngFor="let city of cities" [value]="city.id">
+                      {{ city.name }}
+                    </option>
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('cityId')?.invalid &&
+                    orderForm.get('cityId')?.touched
+                  "
+                >
+                  City is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="branchId"
+                  >Branch <span class="required">*</span></label
+                >
+                <div class="select-wrapper">
+                  <select id="branchId" formControlName="branchId">
+                    <option value="" disabled selected>Select branch</option>
+                    <option *ngFor="let branch of branches" [value]="branch.id">
+                      {{ branch.name }}
+                    </option>
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('branchId')?.invalid &&
+                    orderForm.get('branchId')?.touched
+                  "
+                >
+                  Branch is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="chargeTypeId"
+                  >Shipping Type <span class="required">*</span></label
+                >
+                <div class="select-wrapper">
+                  <select id="chargeTypeId" formControlName="chargeTypeId">
+                    <option value="" disabled selected>
+                      Select shipping type
+                    </option>
+                    <option *ngFor="let type of chargeTypes" [value]="type.id">
+                      {{ type.name }}
+                    </option>
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('chargeTypeId')?.invalid &&
+                    orderForm.get('chargeTypeId')?.touched
+                  "
+                >
+                  Shipping type is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="paymentType"
+                  >Payment Method <span class="required">*</span></label
+                >
+                <div class="select-wrapper">
+                  <select id="paymentType" formControlName="paymentType">
+                    <option value="" disabled selected>
+                      Select payment method
+                    </option>
+                    <option
+                      *ngFor="let method of paymentMethods"
+                      [value]="method"
+                    >
+                      {{ method }}
+                    </option>
+                  </select>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('paymentType')?.invalid &&
+                    orderForm.get('paymentType')?.touched
+                  "
+                >
+                  Payment method is required
+                </div>
+              </div>
+
+              <div class="form-group toggle-group">
+                <label>Shipping to Village</label>
+                <div class="toggle-switch-container">
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      formControlName="shippingToVillage"
+                    />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Product Information</h3>
+            <div class="product-table">
+              <div class="product-table-header">
+                <div class="product-name-header">Product Name</div>
+                <div class="product-quantity-header">Quantity</div>
+                <div class="product-weight-header">Weight (kg)</div>
+                <div class="product-action-header">Delete</div>
+              </div>
+
+              <div formArrayName="products">
+                <div
+                  class="product-row"
+                  *ngFor="let product of productsArray.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="product-name">
+                    <input
+                      type="text"
+                      formControlName="name"
+                      placeholder="Product name"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="
+                        product.get('name')?.invalid &&
+                        product.get('name')?.touched
+                      "
+                    >
+                      Product name is required
+                    </div>
+                  </div>
+                  <div class="product-quantity">
+                    <input
+                      type="number"
+                      formControlName="quantity"
+                      placeholder="Qty"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="
+                        product.get('quantity')?.invalid &&
+                        product.get('quantity')?.touched
+                      "
+                    >
+                      <span
+                        *ngIf="product.get('quantity')?.errors?.['required']"
+                        >Required</span
+                      >
+                      <span *ngIf="product.get('quantity')?.errors?.['min']"
+                        >Min 1</span
+                      >
+                    </div>
+                  </div>
+                  <div class="product-weight">
+                    <input
+                      type="number"
+                      formControlName="weight"
+                      placeholder="Weight"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="
+                        product.get('weight')?.invalid &&
+                        product.get('weight')?.touched
+                      "
+                    >
+                      <span *ngIf="product.get('weight')?.errors?.['required']"
+                        >Required</span
+                      >
+                      <span *ngIf="product.get('weight')?.errors?.['min']"
+                        >Min 0.1</span
+                      >
+                    </div>
+                  </div>
+                  <div class="product-action">
+                    <button
+                      type="button"
+                      class="delete-btn"
+                      (click)="removeProduct(i)"
+                      [disabled]="productsArray.length === 1"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="add-product-row">
+                <button
+                  type="button"
+                  class="add-product-btn"
+                  (click)="addProduct()"
+                >
+                  Add Product
+                </button>
+              </div>
+            </div>
+
+            <div class="order-summary">
+              <div class="form-group">
+                <label for="orderPrice"
+                  >Order Price <span class="required">*</span></label
+                >
+                <input
+                  type="number"
+                  id="orderPrice"
+                  formControlName="orderPrice"
+                  placeholder="Enter order price"
+                />
+                <div
+                  class="error-message"
+                  *ngIf="
+                    orderForm.get('orderPrice')?.invalid &&
+                    orderForm.get('orderPrice')?.touched
+                  "
+                >
+                  <span
+                    *ngIf="orderForm.get('orderPrice')?.errors?.['required']"
+                    >Order price is required</span
+                  >
+                  <span *ngIf="orderForm.get('orderPrice')?.errors?.['min']"
+                    >Must be greater than 0</span
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="totalWeight"
+                  >Total Weight <span class="required">*</span></label
+                >
+                <input
+                  type="number"
+                  id="totalWeight"
+                  formControlName="totalWeight"
+                  readonly
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="notes">Notes</label>
+                <textarea
+                  id="notes"
+                  formControlName="notes"
+                  placeholder="Enter any additional notes"
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-btn" (click)="onClose()">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="create-btn"
+            [disabled]="orderForm.invalid"
+          >
+            Create
+          </button>
+        </div>
+      </form>
     </div>
-
-    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-      <div class="modal-content">
-        <div class="form-section">
-          <h3>Customer Information</h3>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="orderType">Order Type <span class="required">*</span></label>
-              <input type="text" id="orderType" formControlName="orderType" placeholder="Enter order type">
-              <div class="error-message" *ngIf="orderForm.get('orderType')?.invalid && (orderForm.get('orderType')?.dirty || orderForm.get('orderType')?.touched)">
-                Order type is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="merchantName">Merchant Name <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="merchantName" formControlName="merchantName">
-                  <option value="" disabled selected>Select merchant</option>
-                  <option *ngFor="let merchant of merchants" [value]="merchant">{{ merchant }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('merchantName')?.invalid && (orderForm.get('merchantName')?.dirty || orderForm.get('merchantName')?.touched)">
-                Merchant name is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="customerName">Customer Name <span class="required">*</span></label>
-              <input type="text" id="customerName" formControlName="customerName" placeholder="Enter customer name">
-              <div class="error-message" *ngIf="orderForm.get('customerName')?.invalid && (orderForm.get('customerName')?.dirty || orderForm.get('customerName')?.touched)">
-                Customer name is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="customerPhone">Customer Phone <span class="required">*</span></label>
-              <input type="text" id="customerPhone" formControlName="customerPhone" placeholder="Enter customer phone">
-              <div class="error-message" *ngIf="orderForm.get('customerPhone')?.invalid && (orderForm.get('customerPhone')?.dirty || orderForm.get('customerPhone')?.touched)">
-                <span *ngIf="orderForm.get('customerPhone')?.errors?.['required']">Phone number is required</span>
-                <span *ngIf="orderForm.get('customerPhone')?.errors?.['pattern']">Enter a valid phone number</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="government">Government <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="government" formControlName="government" (change)="onGovernmentChange()">
-                  <option value="" disabled selected>Select government</option>
-                  <option *ngFor="let gov of governments" [value]="gov">{{ gov }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('government')?.invalid && (orderForm.get('government')?.dirty || orderForm.get('government')?.touched)">
-                Government is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="city">City <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="city" formControlName="city">
-                  <option value="" disabled selected>Select city</option>
-                  <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('city')?.invalid && (orderForm.get('city')?.dirty || orderForm.get('city')?.touched)">
-                City is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="customerEmail">Customer Email</label>
-              <input type="email" id="customerEmail" formControlName="customerEmail" placeholder="Enter customer email">
-              <div class="error-message" *ngIf="orderForm.get('customerEmail')?.invalid && (orderForm.get('customerEmail')?.dirty || orderForm.get('customerEmail')?.touched)">
-                <span *ngIf="orderForm.get('customerEmail')?.errors?.['email']">Enter a valid email address</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="branch">Branch <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="branch" formControlName="branch">
-                  <option value="" disabled selected>Select branch</option>
-                  <option *ngFor="let branch of branches" [value]="branch">{{ branch }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('branch')?.invalid && (orderForm.get('branch')?.dirty || orderForm.get('branch')?.touched)">
-                Branch is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="shippingType">Shipping Type <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="shippingType" formControlName="shippingType">
-                  <option value="" disabled selected>Select shipping type</option>
-                  <option *ngFor="let type of shippingTypes" [value]="type">{{ type }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('shippingType')?.invalid && (orderForm.get('shippingType')?.dirty || orderForm.get('shippingType')?.touched)">
-                Shipping type is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="payWay">Payment Method <span class="required">*</span></label>
-              <div class="select-wrapper">
-                <select id="payWay" formControlName="payWay">
-                  <option value="" disabled selected>Select payment method</option>
-                  <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
-                </select>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="error-message" *ngIf="orderForm.get('payWay')?.invalid && (orderForm.get('payWay')?.dirty || orderForm.get('payWay')?.touched)">
-                Payment method is required
-              </div>
-            </div>
-
-            <div class="form-group toggle-group">
-              <label>to Village</label>
-              <div class="toggle-switch-container">
-                <label class="toggle-switch">
-                  <input type="checkbox" formControlName="scheduledDelivery">
-                  <span class="toggle-slider"></span>
-                </label>
-                <span class="surcharge-note" *ngIf="orderForm.get('scheduledDelivery')?.value">+50 surcharge applied</span>
-              </div>
-            </div>
-
-            <div class="form-group" *ngIf="orderForm.get('scheduledDelivery')?.value">
-              <label for="deliveryDate">Delivery Date <span class="required">*</span></label>
-              <input type="date" id="deliveryDate" formControlName="deliveryDate">
-              <div class="error-message" *ngIf="orderForm.get('deliveryDate')?.invalid && (orderForm.get('deliveryDate')?.dirty || orderForm.get('deliveryDate')?.touched)">
-                Delivery date is required
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <h3>Product Information</h3>
-          <div class="product-table">
-            <div class="product-table-header">
-              <div class="product-name-header">Product Name</div>
-              <div class="product-quantity-header">Quantity</div>
-              <div class="product-weight-header">Weight (kg)</div>
-              <div class="product-action-header">Delete</div>
-            </div>
-
-            <div formArrayName="products">
-              <div class="product-row" *ngFor="let product of productsArray.controls; let i = index" [formGroupName]="i">
-                <div class="product-name">
-                  <input type="text" formControlName="name" placeholder="Product name">
-                  <div class="error-message" *ngIf="product.get('name')?.invalid && (product.get('name')?.dirty || product.get('name')?.touched)">
-                    Product name is required
-                  </div>
-                </div>
-                <div class="product-quantity">
-                  <input type="number" formControlName="quantity" placeholder="Qty">
-                  <div class="error-message" *ngIf="product.get('quantity')?.invalid && (product.get('quantity')?.dirty || product.get('quantity')?.touched)">
-                    <span *ngIf="product.get('quantity')?.errors?.['required']">Required</span>
-                    <span *ngIf="product.get('quantity')?.errors?.['min']">Min 1</span>
-                  </div>
-                </div>
-                <div class="product-weight">
-                  <input type="number" formControlName="weight" placeholder="Weight">
-                  <div class="error-message" *ngIf="product.get('weight')?.invalid && (product.get('weight')?.dirty || product.get('weight')?.touched)">
-                    <span *ngIf="product.get('weight')?.errors?.['required']">Required</span>
-                    <span *ngIf="product.get('weight')?.errors?.['min']">Min 0.1</span>
-                  </div>
-                </div>
-                <div class="product-action">
-                  <button type="button" class="delete-btn" (click)="removeProduct(i)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 6h18"></path>
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="add-product-row">
-              <button type="button" class="add-product-btn" (click)="addProduct()">
-                Add Product
-              </button>
-            </div>
-          </div>
-
-          <div class="order-summary">
-            <div class="form-group">
-              <label for="packageCost">Package Cost <span class="required">*</span></label>
-              <input type="number" id="packageCost" formControlName="packageCost" placeholder="Enter package cost">
-              <div class="error-message" *ngIf="orderForm.get('packageCost')?.invalid && (orderForm.get('packageCost')?.dirty || orderForm.get('packageCost')?.touched)">
-                <span *ngIf="orderForm.get('packageCost')?.errors?.['required']">Package cost is required</span>
-                <span *ngIf="orderForm.get('packageCost')?.errors?.['min']">Must be greater than 0</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="totalWeight">Total Weight <span class="required">*</span></label>
-              <input type="number" id="totalWeight" formControlName="totalWeight" placeholder="Enter total weight" [value]="calculateTotalWeight()" readonly>
-            </div>
-
-            <div class="form-group full-width">
-              <label for="notes">Notes</label>
-              <textarea id="notes" formControlName="notes" placeholder="Enter any additional notes" rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="cancel-btn" (click)="onClose()">Cancel</button>
-        <button type="submit" class="create-btn" [disabled]="orderForm.invalid">Create</button>
-      </div>
-    </form>
-  </div>
   </div>
 </div>
-
