@@ -75,18 +75,18 @@ export class ChangePasswordComponent {
       this.loading = true;
       const { oldpassword, password } = this.changePasswordForm.value;
 
-      this.authService.changePassword(oldpassword, password).subscribe({
-        next: () => {
-          this.loading = false;
-          alert('Password changed successfully!');
-          this.changePasswordForm.reset();
-          this.router.navigate(['']); // Redirect to profile or desired route
-        },
-        error: (err) => {
-          this.loading = false;
-          alert(err.message || 'Failed to change password.');
-        },
-      });
+      // this.authService.changePassword(oldpassword, password).subscribe({
+      //   next: () => {
+      //     this.loading = false;
+      //     alert('Password changed successfully!');
+      //     this.changePasswordForm.reset();
+      //     this.router.navigate(['']); // Redirect to profile or desired route
+      //   },
+      //   error: (err) => {
+      //     this.loading = false;
+      //     alert(err.message || 'Failed to change password.');
+      //   },
+      // });
     }
   }
 }

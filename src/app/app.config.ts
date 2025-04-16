@@ -2,14 +2,14 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAppInitializer, inject } from '@angular/core';
-import { routes } from './app.routes';
+// import { routes } from './app.routes';
 // import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { lastValueFrom } from 'rxjs';
 import { AuthService } from './services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    // provideRouter(route),
     provideHttpClient(withInterceptors([])),
     // provideAppInitializer(() => {
     // const authService = inject(AuthService);

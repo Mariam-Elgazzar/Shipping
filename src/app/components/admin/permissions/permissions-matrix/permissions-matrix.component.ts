@@ -6,6 +6,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { ModuleService } from '../../../../services/module.service';
+import { AuthService } from '../../../../services/auth.service';
+import { PaginatedModuleResponse } from '../../../../models/module.model';
 
 interface PermissionModule {
   id: number;
@@ -22,6 +25,7 @@ interface PermissionModule {
   selector: 'app-permissions-matrix',
   templateUrl: './permissions-matrix.component.html',
   styleUrls: ['./permissions-matrix.component.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     MatIcon,
@@ -34,85 +38,23 @@ interface PermissionModule {
 export class PermissionsMatrixComponent implements OnInit {
   loading = false;
   searchQuery = '';
-  selectedRoleId: string | null = null;
-  roleName = 'Administrator';
+  selectedRoleId: string | null = null; // Set via route params or user selection
+  roleName = 'Administrator'; // Update dynamically if needed
 
   // Pagination
   pageSize = 100;
   pageSizeOptions = [10, 25, 50, 100];
 
   // Permission modules
-  permissionModules: PermissionModule[] = [
-    {
-      id: 1,
-      name: 'Permissions',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 2,
-      name: 'Settings',
-      permissions: { view: true, edit: true, delete: false, add: false },
-    },
-    {
-      id: 3,
-      name: 'Banks',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 4,
-      name: 'Inventory',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 5,
-      name: 'Orders',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 6,
-      name: 'Employees',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 7,
-      name: 'Merchants',
-      permissions: { view: true, edit: true, delete: false, add: false },
-    },
-    {
-      id: 8,
-      name: 'Offices',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 9,
-      name: 'Governorates',
-      permissions: { view: true, edit: true, delete: false, add: false },
-    },
-    {
-      id: 10,
-      name: 'Cities',
-      permissions: { view: true, edit: true, delete: false, add: false },
-    },
-    {
-      id: 11,
-      name: 'Operations',
-      permissions: { view: true, edit: true, delete: false, add: true },
-    },
-    {
-      id: 12,
-      name: 'Accounts',
-      permissions: { view: true, edit: false, delete: false, add: false },
-    },
-    {
-      id: 13,
-      name: 'Operations Reports',
-      permissions: { view: true, edit: true, delete: false, add: true },
-    },
-  ];
-
+  permissionModules: PermissionModule[] = [];
   filteredModules: PermissionModule[] = [];
 
-  constructor(private snackBar: MatSnackBar, private router: Router) {}
+  constructor(
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private moduleService: ModuleService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadPermissions();
@@ -121,11 +63,49 @@ export class PermissionsMatrixComponent implements OnInit {
   loadPermissions(): void {
     this.loading = true;
 
-    // In a real app, this would be an API call to get permissions for the selected role
-    setTimeout(() => {
-      this.filteredModules = [...this.permissionModules];
-      this.loading = false;
-    }, 800);
+    // Get current user's permissions from AuthService
+    const currentUser = this.authService.getCurrentUser();
+    const userPermissions = currentUser?.permissions || {};
+
+    // Fetch modules from API
+    this.moduleService
+      .getAllModules(
+        1,
+        this.pageSize,
+        this.searchQuery,
+        this.selectedRoleId || undefined
+      )
+      .subscribe({
+        next: (response: PaginatedModuleResponse) => {
+          // Map API modules to PermissionModule, applying user permissions
+          this.permissionModules = response.data.map((module) => {
+            const moduleName = module.name; // e.g., "Branchs"
+            const modulePermissions = userPermissions[moduleName] || [];
+            return {
+              id: module.id,
+              name: moduleName,
+              permissions: {
+                view: modulePermissions.includes('View'),
+                edit: modulePermissions.includes('Edit'),
+                delete: modulePermissions.includes('Delete'),
+                add: modulePermissions.includes('Create'), // Map "Create" to "add"
+              },
+            };
+          });
+          this.filteredModules = [...this.permissionModules];
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+          this.snackBar.open(
+            `Failed to load modules: ${err.message}`,
+            'Close',
+            {
+              duration: 5000,
+            }
+          );
+        },
+      });
   }
 
   onSearch(): void {
@@ -134,6 +114,7 @@ export class PermissionsMatrixComponent implements OnInit {
       return;
     }
 
+    // Client-side filtering for simplicity
     const query = this.searchQuery.toLowerCase().trim();
     this.filteredModules = this.permissionModules.filter((module) =>
       module.name.toLowerCase().includes(query)
@@ -146,7 +127,7 @@ export class PermissionsMatrixComponent implements OnInit {
   ): void {
     module.permissions[permission] = !module.permissions[permission];
 
-    // In a real app, this would be an API call to update the permission
+    // Log change (replace with API call if immediate updates are needed)
     console.log(
       `Updated ${module.name} ${permission} permission to ${module.permissions[permission]}`
     );
@@ -155,13 +136,36 @@ export class PermissionsMatrixComponent implements OnInit {
   savePermissions(): void {
     this.loading = true;
 
-    // In a real app, this would be an API call to save all permissions
-    setTimeout(() => {
-      this.loading = false;
-      this.snackBar.open('Permissions saved successfully', 'Close', {
-        duration: 3000,
-      });
-    }, 800);
+    // Transform PermissionModule back to backend format
+    const permissionsPayload = this.permissionModules.reduce((acc, module) => {
+      const modulePermissions: string[] = [];
+      if (module.permissions.view) modulePermissions.push('View');
+      if (module.permissions.edit) modulePermissions.push('Edit');
+      if (module.permissions.delete) modulePermissions.push('Delete');
+      if (module.permissions.add) modulePermissions.push('Create');
+      acc[module.name] = modulePermissions;
+      return acc;
+    }, {} as { [key: string]: string[] });
+
+    // Call API to save permissions
+    this.moduleService.savePermissions(permissionsPayload).subscribe({
+      next: () => {
+        this.loading = false;
+        this.snackBar.open('Permissions saved successfully', 'Close', {
+          duration: 3000,
+        });
+      },
+      error: (err) => {
+        this.loading = false;
+        this.snackBar.open(
+          `Failed to save permissions: ${err.message}`,
+          'Close',
+          {
+            duration: 5000,
+          }
+        );
+      },
+    });
   }
 
   goBack(): void {

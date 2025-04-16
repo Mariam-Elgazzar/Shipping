@@ -62,8 +62,8 @@ export interface LoginResponse {
   id: string;
   message: string;
   token: string;
-  role: string | null;
-  permission: { name: string; values: string[] } | null;
+  role: string;
+  permissions: { [key: string]: string[] }; // Updated to match JWT
 }
 // export interface User {
 //   id: string

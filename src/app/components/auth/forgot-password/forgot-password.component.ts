@@ -42,19 +42,19 @@ export class ForgotPasswordComponent {
 
       const email = this.forgotPasswordForm.get('email')?.value;
 
-      this.authService.forgotPassword(email).subscribe({
-        next: (response) => {
-          this.loading = false;
-          this.isSubmitted = true;
-          this.successMessage =
-            'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
-          // this.successMessage = response.message || 'تم إرسال الرابط بنجاح';
-        },
-        error: (err) => {
-          this.loading = false;
-          this.errorMessage = err.error?.message || 'حدث خطأ، حاول مرة أخرى';
-        },
-      });
+      // this.authService.forgotPassword(email).subscribe({
+      //   next: (response) => {
+      //     this.loading = false;
+      //     this.isSubmitted = true;
+      //     this.successMessage =
+      //       'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
+      //     // this.successMessage = response.message || 'تم إرسال الرابط بنجاح';
+      //   },
+      //   error: (err) => {
+      //     this.loading = false;
+      //     this.errorMessage = err.error?.message || 'حدث خطأ، حاول مرة أخرى';
+      //   },
+      // });
     }
   }
 
