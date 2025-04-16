@@ -7,8 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { PricingService } from '../../../services/pricing.service';
 import { PricingResponse } from '../../../models/pricing.model';
-// import { PricingService, PricingResponse } from '../../../services/pricing.service';
-
+ 
 @Component({
   selector: 'app-pricing-details',
   templateUrl: './pricing-details.component.html',

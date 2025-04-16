@@ -73,6 +73,19 @@
 //       this.calculateStats(shipments);
 //     });
 
+
+
+//     this.orderService.getPendingOrders().subscribe((orders) => {
+//       this.pendingOrders = orders;
+//     });
+//   }
+
+    // this.orderService.getPendingOrders().subscribe((orders) => {
+    //   this.pendingOrders = orders;
+    // });
+
+
+
 //   calculateStats(shipments: Shipment[]): void {
 //     this.stats.totalShipments = shipments.length;
 //     this.stats.inTransit = shipments.filter(
