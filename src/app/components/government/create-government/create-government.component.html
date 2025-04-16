@@ -1,10 +1,10 @@
-<div class="create-government-container">
+<!-- <div class="create-government-container">
+  <div class="header-actions">
+    <h1>Create New Government</h1>
+  </div>
+
   <div class="card">
     <div class="card-content">
-      <div class="header-actions">
-        <h1>Create New Government</h1>
-      </div>
-
       <form [formGroup]="governmentForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <div class="form-group">
@@ -21,6 +21,109 @@
               <span *ngIf="nameControl?.errors?.['minlength']">Government name must be at least 3 characters</span>
               <span *ngIf="nameControl?.errors?.['maxlength']">Government name cannot exceed 50 characters</span>
               <span *ngIf="nameControl?.errors?.['pattern']">Government name can only contain letters, spaces, and hyphens</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status <span class="required">*</span></label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="status-active"
+                  formControlName="status"
+                  value="active"
+                >
+                <label for="status-active">Active</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="status-inactive"
+                  formControlName="status"
+                  value="inactive"
+                >
+                <label for="status-inactive">Inactive</label>
+              </div>
+            </div>
+            <div class="error-message" *ngIf="statusControl?.invalid && statusControl?.touched">
+              <span *ngIf="statusControl?.errors?.['required']">Status is required</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="goBack()">
+            <i class="icon-arrow-left"></i>
+            Back
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <div class="spinner" *ngIf="loading"></div>
+            <span *ngIf="!loading">
+              <i class="icon-save"></i>
+              Save
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+ -->
+ <div class="create-government-container">
+  <div class="card">
+    <div class="card-content">
+      <div class="header-actions">
+        <h1>Create New Government</h1>
+      </div>
+
+      <form [formGroup]="governmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="government-name">Government Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="government-name"
+              formControlName="name"
+              placeholder="Enter government name"
+              [ngClass]="{'is-invalid': governmentForm?.invalid && governmentForm?.touched}"
+            >
+            <div class="error-message" *ngIf="governmentForm?.invalid && governmentForm?.touched">
+              <span *ngIf="governmentForm?.errors?.['required']">Government name is required</span>
+              <span *ngIf="governmentForm?.errors?.['minlength']">Government name must be at least 3 characters</span>
+              <span *ngIf="governmentForm?.errors?.['maxlength']">Government name cannot exceed 50 characters</span>
+              <span *ngIf="governmentForm?.errors?.['pattern']">Government name can only contain letters, spaces, and hyphens</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status <span class="required">*</span></label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="status-active"
+                  formControlName="status"
+                  value="active"
+                >
+                <label for="status-active">Active</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="status-inactive"
+                  formControlName="status"
+                  value="inactive"
+                >
+                <label for="status-inactive">Inactive</label>
+              </div>
+            </div>
+            <div class="error-message" *ngIf="statusControl?.invalid && statusControl?.touched">
+              <span *ngIf="statusControl?.errors?.['required']">Status is required</span>
             </div>
           </div>
         </div>

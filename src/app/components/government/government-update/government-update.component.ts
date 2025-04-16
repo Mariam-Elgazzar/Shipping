@@ -1,140 +1,93 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GovernmentService } from '../../../services/government.service';
-import { UpdateGovernmentRequest } from '../../../models/government.interface';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-edit-government',
+  selector: 'app-government-update',
   templateUrl: './government-update.component.html',
   styleUrls: ['./government-update.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
 })
-export class EditGovernmentComponent implements OnInit {
+export class GovernmentUpdateComponent implements OnInit {
   governmentForm!: FormGroup;
-  loading = false;
-  governmentId!: number;
+  isLoading = false;
+  governmentId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private governmentService: GovernmentService
+    private governmentService: GovernmentService,
+    public router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.governmentId = Number(this.route.snapshot.paramMap.get('id'));
     this.initForm();
-    this.loadGovernment();
+    this.governmentId = this.route.snapshot.paramMap.get('id');
+    if (this.governmentId) {
+      this.loadGovernmentData();
+    }
   }
 
-  initForm(): void {
+  private initForm(): void {
     this.governmentForm = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50),
-          Validators.pattern(/^[a-zA-Z\s-]+$/),
-        ],
-      ],
-      isDeleted: [false],
+      GovernmentName: ['', [Validators.required, Validators.minLength(3)]],
+      cost: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      pickupCost: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      status: ['', Validators.required],
     });
   }
 
-  loadGovernment(): void {
+  loadGovernmentData(): void {
+    if (!this.governmentId) return;
+    this.isLoading = true;
     this.governmentService.getGovernmentDetails(this.governmentId).subscribe({
       next: (government) => {
         this.governmentForm.patchValue({
-          name: government.name,
-          isDeleted: government.isDeleted,
+          GovernmentName: government.GovernmentName,
+          cost: government.cost,
+          pickupCost: government.pickupCost,
+          status: government.status,
         });
+        this.isLoading = false;
       },
-      error: (error) => {
-        this.snackBar.open(error.message || 'Failed to load government', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['error-snackbar'],
-        });
+      error: (err) => {
+        console.error('Error loading government', err);
+        this.isLoading = false;
       },
     });
   }
 
   onSubmit(): void {
     if (this.governmentForm.invalid) {
-      this.governmentForm.markAllAsTouched();
+      Object.values(this.governmentForm.controls).forEach((control) => control.markAsTouched());
       return;
     }
 
-    this.loading = true;
+    if (this.governmentId) {
+      const governmentData = this.governmentForm.value;
+      this.updateGovernment(governmentData);
+    }
+  }
 
-    const governmentData: UpdateGovernmentRequest = {
-      id: this.governmentId,
-      name: this.governmentForm.value.name.trim(),
-      isDeleted: this.governmentForm.value.isDeleted,
-    };
-
-    this.governmentService.updateGovernment(governmentData).subscribe({
+  updateGovernment(government: any): void {
+    if (!this.governmentId) return;
+    this.isLoading = true;
+    this.governmentService.updateGovernment(this.governmentId, government).subscribe({
       next: () => {
-
-        this.loading = false;
-        this.snackBar.open('Government updated successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-        });
-        this.goBack();
-        console.log("good");
-
+        this.isLoading = false;
+        this.router.navigate(['/governments']);
       },
-      error: (error) => {
-
-        this.loading = false;
-        this.snackBar.open('Government updated successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-        });
-        this.goBack();
-        console.log("not good");
-
+      error: (err) => {
+        console.error('Error updating government', err);
+        this.isLoading = false;
       },
     });
   }
 
-  goBack(): void {
-    console.log("any thing");
-
-    this.router.navigate(['/Government/list']);
-    console.log("any thing");
-
-  }
-
-  get nameControl() {
-    return this.governmentForm.get('name');
-  }
-
-  get isDeletedControl() {
-    return this.governmentForm.get('isDeleted');
+  cancel(): void {
+    this.router.navigate(['/governments']);
   }
 }

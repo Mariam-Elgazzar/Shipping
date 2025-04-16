@@ -1,55 +1,78 @@
-<div class="create-government-container">
-  <div class="card">
-    <div class="card-content">
-      <div class="header-actions">
-        <h1>Edit Government</h1>
-      </div>
-
-      <form [formGroup]="governmentForm" (ngSubmit)="onSubmit()">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="government-name">Government Name <span class="required">*</span></label>
-            <input
-              type="text"
-              id="government-name"
-              formControlName="name"
-              placeholder="Enter government name"
-              [ngClass]="{'is-invalid': nameControl?.invalid && nameControl?.touched}"
-            >
-            <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
-              <span *ngIf="nameControl?.errors?.['required']">Government name is required</span>
-              <span *ngIf="nameControl?.errors?.['minlength']">Government name must be at least 3 characters</span>
-              <span *ngIf="nameControl?.errors?.['maxlength']">Government name cannot exceed 50 characters</span>
-              <span *ngIf="nameControl?.errors?.['pattern']">Government name can only contain letters, spaces, and hyphens</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="is-deleted">Inactive</label>
-            <input
-              type="checkbox"
-              id="is-deleted"
-              formControlName="isDeleted"
-            >
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" (click)="goBack()">
-            <i class="icon-arrow-left"></i>
-            Back
-          </button>
-          <button type="submit" class="btn btn-primary" [disabled]="loading">
-            <div class="spinner" *ngIf="loading"></div>
-            <span *ngIf="!loading">
-              <i class="icon-save"></i>
-              Save
-            </span>
-          </button>
-        </div>
-      </form>
+<div class="government-update-container">
+    <div class="header">
+      <h2>
+        <i class="icon-edit"></i>
+        Update Government
+      </h2>
+      <button class="btn btn-back" (click)="router.navigate(['/governments'])">
+        <i class="icon-arrow-left"></i> Back to List
+      </button>
     </div>
+  
+    <form [formGroup]="governmentForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading; else loading">
+      <div class="form-grid">
+        <!-- Government Information -->
+        <div class="form-group">
+          <label for="GovernmentName">Government Name*</label>
+          <input type="text" id="GovernmentName" formControlName="GovernmentName" class="form-control" required
+            [class.is-invalid]="governmentForm.get('GovernmentName')?.invalid && governmentForm.get('GovernmentName')?.touched">
+          <div class="invalid-feedback" *ngIf="governmentForm.get('GovernmentName')?.invalid && governmentForm.get('GovernmentName')?.touched">
+            <span *ngIf="governmentForm.get('GovernmentName')?.errors?.['required']">Government Name is required</span>
+            <span *ngIf="governmentForm.get('GovernmentName')?.errors?.['minlength']">Government Name must be at least 3 characters</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="cost">Cost*</label>
+          <div class="input-group">
+            <input type="text" id="cost" formControlName="cost" class="form-control" required
+              [class.is-invalid]="governmentForm.get('cost')?.invalid && governmentForm.get('cost')?.touched">
+            <span class="input-group-text">$</span>
+          </div>
+          <div class="invalid-feedback" *ngIf="governmentForm.get('cost')?.invalid && governmentForm.get('cost')?.touched">
+            <span *ngIf="governmentForm.get('cost')?.errors?.['required']">Cost is required</span>
+            <span *ngIf="governmentForm.get('cost')?.errors?.['pattern']">Please enter a valid cost (e.g., 10.99)</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="pickupCost">Pickup Cost*</label>
+          <div class="input-group">
+            <input type="text" id="pickupCost" formControlName="pickupCost" class="form-control" required
+              [class.is-invalid]="governmentForm.get('pickupCost')?.invalid && governmentForm.get('pickupCost')?.touched">
+            <span class="input-group-text">$</span>
+          </div>
+          <div class="invalid-feedback" *ngIf="governmentForm.get('pickupCost')?.invalid && governmentForm.get('pickupCost')?.touched">
+            <span *ngIf="governmentForm.get('pickupCost')?.errors?.['required']">Pickup Cost is required</span>
+            <span *ngIf="governmentForm.get('pickupCost')?.errors?.['pattern']">Please enter a valid pickup cost (e.g., 5.00)</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="status">Status*</label>
+          <select id="status" formControlName="status" class="form-control" required
+            [class.is-invalid]="governmentForm.get('status')?.invalid && governmentForm.get('status')?.touched">
+            <option value="">Select Status</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="governmentForm.get('status')?.invalid && governmentForm.get('status')?.touched">
+            Status is required
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-submit" [disabled]="governmentForm.invalid || isLoading">
+          {{ isLoading ? 'Updating...' : 'Update Government' }}
+        </button>
+      </div>
+    </form>
+  
+    <ng-template #loading>
+      <div class="loading-spinner">
+        <i class="icon-spinner"></i> Loading...
+      </div>
+    </ng-template>
   </div>
-</div>
