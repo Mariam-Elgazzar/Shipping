@@ -27,6 +27,7 @@ import { PermissionsMatrixComponent } from './components/admin/permissions/permi
 import { UnauthorizedComponent } from './components/shared/unauthorized/unauthorized.component';
 import { NgModule } from '@angular/core';
 import { DeliveryListComponent } from './components/Deliveries/delivery-list/delivery-list.component';
+import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 
 // // import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 // import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
@@ -337,6 +338,20 @@ import { DeliveryListComponent } from './components/Deliveries/delivery-list/del
 // import { PermissionsMatrixComponent } from './components/permissions-matrix/permissions-matrix.component';
 // import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
+// import { NgModule } from '@angular/core';
+// import { RouterModule, Routes } from '@angular/router';
+// import { RoleGuard } from './guards/role.guard';
+// import { LoginComponent } from './components/login/login.component';
+// import { LoginFormComponent } from './components/login-form/login-form.component';
+// import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+// import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+// import { ChangePasswordComponent } from './components/change-password/change-password.component';
+// import { DeliveryDashboardComponent } from './components/delivery-dashboard/delivery-dashboard.component';
+// import { MerchantListComponent } from './components/merchant-list/merchant-list.component';
+// import { EmployeeComponent } from './components/employee/employee.component';
+// import { PermissionsMatrixComponent } from './components/permissions-matrix/permissions-matrix.component';
+// import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -367,29 +382,23 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['Employee'] },
   },
-  {
-    path: 'delivery',
-    component: DeliveryListComponent,
-    canActivate: [RoleGuard],
-    data: {
-      roles: ['Employee'],
-      permissions: [
-        'Permission.Permissions.View',
-        'Permission.Permissions.Create',
-        'Permission.Permissions.Edit',
-        'Permission.Permissions.Delete',
-      ],
-    },
-  },
-  {
-    path: 'employee',
-    component: EmployeeComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Employee'] },
-  },
+  // {
+  //   path: 'Branchs',
+  //   component: PermissionsMatrixComponent,
+  //   canActivate: [RoleGuard],
+  //   data: {
+  //     roles: ['Employee'],
+  //     permissions: [
+  //       'Permission.Permissions.View',
+  //       'Permission.Permissions.Create',
+  //       'Permission.Permissions.Edit',
+  //       'Permission.Permissions.Delete',
+  //     ],
+  //   },
+  // },
   {
     path: 'Branchs',
-    component: PermissionsMatrixComponent,
+    component: MerchantListComponent,
     canActivate: [RoleGuard],
     data: {
       roles: ['Employee'],
@@ -400,6 +409,12 @@ export const routes: Routes = [
         'Permission.Permissions.Delete',
       ],
     },
+  },
+  { path: 'merchants/create', component: MerchantFormComponent },
+  { path: 'merchants/edit/:id', component: MerchantFormComponent },
+  {
+    path: 'merchants',
+    component: MerchantFormComponent,
   },
   {
     path: 'unauthorized',
@@ -412,7 +427,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/login', //sometimes referred to as the default route since this is the default route if the user just hits the base URL for the website (e.g., http://www.example.com/) redirectTo: '/login',
     pathMatch: 'full',
   },
 ];

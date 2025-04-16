@@ -38,8 +38,8 @@ interface PermissionModule {
 export class PermissionsMatrixComponent implements OnInit {
   loading = false;
   searchQuery = '';
-  selectedRoleId: string | null = null; // Set via route params or user selection
-  roleName = 'Administrator'; // Update dynamically if needed
+  selectedRoleId: string | null = null;
+  roleName = 'Administrator';
 
   // Pagination
   pageSize = 100;
@@ -79,7 +79,7 @@ export class PermissionsMatrixComponent implements OnInit {
         next: (response: PaginatedModuleResponse) => {
           // Map API modules to PermissionModule, applying user permissions
           this.permissionModules = response.data.map((module) => {
-            const moduleName = module.name; // e.g., "Branchs"
+            const moduleName = module.name;
             const modulePermissions = userPermissions[moduleName] || [];
             return {
               id: module.id,
@@ -88,7 +88,7 @@ export class PermissionsMatrixComponent implements OnInit {
                 view: modulePermissions.includes('View'),
                 edit: modulePermissions.includes('Edit'),
                 delete: modulePermissions.includes('Delete'),
-                add: modulePermissions.includes('Create'), // Map "Create" to "add"
+                add: modulePermissions.includes('Create'),
               },
             };
           });
@@ -114,7 +114,6 @@ export class PermissionsMatrixComponent implements OnInit {
       return;
     }
 
-    // Client-side filtering for simplicity
     const query = this.searchQuery.toLowerCase().trim();
     this.filteredModules = this.permissionModules.filter((module) =>
       module.name.toLowerCase().includes(query)
@@ -126,8 +125,6 @@ export class PermissionsMatrixComponent implements OnInit {
     permission: 'view' | 'edit' | 'delete' | 'add'
   ): void {
     module.permissions[permission] = !module.permissions[permission];
-
-    // Log change (replace with API call if immediate updates are needed)
     console.log(
       `Updated ${module.name} ${permission} permission to ${module.permissions[permission]}`
     );
