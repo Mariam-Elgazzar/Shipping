@@ -41,7 +41,7 @@ import { BranchesUpdateComponent } from './components/branches/branche-update/br
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 import { DeliveryDashboardComponent } from './components/delivery/delivery-dashboard/delivery-dashboard.component';
 
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+// import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PricingAddComponent } from './components/price/pricing-create/pricing-create.component';
 import { PricingListComponent } from './components/price/pricing-list/pricing-list.component';
 import { PricingDetailsComponent } from './components/price/pricing-details/pricing-details.component';
@@ -60,12 +60,11 @@ export const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: { requiredPermission: 'dashboard:view' },
 
-  },
   { path: 'city/add', component: CreateCityComponent },
 
 
   { path: 'create-government', component: CreateGovernmentComponent },
-  
+
   { path: 'orders', component: OrderDashboardComponent },
   { path: 'orders', component: OrderDashboardComponent },
 
@@ -133,9 +132,9 @@ export const routes: Routes = [
     path: 'Government/list',
     component: GovernmentListComponent,
   },
-  { 
-    path: 'government/:id/update', 
-    component: GovernmentUpdateComponent 
+  {
+    path: 'government/:id/update',
+    component: GovernmentUpdateComponent
   },
   {
     path: 'branche/list',
