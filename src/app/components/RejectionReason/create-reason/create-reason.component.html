@@ -1,3 +1,5 @@
+<!-- create-reason.component.html -->
+
 <div class="create-reason-container">
   <div class="card">
     <div class="card-content">
@@ -21,9 +23,13 @@
               <span *ngIf="reasonControl?.errors?.['required']">Rejection reason is required</span>
               <span *ngIf="reasonControl?.errors?.['minlength']">Reason must be at least 5 characters</span>
               <span *ngIf="reasonControl?.errors?.['maxlength']">Reason cannot exceed 200 characters</span>
+              <span *ngIf="reasonControl?.errors?.['pattern']">Reason cannot start or end with whitespace</span>
             </div>
           </div>
         </div>
+
+        <!-- API Error Message -->
+        <!-- <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div> -->
 
         <!-- Form Actions -->
         <div class="form-actions">
@@ -43,4 +49,3 @@
     </div>
   </div>
 </div>
-

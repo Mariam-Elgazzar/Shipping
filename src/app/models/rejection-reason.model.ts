@@ -1,32 +1,40 @@
+// rejection-reason.model.ts
+
 export interface RejectionReason {
-  id?: string
-  reason: string
-  createdAt?: Date
-  updatedAt?: Date
+  id: number;
+  text: string;
+  isDeleted: boolean;
+}
+
+export interface RejectionReasonRequestCreate {
+  text: string; // Simplified for create
 }
 
 export interface RejectionReasonResponse {
-  success: boolean
-  data: RejectionReason | RejectionReason[]
-  message?: string
-  errors?: any
+  id: number;
+  text: string;
+  isDeleted: boolean;
 }
 
-export interface RejectionReasonListResponse {
-  success: boolean
-  data: {
-    reasons: RejectionReason[]
-    totalCount: number
-    page: number
-    limit: number
-  }
-  message?: string
+
+export interface RejectionReasonRequest {
+  id?: number;
+  text: string;
+  isDeleted?: boolean;
 }
 
-export interface RejectionReasonFilter {
-  search?: string
-  page?: number
-  limit?: number
-  sortBy?: string
-  sortDirection?: "asc" | "desc"
+export interface CreateRejectionReasonResponse {
+  id: number;
+}
+
+export interface PaginatedRejectionReasonResponse {
+  data: RejectionReasonResponse[];
+  pageIndex: number;
+  pageSize: number;
+  totalCount: number;
+}
+
+export interface updateRejectionReasonRequest {
+  id: number; // Required for update
+  text: string;
 }

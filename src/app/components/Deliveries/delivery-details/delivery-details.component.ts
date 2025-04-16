@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DeliveryService } from '../../../services/delivery.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-delivery-details',
@@ -22,8 +23,7 @@ export class DeliveryDetailsComponent implements OnChanges {
   @Output() close = new EventEmitter<void>();
 
   DeliveryDetails: any = null;
-
-  constructor(private DeliveryService: DeliveryService) {}
+  constructor(private DeliveryService: DeliveryService, private route: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['DeliveryId'] && this.DeliveryId) {
@@ -55,6 +55,6 @@ export class DeliveryDetailsComponent implements OnChanges {
   }
 
   onEdit(): void {
-    console.log('Edit Delivery details:', this.DeliveryId);
-  }
+this.route.navigate([`delivery/update/:${this.DeliveryId}`]); // Navigate to the update page with the selected Delivery ID}
+}
 }

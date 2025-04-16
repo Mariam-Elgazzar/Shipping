@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 // import {  DeliveryService } from '../../../services/Delivery.service';
 // import { DeliveryDetailsComponent } from '../Delivery-details/Delivery-details.component';
 // import { DeliveryService } from '../../../services/Delivery.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { DeliveryDetailsComponent } from '../delivery-details/delivery-details.component';
 import { DeliveryService } from '../../../services/delivery.service';
 // import { DeliveryDetailsComponent } from '../Delivery-details/Delivery-details.component';
@@ -42,7 +42,7 @@ export class DeliveryListComponent implements OnInit {
   selectedDeliveryId: string | null = null;
   isDeliveryDetailsVisible = false;
 
-  constructor(private DeliveryService: DeliveryService) {}
+  constructor(private DeliveryService: DeliveryService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadDeliverys();
@@ -119,7 +119,9 @@ export class DeliveryListComponent implements OnInit {
   }
 
   editDelivery(DeliveryId: string): void {
-    console.log('Edit  Delivery:', DeliveryId);
+    // console.log('Edit  Delivery:', DeliveryId);
+    this.router.navigate([`/delivery/update/${DeliveryId}`]);
+    //delivery/update/:id
     this.activeActionMenu = null;
   }
 

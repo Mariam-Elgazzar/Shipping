@@ -58,54 +58,8 @@
         </div>
       </div>
 
-      <div class="Delivery-section">
-        <h3>Driver Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ DeliveryDetails.driverName }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone Number</div>
-            <div class="info-value">
-              {{ DeliveryDetails.driverPhone || "N/A" }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">License Number</div>
-            <div class="info-value">
-              {{ DeliveryDetails.licenseNumber || "N/A" }}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="Delivery-section">
-        <h3>Delivery Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Last Location</div>
-            <div class="info-value">{{ DeliveryDetails.lastLocation }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Schedule</div>
-            <div class="info-value">
-              {{ DeliveryDetails.deliverySchedule }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="DeliveryDetails.deliveryStatus.toLowerCase()"
-              >
-                {{ DeliveryDetails.deliveryStatus }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <div
         class="Delivery-section"
@@ -135,7 +89,6 @@
 
     <div class="modal-footer">
       <button class="secondary-btn" (click)="onClose()">Close</button>
-      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
     </div>
   </div>
 </div>

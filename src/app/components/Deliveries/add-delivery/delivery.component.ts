@@ -56,10 +56,8 @@ export class DeliveryComponent implements OnInit {
       ],
       address: ['', Validators.required],
       saleType: [SaleTypeEnum.Percentage, Validators.required],
-      salePercentage: [
-        0,
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
+      salePresentage: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+
       empId: ['', Validators.required],
     });
 
@@ -240,7 +238,6 @@ export class DeliveryComponent implements OnInit {
       phone: '',
       address: '',
       saleType: SaleTypeEnum.Percentage,
-      salePercentage: 0,
       empId: '',
     });
     this.isEditing = false;

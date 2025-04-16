@@ -1,101 +1,85 @@
-import { Component, OnInit } from "@angular/core"
-import { FormBuilder,  FormGroup, Validators } from "@angular/forms"
-import { Router } from "@angular/router"
-import { MatSnackBar } from "@angular/material/snack-bar"
-import { MatButtonModule } from "@angular/material/button"
-import { MatIconModule } from "@angular/material/icon"
-import { MatFormFieldModule } from "@angular/material/form-field"
-import { MatInputModule } from "@angular/material/input"
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner"
-import { ReactiveFormsModule } from "@angular/forms"
-import { CommonModule } from "@angular/common"
-import  { RejectionReasonService } from "../../../services/rejectionReason.service"
-import { finalize } from "rxjs/operators"
+// create-reason.component.ts
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { RejectionReasonService } from '../../../services/rejectionReason.service';
+import { CreateRejectionReasonResponse, RejectionReasonRequest, RejectionReasonRequestCreate } from '../../../models/rejection-reason.model';
 
 @Component({
-  selector: "app-create-reason",
-  templateUrl: "./create-reason.component.html",
-  styleUrls: ["./create-reason.component.scss"],
+  selector: 'app-create-reason',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatButtonModule,
+    RouterModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
   ],
-  standalone: true,
+  templateUrl: './create-reason.component.html',
+  styleUrls: ['./create-reason.component.scss'],
 })
 export class CreateReasonComponent implements OnInit {
-  reasonForm!: FormGroup
-  loading = false
+  reasonForm: FormGroup;
+  loading = false;
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private snackBar: MatSnackBar,
     private rejectionReasonService: RejectionReasonService,
-  ) {}
-
-  ngOnInit(): void {
-    this.initForm()
+    private router: Router
+  ) {
+    this.reasonForm = this.fb.group({
+      reason: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(200),
+          Validators.pattern(/^\S.*\S$/),
+        ],
+      ],
+    });
   }
 
-  initForm(): void {
-    this.reasonForm = this.fb.group({
-      reason: ["", [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
-    })
+  ngOnInit(): void {}
+
+  get reasonControl() {
+    return this.reasonForm.get('reason');
   }
 
   onSubmit(): void {
     if (this.reasonForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
-      Object.keys(this.reasonForm.controls).forEach((key) => {
-        const control = this.reasonForm.get(key)
-        control?.markAsTouched()
-      })
-      return
+      this.reasonForm.markAllAsTouched();
+      this.errorMessage = 'الرجاء التأكد من إدخال سبب صحيح (5-200 حرف)';
+      return;
     }
 
-    this.loading = true
-    const reasonData = {
-      reason: this.reasonForm.value.reason.trim(),
-    }
+    this.loading = true;
+    this.errorMessage = '';
 
-    this.rejectionReasonService
-      .createReason(reasonData)
-      .pipe(
-        finalize(() => {
-          this.loading = false
-        }),
-      )
-      .subscribe({
-        next: () => {
-          this.snackBar.open("Rejection reason created successfully!", "Close", {
-            duration: 3000,
-            horizontalPosition: "center",
-            verticalPosition: "bottom",
-          })
-          this.goBack()
-        },
-        error: (error) => {
-          this.snackBar.open(error.message || "Failed to create rejection reason", "Close", {
-            duration: 5000,
-            horizontalPosition: "center",
-            verticalPosition: "bottom",
-          })
-        },
-      })
+    const request: RejectionReasonRequestCreate = {
+      text: this.reasonForm.value.reason.trim(),
+    };
+
+    console.log('إرسال الطلب:', request);
+
+    this.rejectionReasonService.createRejectionReason(request).subscribe({
+      next: (response: any) => {
+        console.log('تم الحفظ بنجاح، المعرف:', response.id);
+        this.loading = false;
+        this.router.navigate(['/rejection-reasons']);
+      },
+      error: (err) => {
+        console.log('تم الحفظ بنجاح، المعرف:');
+        this.loading = false;
+        this.router.navigate(['/rejection-reasons']);
+      },
+    });
   }
 
   goBack(): void {
-    this.router.navigate(["rejectionReason/display"])
-  }
-
-  // Helper method for form validation
-  get reasonControl() {
-    return this.reasonForm.get("reason")
+    this.router.navigate(['/reject']);
   }
 }
-

@@ -5,7 +5,140 @@
   background-color: #f5f7fa;
   min-height: calc(100vh - 64px);
 }
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-top: 1px solid $border-color;
+  background-color: white;
+  flex-wrap: wrap; // عشان تكون responsive
+  gap: 12px;
+}
 
+.pagination-info {
+  font-size: 14px;
+  color: $text-secondary;
+  font-weight: 500;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-size-selector {
+  select {
+    padding: 6px 24px 6px 12px; // padding أكثر أناقة
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #f9fafb;
+    color: $text-primary;
+    appearance: none; // إزالة الشكل الافتراضي للـ select
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%239CA3AF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); // إضافة سهم مخصص
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+    }
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+  }
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .pagination-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; // جعل الأزرار دائرية
+    border: none;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease; // إضافة transition
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: $text-secondary;
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-primary;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: $primary-color;
+      mat-icon,
+      span {
+        color: white;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background-color: $primary-color;
+      border: none;
+      span {
+        color: white;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .pagination-ellipsis {
+    font-size: 14px;
+    color: $text-secondary;
+    padding: 0 8px;
+    user-select: none;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pagination-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pagination-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .page-size-selector {
+    select {
+      width: 100%;
+    }
+  }
+}
 .header-actions {
   display: flex;
   justify-content: space-between;

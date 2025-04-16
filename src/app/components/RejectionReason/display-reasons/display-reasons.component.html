@@ -1,19 +1,13 @@
+<!-- display-reasons.component.html -->
+
 <div class="display-reasons-container">
   <div class="header-actions">
     <h1>Rejection Reasons</h1>
-    <!-- <div class="breadcrumb">
-      <a routerLink="/dashboard">Dashboard</a>
-      <span class="separator">/</span>
-      <span>Rejection Reasons</span>
-    </div> -->
   </div>
 
   <div class="card">
     <div class="card-header">
-      <button
-        class="add-button"
-        (click)="addReason()"
-      >
+      <button class="add-button" (click)="addReason()">
         <mat-icon>add</mat-icon>
         Add Reason
       </button>
@@ -37,7 +31,6 @@
           <tr>
             <th class="number-column">#</th>
             <th class="name-column">Reason</th>
-            <th class="date-column">Date Added</th>
             <th class="actions-column">Actions</th>
           </tr>
         </thead>
@@ -47,29 +40,22 @@
               *ngFor="let reason of filteredReasons; let i = index"
               [ngClass]="{ 'even-row': i % 2 === 0 }"
             >
-              <td class="number-column">{{ i + 1 }}</td>
-              <td class="name-column">{{ reason.reason }}</td>
-              <td class="date-column">{{ formatDate(reason.createdAt) }}</td>
+              <td class="number-column">
+                {{ (currentPage - 1) * pageSize + i + 1 }}
+              </td>
+              <td class="name-column">{{ reason.text }}</td>
               <td class="actions-column">
                 <div class="action-buttons">
-                  <button
-                    class="action-button view-button"
-                    (click)="viewReason(reason)"
-                    matTooltip="View"
-                  >
-                    <mat-icon>visibility</mat-icon>
-                  </button>
+
                   <button
                     class="action-button edit-button"
-                    (click)="editReason(reason.id!)"
-                    matTooltip="Edit"
+                    (click)="editReason(reason.id)"
                   >
                     <mat-icon>edit</mat-icon>
                   </button>
                   <button
                     class="action-button delete-button"
-                    (click)="confirmDeleteReason(reason)"
-                    matTooltip="Delete"
+                    (click)="deleteReason(reason.id)"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>
@@ -79,29 +65,69 @@
           </ng-container>
 
           <tr *ngIf="loading">
-            <td colspan="4" class="loading-cell">
+            <td colspan="3" class="loading-cell">
               <mat-spinner diameter="40"></mat-spinner>
               <span>Loading rejection reasons...</span>
             </td>
           </tr>
 
           <tr *ngIf="!loading && filteredReasons.length === 0">
-            <td colspan="4" class="empty-cell">No data available</td>
+            <td colspan="3" class="empty-cell">No data available</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
-</div>
 
-<!-- Confirmation Dialog -->
-<div class="confirm-overlay" *ngIf="showConfirmDialog">
-  <div class="confirm-dialog">
-    <h2>Delete Rejection Reason</h2>
-    <p>Are you sure you want to delete the reason: "{{ reasonToDelete?.reason }}"?</p>
-    <div class="confirm-actions">
-      <button class="cancel-button" (click)="cancelDelete()">Cancel</button>
-      <button class="delete-button" (click)="confirmDelete()">Delete</button>
+    <div class="pagination-container" *ngIf="!loading && filteredReasons.length > 0">
+      <div class="pagination-info">
+        Showing {{ displayRange.start }} to {{ displayRange.end }} of {{ displayRange.total }} entries
+      </div>
+
+      <div class="pagination-controls">
+        <div class="page-size-selector">
+          <select (change)="changePageSize($event)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size" [selected]="pageSize === size">
+              {{ size }} per page
+            </option>
+          </select>
+        </div>
+
+        <div class="pagination-buttons">
+          <button class="pagination-button" [disabled]="currentPage === 1" (click)="firstPage()" aria-label="First page">
+            <mat-icon>first_page</mat-icon>
+          </button>
+          <button class="pagination-button" [disabled]="currentPage === 1" (click)="previousPage()" aria-label="Previous page">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          <ng-container *ngFor="let page of getPageNumbers()">
+            <span *ngIf="page < 0" class="pagination-ellipsis">...</span>
+            <button *ngIf="page > 0" class="pagination-button" [class.active]="currentPage === page" (click)="goToPage(page)">
+              <span>{{ page }}</span>
+            </button>
+          </ng-container>
+
+          <button class="pagination-button" [disabled]="currentPage === totalPages" (click)="nextPage()" aria-label="Next page">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button class="pagination-button" [disabled]="currentPage === totalPages" (click)="lastPage()" aria-label="Last page">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Confirmation Dialog -->
+  <div class="confirm-overlay" *ngIf="showConfirmDialog">
+    <div class="confirm-dialog">
+      <h2>Delete Rejection Reason</h2>
+      <p>Are you sure you want to delete the reason: "{{ reasonToDelete?.text }}"?</p>
+      <div class="confirm-actions">
+        <button class="cancel-button" (click)="cancelDelete()">Cancel</button>
+        <button class="delete-button" (click)="confirmDelete()">Delete</button>
+      </div>
     </div>
   </div>
 </div>

@@ -1,34 +1,34 @@
-<div class="update-reason-container">
+<!-- edit-reason.component.html -->
+
+<div class="edit-reason-container">
   <div class="card">
     <div class="card-content">
       <div class="header-actions">
-        <h1>Update Rejection Reason</h1>
+        <h1>Edit Rejection Reason</h1>
       </div>
 
-      <div *ngIf="loadingData" class="loading-container">
-        <div class="spinner-large"></div>
-        <p>Loading reason data...</p>
-      </div>
-
-      <form *ngIf="!loadingData" [formGroup]="reasonForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="reasonForm" (ngSubmit)="onSubmit()">
         <!-- Rejection Reason Input -->
         <div class="form-row">
           <div class="form-group">
-            <label for="reason">Rejection Reason <span class="required">*</span></label>
+            <label for="reason">Rejection Reason<span class="required">*</span></label>
             <input
               type="text"
               id="reason"
               formControlName="reason"
-              placeholder="Enter rejection reason"
               [ngClass]="{'is-invalid': reasonControl?.invalid && reasonControl?.touched}"
             >
             <div class="error-message" *ngIf="reasonControl?.invalid && reasonControl?.touched">
-              <span *ngIf="reasonControl?.errors?.['required']">Rejection reason is required</span>
-              <span *ngIf="reasonControl?.errors?.['minlength']">Reason must be at least 5 characters</span>
-              <span *ngIf="reasonControl?.errors?.['maxlength']">Reason cannot exceed 200 characters</span>
+              <span *ngIf="reasonControl?.errors?.['required']">سبب الرفض مطلوب</span>
+              <span *ngIf="reasonControl?.errors?.['minlength']">يجب أن يكون السبب 5 أحرف على الأقل</span>
+              <span *ngIf="reasonControl?.errors?.['maxlength']">السبب لا يمكن أن يتجاوز 200 حرف</span>
+              <span *ngIf="reasonControl?.errors?.['pattern']">السبب لا يمكن أن يبدأ أو ينتهي بفراغ</span>
             </div>
           </div>
         </div>
+
+        <!-- API Error Message -->
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
         <!-- Form Actions -->
         <div class="form-actions">
@@ -40,7 +40,7 @@
             <div class="spinner" *ngIf="loading"></div>
             <span *ngIf="!loading">
               <mat-icon>save</mat-icon>
-              <span>Update Reason</span>
+              <span>save</span>
             </span>
           </button>
         </div>
@@ -48,4 +48,3 @@
     </div>
   </div>
 </div>
-
