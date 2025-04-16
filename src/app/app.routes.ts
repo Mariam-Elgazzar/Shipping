@@ -11,7 +11,7 @@ import { CreateGovernmentComponent } from './components/government/create-govern
 import { LoginComponent } from './pages/login/login.component';
 import { LoginFormComponent } from './components/auth/login-form/login-form.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
-import { ForgotPasswordFormComponent } from './components/auth/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 
 // import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
@@ -22,8 +22,8 @@ import { MerchantDetailsComponent } from './components/Merchants/merchant-detail
 import { DeliveryDetailsComponent } from './components/Deliveries/delivery-details/delivery-details.component';
 import { DeliveryListComponent } from './components/Deliveries/delivery-list/delivery-list.component';
 // import { EmployeeListComponent } from './components/Employee/employee-list/employee-list.component';
-import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
-import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
+// import { EmployeeDetailsComponent } from './components/Employee/employee-details/employee-details.component';
+// import { EmployeeListComponent } from './components/Employee/emplyee-list/employee-list.component';
 
 // import { DeliveryUpdateComponent } from './components/Deliveries/delivery-update/delivery-update.component';
 import { MerchantUpdateComponent } from './components/Merchants/merchant-update/merchant-update.component';
@@ -35,8 +35,8 @@ import { BranchesListComponent } from './components/branches/branches-list/branc
 import { CityUpdateComponent } from './components/city/city-update/city-update.component';
 import { CityAddComponent } from './components/city/city-add/city-add.component';
 import { GovernmentUpdateComponent } from './components/government/government-update/government-update.component';
-import { EmployeeAddComponent } from './components/Employee/employee-add/employee-add.component';
-import { EmployeeUpdateComponent } from './components/Employee/employee-update/employee-update.component';
+// import { EmployeeAddComponent } from './components/Employee/employee-add/employee-add.component';
+// import { EmployeeUpdateComponent } from './components/Employee/employee-update/employee-update.component';
 import { BrancheAddComponent } from './components/branches/branche-add/branche-add.component';
 import { BranchesUpdateComponent } from './components/branches/branche-update/branche-update.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
@@ -52,6 +52,8 @@ import { PricingUpdateComponent } from './components/price/pricing-update/pricin
 
 import { OrderReportComponent } from './components/reports/order-report.component';
 import { UpdateEmployeeComponent } from './components/Employee/update-employee/update-employee.component';
+import { EmployeeComponent } from './components/Employee/emplyee-list/employee-list.component';
+import { ChangePasswordComponent } from './components/auth/change-password/change-password.component';
 
 export const routes: Routes = [
   // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -147,20 +149,20 @@ export const routes: Routes = [
   },
   {
     path: 'Employee/list',
-    component: EmployeeListComponent,
+    component: EmployeeComponent,
   },
-  {
-    path: 'Employee/add',
-    component: EmployeeAddComponent,
-  },
-  {
-    path: 'Employee/details',
-    component: EmployeeDetailsComponent,
-  },
-  {
-    path: 'Employee/:id/update',
-    component: EmployeeUpdateComponent,
-  },
+  // {
+  //   path: 'Employee/add',
+  //   component: EmployeeAddComponent,
+  // },
+  // {
+  //   path: 'Employee/details',
+  //   component: EmployeeDetailsComponent,
+  // },
+  // {
+  //   path: 'Employee/:id/update',
+  //   component: EmployeeUpdateComponent,
+  // },
 
   {
     path: 'deliverys',
@@ -202,7 +204,6 @@ export const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: { requiredPermission: 'shipments:view' },
   },
-  { path: '**', redirectTo: '' },
 
   // {
   //   path: 'shipments/:id',
@@ -261,9 +262,18 @@ export const routes: Routes = [
       },
       {
         path: 'forgot-password',
-        component: ForgotPasswordFormComponent,
+        component: ForgotPasswordComponent,
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
       },
     ],
+  },
+  {
+    path: 'reset-password',
+    redirectTo: 'login/reset-password',
+    pathMatch: 'full',
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', redirectTo: '/dashboard' },

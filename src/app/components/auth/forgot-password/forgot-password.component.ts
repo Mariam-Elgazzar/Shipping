@@ -1,58 +1,64 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
+  ReactiveFormsModule,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+// import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-forgot-password-form',
+  selector: 'app-forgot-password',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss'],
-  imports: [ReactiveFormsModule, RouterLink, FormsModule, CommonModule],
-  standalone: true,
 })
-export class ForgotPasswordFormComponent {
+export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
+  isSubmitted = false;
   loading = false;
+  errorMessage = '';
+  successMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private authService: AuthService // ضيف الـ Service هنا
   ) {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
   }
 
-  onSubmit(): void {
-    if (this.forgotPasswordForm.invalid) {
-      return;
+  onSubmit() {
+    if (this.forgotPasswordForm.valid) {
+      this.loading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      const email = this.forgotPasswordForm.get('email')?.value;
+
+      this.authService.forgotPassword(email).subscribe({
+        next: (response) => {
+          this.loading = false;
+          this.isSubmitted = true;
+          this.successMessage =
+            'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
+          // this.successMessage = response.message || 'تم إرسال الرابط بنجاح';
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.message || 'حدث خطأ، حاول مرة أخرى';
+        },
+      });
     }
+  }
 
-    this.loading = true;
-    const email = this.forgotPasswordForm.controls['email'].value;
-
-    // In a real app, this would call an API endpoint
-    setTimeout(() => {
-      this.loading = false;
-      this.snackBar.open(
-        'Password reset instructions sent to your email',
-        'Close',
-        {
-          duration: 5000,
-        }
-      );
-      // Navigate to login page after showing the message
-      setTimeout(() => {
-        this.router.navigate(['/auth/login']);
-      }, 2000);
-    }, 1500);
+  backToLogin() {
+    this.router.navigate(['/login']);
   }
 }
