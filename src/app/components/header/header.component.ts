@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
@@ -12,7 +12,14 @@ import { CommonModule } from '@angular/common';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [CommonModule, MatIcon, MatDialogModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatIcon,
+    MatDialogModule,
+    MatMenuModule,
+    RouterLink,
+    RouterLinkActive,
+  ],
   standalone: true,
 })
 export class HeaderComponent {

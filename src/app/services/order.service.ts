@@ -64,6 +64,18 @@ export interface CreateOrderRequest {
     quantity: number;
   }[];
 }
+export interface PaginatedResponse<T> {
+  pageSize: number;
+  pageIndex: number;
+  totalCount: number;
+  data: T[];
+}
+export interface UpdateOrderRequest {
+  orderState: string;
+  shippigRepresentativeId: string | null;
+  amountReceived: number;
+  notes: string | null;
+}
 
 export interface PaginatedOrderResponse {
   pageSize: number;
@@ -71,7 +83,10 @@ export interface PaginatedOrderResponse {
   totalCount: number;
   data: Order[];
 }
-
+export interface ShippingRepresentative {
+  id: string;
+  name: string;
+}
 export interface City {
   id: number;
   name: string;
@@ -168,6 +183,12 @@ export class OrderService {
       .pipe(catchError(this.handleError));
   }
 
+  updateOrder(id: number, order: UpdateOrderRequest): Observable<Order> {
+    return this.http
+      .put<Order>(`${this.apiUrl}/Orders/UpdateOrder/${id}`, order)
+      .pipe(catchError(this.handleError));
+  }
+
   getCities(
     pageIndex = 1,
     pageSize = 100,
@@ -258,6 +279,46 @@ export class OrderService {
         data: Branch[];
       }>(`${this.apiUrl}/Branches/GetAll`, { params })
       .pipe(catchError(this.handleError));
+  }
+  // updateOrder(id: number, request: UpdateOrderRequest): Observable<Order> {
+  //   return this.http
+  //     .put<Order>(`${this.apiUrl}/Orders/UpdateOrder/${id}`, request)
+  //     .pipe(catchError(this.handleError));
+  // }
+
+  getShippingRepresentatives(
+    pageIndex = 1,
+    pageSize = 100,
+    search?: string,
+    sortBy?: string,
+    sortDirection?: string,
+    governorateId?: number
+  ): Observable<PaginatedResponse<ShippingRepresentative>> {
+    let params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
+
+    if (search) params = params.set('Search', search);
+    if (sortBy) params = params.set('SortBy', sortBy);
+    if (sortDirection) params = params.set('SortDirection', sortDirection);
+    if (governorateId !== undefined)
+      params = params.set('GovernorateId', governorateId.toString());
+
+    return this.http
+      .get<PaginatedResponse<ShippingRepresentative>>(
+        `${this.apiUrl}/ShippingRepresentatives/GetAll`,
+        { params }
+      )
+      .pipe(
+        map((response) => {
+          console.log('ShippingRepresentatives response:', response);
+          return {
+            ...response,
+            data: Array.isArray(response.data) ? response.data : [],
+          };
+        }),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

@@ -74,6 +74,7 @@
           type="submit"
           class="btn-signin"
           [disabled]="loginForm.invalid || loading"
+          routerLink="/"
         >
           <div class="spinner" *ngIf="loading"></div>
           <span *ngIf="!loading">Sign In</span>

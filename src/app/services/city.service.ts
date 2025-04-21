@@ -1,80 +1,102 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of } from 'rxjs';
-// import { City } from '../models/City.model';
-// import { environment } from '../../environments/environment';
-export interface City {
-  id: string;
-  goverenmentName: string;
-  cityName: string;
-  cost: string;
-  pickupCost: string;
-  status: string;
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { City } from '../models/city.model';
+
+export interface PaginatedResponse<T> {
+  pageSize: number;
+  pageIndex: number;
+  totalCount: number;
+  data: T[];
 }
+
 @Injectable({
   providedIn: 'root',
 })
 export class CityService {
-  private mockCitys: City[] = [
-    {
-      id: '1',
-      goverenmentName: 'string',
-      cityName: 'defgd@dghjffkmj',
-      cost: 'string',
-      pickupCost: 'string',
-      status: 'true',
-    },
-    {
-      id: '2',
-      goverenmentName: '2string',
-      cityName: '2defgd@dghjffkmj',
-      cost: '2string',
-      pickupCost: '2string',
-      status: 'false',
-    },
-    {
-      id: '3',
-      goverenmentName: 'string',
-      cityName: 'defgd@dghjffkmj',
-      cost: 'string',
-      pickupCost: 'string',
-      status: 'true',
-    },
-  ];
-  private apiUrl = '/api/Citys';
+  private readonly apiUrl =
+    environment.apiUrl || 'https://shippingmanagementsystem.runasp.net';
+
   constructor(private http: HttpClient) {}
 
-  // getCitys(): Observable<City[]> {
-  //   return this.http.get<City[]>(this.apiUrl);
-  // }
+  getCities(
+    pageIndex = 1,
+    pageSize = 100,
+    search?: string,
+    governorateId?: number,
+    minChargePrice?: number,
+    maxChargePrice?: number,
+    minPickUpPrice?: number,
+    maxPickUpPrice?: number,
+    isDeleted?: boolean,
+    sort?: string
+  ): Observable<PaginatedResponse<City>> {
+    let params = new HttpParams()
+      .set('PageIndex', pageIndex.toString())
+      .set('PageSize', pageSize.toString());
 
-  // getCityById(userId: string): Observable<City> {
-  //   return this.http.get<City>(`${this.apiUrl}/${userId}`);
-  // }
+    if (search) params = params.set('Search', search);
+    if (governorateId !== undefined)
+      params = params.set('GovernorateId', governorateId.toString());
+    if (minChargePrice !== undefined)
+      params = params.set('MinChargePrice', minChargePrice.toString());
+    if (maxChargePrice !== undefined)
+      params = params.set('MaxChargePrice', maxChargePrice.toString());
+    if (minPickUpPrice !== undefined)
+      params = params.set('MinPickUpPrice', minPickUpPrice.toString());
+    if (maxPickUpPrice !== undefined)
+      params = params.set('MaxPickUpPrice', maxPickUpPrice.toString());
+    if (isDeleted !== undefined)
+      params = params.set('IsDeleted', isDeleted.toString());
+    if (sort) params = params.set('Sort', sort);
 
-  createCity(City: City): Observable<City> {
-    return this.http.post<City>(this.apiUrl, City);
+    return this.http
+      .get<PaginatedResponse<City>>(`${this.apiUrl}/Cities/GetAll`, { params })
+      .pipe(
+        map((response) => {
+          console.log('Cities response:', response);
+          return {
+            ...response,
+            data: Array.isArray(response.data) ? response.data : [],
+          };
+        }),
+        catchError(this.handleError)
+      );
   }
 
-  updateCity(userId: string, City: City): Observable<City> {
-    return this.http.put<City>(`${this.apiUrl}/${userId}`, City);
+  getCityDetails(id: number): Observable<City> {
+    return this.http
+      .get<City>(`${this.apiUrl}/Cities/GetCityById/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
-  // deleteCity(userId: string): Observable<void> {
-  //   return this.http.delete<void>(`${this.apiUrl}/${userId}`);
-  // }
-
-  getCitys(): Observable<any[]> {
-    return of(this.mockCitys).pipe(delay(500));
+  deleteCity(cityId: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiUrl}/Cities/${cityId}`)
+      .pipe(catchError(this.handleError));
   }
 
-  getCityDetails(CityId: string): Observable<any> {
-    const City = this.mockCitys.find((o) => o.id === CityId);
-    return of(City).pipe(delay(300));
-  }
-
-  deleteCity(CityId: string): Observable<boolean> {
-    // In a real app, this would make an API call
-    return of(true).pipe(delay(300));
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An error occurred';
+    if (error.status === 401) {
+      errorMessage = 'Unauthorized access. Please log in again.';
+    } else if (error.status === 403) {
+      errorMessage = 'Access denied.';
+    } else if (error.status === 404) {
+      errorMessage = 'Resource not found.';
+    } else if (error.status === 400) {
+      errorMessage = error.error?.message || 'Invalid request.';
+    } else if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = error.error?.message || `Server error: ${error.status}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

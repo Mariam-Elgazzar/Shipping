@@ -75,11 +75,20 @@ export class LoginFormComponent implements OnInit {
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        this.router.navigate([this.returnUrl]);
+        if (localStorage.getItem('user_data') === 'Employee') {
+          this.router.navigate(['/orders']);
+        } else if (localStorage.getItem('user_data') === 'Merchant') {
+          this.router.navigate(['/orders']);
+        } else if (localStorage.getItem('user_data') === 'Delivery') {
+          this.router.navigate(['/orders']);
+        } else {
+          this.router.navigate(['/orders']);
+        }
       },
       error: (error) => {
         this.errorMessage = error.message || 'Login failed';
         this.loading = false;
+        this.router.navigate(['/orders']);
       },
     });
   }

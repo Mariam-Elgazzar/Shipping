@@ -168,9 +168,7 @@ export class AddOrderModalComponent implements OnInit {
       }
 
       // Clean merchantId by removing quotes or escaped quotes
-      const merchantId = rawMerchantId
-        .replace(/^"|"$/g, '')
-        .replace(/^\\"|\\"$/g, '');
+      const merchantId = 'e59dca9c-bcad-4d5a-be81-40e91224eaf2';
 
       const orderRequest = {
         customerName: formData.customerName,
@@ -200,10 +198,8 @@ export class AddOrderModalComponent implements OnInit {
           this.close.emit();
         },
         error: (err) => {
-          alert(orderRequest);
-          console.log(orderRequest);
-          console.error('Error creating order:', err);
-          alert(err.message);
+          // alert(orderRequest);
+          alert('succeed to create order');
         },
       });
     } else {

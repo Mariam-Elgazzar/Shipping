@@ -3,13 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { OrderStatsComponent } from './order-stats/order-stats.component';
 import { OrderTableComponent } from './order-table/order-table.component';
+import { HeaderComponent } from '../header/header.component';
 // import { OrderTableComponent } from "./order-table/order-table.component"
 
 @Component({
   selector: 'app-order-dashboard',
   standalone: true,
 
-  imports: [CommonModule, OrderStatsComponent, OrderTableComponent],
+  imports: [
+    CommonModule,
+    OrderStatsComponent,
+    OrderTableComponent,
+    HeaderComponent,
+  ],
   templateUrl: './order-dashboard.component.html',
 
   styleUrls: ['./order-dashboard.component.scss'],

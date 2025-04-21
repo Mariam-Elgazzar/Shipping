@@ -29,6 +29,11 @@ import { NgModule } from '@angular/core';
 import { DeliveryListComponent } from './components/Deliveries/delivery-list/delivery-list.component';
 import { MerchantFormComponent } from './components/Merchants/add-merchant/merchant.component';
 import { OrderDashboardComponent } from './components/order/order-dashboard.component';
+import { RolesListComponent } from './components/admin/roles/roles-list/roles-list.component';
+import { RejectionReasonService } from './services/rejectionReason.service';
+import { AddOrderModalComponent } from './components/order/add-order-modal/add-order-modal.component';
+import { CreateCityComponent } from './components/city/create-city/create-city.component';
+import { CityListComponent } from './components/city/city-list/city-list.component';
 
 // // import { DeliveryComponent } from './components/Deliveries/add-delivery/delivery.component';
 // import { PermissionsListComponent } from './components/admin/permissions/permission-list/permissions-list.component';
@@ -365,6 +370,11 @@ export const routes: Routes = [
       { path: 'change-password', component: ChangePasswordComponent },
     ],
   },
+  { path: 'admin/roles', component: PermissionsMatrixComponent },
+  { path: 'Employee/list', component: EmployeeComponent },
+  { path: 'Merchant/list', component: MerchantListComponent },
+  { path: 'Delivery/list', component: DeliveryListComponent },
+  { path: 'Rej', component: RejectionReasonService },
   {
     path: 'delivery',
     component: DeliveryDashboardComponent,
@@ -374,14 +384,14 @@ export const routes: Routes = [
   {
     path: 'merchant',
     component: MerchantListComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Merchant'] },
+    // canActivate: [RoleGuard],
+    // data: { roles: ['Merchant'] },
   },
   {
-    path: 'employee',
-    component: EmployeeComponent,
+    path: 'orders/add',
+    component: AddOrderModalComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['Employee'] },
+    data: { roles: ['Delivery', 'Employee'] },
   },
   // {
   //   path: 'Branchs',
@@ -411,6 +421,9 @@ export const routes: Routes = [
       ],
     },
   },
+  {path:"city/add",component:CreateCityComponent},
+  {path:"city/list",component:CityListComponent},
+
   { path: 'merchants/create', component: MerchantFormComponent },
   { path: 'merchants/edit/:id', component: MerchantFormComponent },
   {

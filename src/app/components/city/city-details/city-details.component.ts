@@ -7,42 +7,43 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CityService } from '../../../services/City.service';
-// import { CityService } from '../../../services/city.service';
+import { CityService } from '../../../services/city.service';
+import { City } from '../../../models/city.model';
 
 @Component({
-  selector: 'app-City-details',
+  selector: 'app-city-details',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './City-details.component.html',
-  styleUrls: ['./City-details.component.scss'],
+  templateUrl: './city-details.component.html',
+  styleUrls: ['./city-details.component.scss'],
 })
 export class CityDetailsComponent implements OnChanges {
-  @Input() CityId: string | null = null;
+  @Input() cityId: number | null = null;
   @Input() isVisible = false;
   @Output() close = new EventEmitter<void>();
 
-  CityDetails: any = null;
+  cityDetails: City | null = null;
 
   constructor(private cityService: CityService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['CityId'] && this.CityId) {
+    if (changes['cityId'] && this.cityId !== null) {
       this.loadCityDetails();
     }
   }
 
   loadCityDetails(): void {
-    if (!this.CityId) return;
+    if (!this.cityId) return;
 
-    this.cityService.getCityDetails(this.CityId).subscribe(
-      (details) => {
-        this.CityDetails = details;
+    this.cityService.getCityDetails(this.cityId).subscribe({
+      next: (details) => {
+        this.cityDetails = details;
       },
-      (error) => {
-        console.error('Error loading City details:', error);
-      }
-    );
+      error: (error) => {
+        console.error('Error loading city details:', error);
+        alert('Failed to load city details.');
+      },
+    });
   }
 
   onOverlayClick(event: MouseEvent): void {
@@ -52,10 +53,11 @@ export class CityDetailsComponent implements OnChanges {
   }
 
   onClose(): void {
+    this.cityDetails = null;
     this.close.emit();
   }
 
   onEdit(): void {
-    console.log('Edit City details:', this.CityId);
+    console.log('Edit city details:', this.cityId);
   }
 }

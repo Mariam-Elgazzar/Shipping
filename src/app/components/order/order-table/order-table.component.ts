@@ -13,6 +13,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { RouterLink } from '@angular/router';
 
 interface FilterOptions {
   categories: string[];
@@ -210,7 +211,26 @@ export class OrderTableComponent implements OnInit, OnDestroy {
   }
 
   addNewOrder(): void {
-    this.showAddOrderModal = true;
+    const userData = localStorage.getItem('user_data');
+    const userPermissionsRaw = localStorage.getItem('user_permissions');
+    let userPermissions: { [key: string]: string[] } = {};
+
+    // if (userPermissionsRaw) {
+    //   try {
+    //     userPermissions = JSON.parse(userPermissionsRaw);
+    //   } catch (error) {
+    //     console.error('Failed to parse user permissions:', error);
+    //     alert('Invalid user permissions data.');
+    //     return;
+    //   }
+    // }
+
+    if (userData === 'Merchant' || userData !== 'Employee') {
+      this.showAddOrderModal = true;
+    } else {
+      this.showAddOrderModal = false;
+      alert('You do not have permission to add a new order.');
+    }
   }
 
   createOrder(orderData: any): void {

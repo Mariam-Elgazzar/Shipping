@@ -20,111 +20,43 @@
       </button>
     </div>
 
-    <div class="modal-content" *ngIf="CityDetails">
-      <div class="City-section">
+    <div class="modal-content" *ngIf="cityDetails">
+      <div class="city-section">
         <h3>City Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Goverenment</div>
-            <div class="info-value">{{ CityDetails.goverenmentName }}</div>
+            <div class="info-label">Governorate</div>
+            <div class="info-value">{{ cityDetails.governorateName }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">City</div>
-            <div class="info-value">{{ CityDetails.cityName }}</div>
+            <div class="info-value">{{ cityDetails.name }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Charge Cost</div>
-            <div class="info-value">{{ CityDetails.cost }}</div>
+            <div class="info-label">Charge Price</div>
+            <div class="info-value">{{ cityDetails.chargePrice }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">pickupCost</div>
-            <div class="info-value">{{ CityDetails.pickupCost }}</div>
+            <div class="info-label">PickUp Price</div>
+            <div class="info-value">{{ cityDetails.pickUpPrice }}</div>
           </div>
-
           <div class="info-item">
             <div class="info-label">Status</div>
             <div class="info-value">
               <span
                 class="status-badge"
-                [ngClass]="CityDetails.status.toLowerCase()"
+                [ngClass]="cityDetails.isDeleted ? 'deleted' : 'active'"
               >
-                {{ CityDetails.status }}
+                {{ cityDetails.isDeleted ? 'Deleted' : 'Active' }}
               </span>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="City-section">
-        <h3>Driver Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ CityDetails.driverName }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone Number</div>
-            <div class="info-value">
-              {{ CityDetails.driverPhone || "N/A" }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">License Number</div>
-            <div class="info-value">
-              {{ CityDetails.licenseNumber || "N/A" }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="City-section">
-        <h3>Delivery Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Last Location</div>
-            <div class="info-value">{{ CityDetails.lastLocation }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Schedule</div>
-            <div class="info-value">
-              {{ CityDetails.deliverySchedule }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="CityDetails.deliveryStatus.toLowerCase()"
-              >
-                {{ CityDetails.deliveryStatus }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="City-section" *ngIf="CityDetails.deliveryHistory?.length">
-        <h3>Delivery History</h3>
-        <div class="history-timeline">
-          <div
-            class="timeline-item"
-            *ngFor="let history of CityDetails.deliveryHistory"
-          >
-            <div
-              class="timeline-dot"
-              [ngClass]="history.status.toLowerCase()"
-            ></div>
-            <div class="timeline-content">
-              <div class="timeline-date">{{ history.date }}</div>
-              <div class="timeline-title">{{ history.title }}</div>
-              <div class="timeline-description">
-                {{ history.description }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="modal-content" *ngIf="!cityDetails && isVisible">
+      <p>Loading city details...</p>
     </div>
 
     <div class="modal-footer">

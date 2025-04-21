@@ -1,77 +1,102 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// import {  CityService } from '../../../services/City.service';
-// import { CityDetailsComponent } from '../City-details/City-details.component';
-// import { CityService } from '../../../services/City.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { CityDetailsComponent } from '../city-details/city-details.component';
-import { City, CityService } from '../../../services/City.service';
-// import { CityDetailsComponent } from '../City-details/City-details.component';
+// import { CityService, PaginatedResponse } from '../../../services/city.service';
+import { City } from '../../../models/city.model';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { CityService, PaginatedResponse } from '../../../services/city.service';
+// import { CityService, PaginatedResponse } from '../../../services/City.service';
 
 @Component({
-  selector: 'app-City-table',
+  selector: 'app-city-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterLink,
-    CityDetailsComponent,
-  ],
-  templateUrl: './City-list.component.html',
-  styleUrls: ['./City-list.component.scss'],
+  imports: [CommonModule, FormsModule, RouterLink, CityDetailsComponent],
+  templateUrl: './city-list.component.html',
+  styleUrls: ['./city-list.component.scss'],
 })
-export class CityListComponent implements OnInit {
-  Citys: City[] = [];
-  filteredCitys: City[] = [];
-  selectedCitys: string[] = [];
-  activeActionMenu: string | null = null;
+export class CityListComponent implements OnInit, OnDestroy {
+  cities: City[] = [];
+  filteredCities: City[] = [];
+  selectedCities: number[] = [];
+  activeActionMenu: number | null = null;
   searchTerm = '';
+  pageIndex = 1;
+  pageSize = 100;
+  totalCount = 0;
 
-  // For  City details modal
-  selectedCityId: string | null = null;
+  // For city details modal
+  selectedCityId: number | null = null;
   isCityDetailsVisible = false;
 
-  constructor(private CityService: CityService) {}
+  private clickListener!: (event: Event) => void;
+  private searchSubject = new Subject<string>();
+
+  constructor(private cityService: CityService) {}
 
   ngOnInit(): void {
-    this.loadCitys();
+    this.loadCities();
+
+    // Debounce search input
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((searchTerm) => {
+        this.searchTerm = searchTerm;
+        this.pageIndex = 1; // Reset to first page on search
+        this.loadCities();
+      });
 
     // Close action menu when clicking outside
-    document.addEventListener('click', (event) => {
+    this.clickListener = (event: Event) => {
       if (
         this.activeActionMenu &&
         !(event.target as HTMLElement).closest('.action-btn')
       ) {
         this.activeActionMenu = null;
       }
-    });
+    };
+    document.addEventListener('click', this.clickListener);
   }
 
-  loadCitys(): void {
-    this.CityService.getCitys().subscribe(
-      (data) => {
-        this.Citys = data;
-        this.filteredCitys = [...data];
-      },
-      (error) => {
-        console.error('Error loading  Citys:', error);
-      }
-    );
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.clickListener);
+    this.searchSubject.complete();
   }
 
-  filterCitys(): void {
+  loadCities(): void {
+    this.cityService
+      .getCities(this.pageIndex, this.pageSize, this.searchTerm || undefined)
+      .subscribe({
+        next: (response: PaginatedResponse<City>) => {
+          this.cities = response.data;
+          this.filteredCities = [...response.data];
+          this.totalCount = response.totalCount;
+        },
+        error: (error) => {
+          console.error('Error loading cities:', error);
+          alert('Failed to load cities.');
+        },
+      });
+  }
+
+  onSearchChange(searchTerm: string): void {
+    this.searchSubject.next(searchTerm);
+  }
+
+  filterCities(): void {
+    // Client-side filtering (optional, kept for fallback)
     if (!this.searchTerm.trim()) {
-      this.filteredCitys = [...this.Citys];
+      this.filteredCities = [...this.cities];
       return;
     }
 
     const term = this.searchTerm.toLowerCase();
-    this.filteredCitys = this.Citys.filter(
-      (City) =>
-        City.goverenmentName.toLowerCase().includes(term) ||
-        City.cityName.toLowerCase().includes(term) ||
-        City.cost.toLowerCase().includes(term)
+    this.filteredCities = this.cities.filter(
+      (city) =>
+        city.governorateName.toLowerCase().includes(term) ||
+        city.name.toLowerCase().includes(term) ||
+        city.chargePrice.toString().includes(term)
     );
   }
 
@@ -79,50 +104,51 @@ export class CityListComponent implements OnInit {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
-      this.selectedCitys = this.filteredCitys.map((City) => City.id);
+      this.selectedCities = this.filteredCities.map((city) => city.id);
     } else {
-      this.selectedCitys = [];
+      this.selectedCities = [];
     }
   }
 
-  toggleCitySelection(CityId: string): void {
-    const index = this.selectedCitys.indexOf(CityId);
+  toggleCitySelection(cityId: number): void {
+    const index = this.selectedCities.indexOf(cityId);
 
     if (index === -1) {
-      this.selectedCitys.push(CityId);
+      this.selectedCities.push(cityId);
     } else {
-      this.selectedCitys.splice(index, 1);
+      this.selectedCities.splice(index, 1);
     }
   }
 
-  showActionMenu(CityId: string): void {
-    this.activeActionMenu = this.activeActionMenu === CityId ? null : CityId;
+  showActionMenu(cityId: number): void {
+    this.activeActionMenu = this.activeActionMenu === cityId ? null : cityId;
   }
 
-  viewCityDetails(CityId: string): void {
-    this.selectedCityId = CityId;
+  viewCityDetails(cityId: number): void {
+    this.selectedCityId = cityId;
     this.isCityDetailsVisible = true;
     this.activeActionMenu = null;
   }
 
-  editCity(CityId: string): void {
-    console.log('Edit  City:', CityId);
+  editCity(cityId: number): void {
+    console.log('Edit city:', cityId);
     this.activeActionMenu = null;
   }
 
-  deleteCity(CityId: string): void {
-    if (confirm('Are you sure you want to delete this  City?')) {
-      this.CityService.deleteCity(CityId).subscribe(
-        () => {
-          this.Citys = this.Citys.filter((City) => City.id !== CityId);
-          this.filteredCitys = this.filteredCitys.filter(
-            (City) => City.id !== CityId
+  deleteCity(cityId: number): void {
+    if (confirm('Are you sure you want to delete this city?')) {
+      this.cityService.deleteCity(cityId).subscribe({
+        next: () => {
+          this.cities = this.cities.filter((city) => city.id !== cityId);
+          this.filteredCities = this.filteredCities.filter(
+            (city) => city.id !== cityId
           );
         },
-        (error) => {
-          console.error('Error deleting  City:', error);
-        }
-      );
+        error: (error) => {
+          console.error('Error deleting city:', error);
+          alert('Failed to delete city.');
+        },
+      });
     }
     this.activeActionMenu = null;
   }

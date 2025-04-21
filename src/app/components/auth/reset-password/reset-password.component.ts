@@ -76,19 +76,19 @@ export class ResetPasswordComponent {
 
       const { password } = this.resetPasswordForm.value;
 
-      // this.authService
-      //   .resetPassword(this.email, this.token, password)
-      //   .subscribe({
-      //     next: () => {
-      //       this.loading = false;
-      //       alert('Password reset successfully!');
-      //       this.resetPasswordForm.reset();
-      //     },
-      //     error: (err) => {
-      //       this.loading = false;
-      //       alert(err.message || 'Failed to reset password.');
-      //     },
-      //   });
+      this.authService
+        .resetPassword(this.email, this.token, password)
+        .subscribe({
+          next: () => {
+            this.loading = false;
+            alert('Password reset successfully!');
+            this.resetPasswordForm.reset();
+          },
+          error: (err) => {
+            this.loading = false;
+            alert(err.message || 'Failed to reset password.');
+          },
+        });
     } else {
       alert('Invalid form or missing email/token.');
     }

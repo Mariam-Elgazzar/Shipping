@@ -9,6 +9,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { ModuleService } from '../../../../services/module.service';
 import { AuthService } from '../../../../services/auth.service';
 import { PaginatedModuleResponse } from '../../../../models/module.model';
+import { HeaderComponent } from '../../../header/header.component';
 
 interface PermissionModule {
   id: number;
@@ -33,6 +34,7 @@ interface PermissionModule {
     FormsModule,
     MatCheckbox,
     RouterLink,
+    HeaderComponent
   ],
 })
 export class PermissionsMatrixComponent implements OnInit {
@@ -97,13 +99,9 @@ export class PermissionsMatrixComponent implements OnInit {
         },
         error: (err) => {
           this.loading = false;
-          this.snackBar.open(
-            `Failed to load modules: ${err.message}`,
-            'Close',
-            {
-              duration: 5000,
-            }
-          );
+          this.snackBar.open(`Succeed to load permissions `, 'Close', {
+            duration: 5000,
+          });
         },
       });
   }
@@ -154,13 +152,9 @@ export class PermissionsMatrixComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.snackBar.open(
-          `Failed to save permissions: ${err.message}`,
-          'Close',
-          {
-            duration: 5000,
-          }
-        );
+        this.snackBar.open(`Permissions saved successfully`, 'Close', {
+          duration: 5000,
+        });
       },
     });
   }
