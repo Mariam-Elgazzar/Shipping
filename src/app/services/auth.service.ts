@@ -23,29 +23,53 @@ export class AuthService {
   }
 
   private loadUserFromStorage(): void {
+    const token = localStorage.getItem(this.tokenKey);
     const userData = localStorage.getItem(this.userKey);
     const permissionsData = localStorage.getItem(this.permissionsKey);
     const idData = localStorage.getItem(this.userIdKey);
 
+    // ✅ لو التوكن مش موجود أو منتهي: نلوج أوت
+    if (!token || this.isTokenExpired(token)) {
+      this.logout();
+      return;
+    }
+
+    // ✅ لو باقي البيانات موجودة
     if (userData && idData) {
       try {
-        const role = JSON.parse(userData);
+        const role = JSON.parse(userData).role;
         const id = JSON.parse(idData);
         const permissions = permissionsData ? JSON.parse(permissionsData) : {};
         const user: LoginResponse = {
           id,
           message: '',
-          token: localStorage.getItem(this.tokenKey) || '',
+          token,
           role,
           permissions,
         };
         this.currentUserSubject.next(user);
       } catch (e) {
         console.error('Error parsing user data from localStorage', e);
-        this.logout();
+        this.logout(); // 🧹 امسح أي بيانات بايظة
       }
+    } else {
+      this.logout();
     }
   }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      if (!exp) return true;
+      const now = Math.floor(new Date().getTime() / 1000);
+      return now > exp;
+    } catch (e) {
+      console.error('Invalid token format', e);
+      return true;
+    }
+  }
+
 
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
     return this.http
@@ -98,6 +122,7 @@ export class AuthService {
     const user = this.currentUserSubject.value;
     return user?.role === roleName || false;
   }
+
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';

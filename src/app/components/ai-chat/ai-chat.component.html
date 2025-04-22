@@ -1,0 +1,15 @@
+<div class="chat-container">
+  <div class="chat-box">
+    <div *ngFor="let message of messages" class="message">
+      <span>{{ message }}</span>
+    </div>
+  </div>
+
+  <textarea [(ngModel)]="userMessage" placeholder="Write your message..."></textarea>
+
+  <button (click)="sendMessage()">Send</button>
+
+  <div *ngIf="aiResponse" class="ai-response">
+    <p>{{ aiResponse }}</p>
+  </div>
+</div>

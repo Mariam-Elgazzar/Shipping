@@ -1,0 +1,58 @@
+.chat-container {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  height: 400px;
+  overflow-y: auto;
+  z-index: 9999; /* لازم يكون في أعلى الصفحة */
+}
+
+.messages {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.user-message {
+  text-align: right;
+}
+
+.bot-message {
+  text-align: left;
+}
+
+.chat-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-input input {
+  width: 80%;
+}
+
+.chat-input button {
+  width: 18%;
+}
+
+/* زرار فتح الشات */
+.open-chat-btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 50%;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.open-chat-btn:hover {
+  background-color: #45a049;
+}
