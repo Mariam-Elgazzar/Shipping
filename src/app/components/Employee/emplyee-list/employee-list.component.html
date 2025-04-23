@@ -1,51 +1,421 @@
-<div class="mt-5 container p-5">
-  <h1 class="text-center text-muted mb-4">Employees</h1>
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-outline-primary" routerLink="/Employee/0/edit">
-      Add New Employee
-    </button>
-    <input type="text" [(ngModel)]="Search" (input)="SearchHandle(Search)" class="form-control w-25" placeholder="Search ...."
-       />
+<div class="employee-table-container">
+  <div class="table-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
+      <h3>Employees</h3>
+    </div>
+
+    <div class="header-actions">
+      <button class="add-btn" [routerLink]="['/Employee/add']">
+        Add New Employee
+      </button>
+
+      <div class="search-box">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          [(ngModel)]="searchTerm"
+          (input)="filterEmployees()"
+        />
+      </div>
+    </div>
   </div>
-  <table class="table mt-5">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Phone Number</th>
-        <th scope="col">Branch</th>
-        <th scope="col">Permission</th>
-        <th scope="col">Status</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (emp of employees; track $index) {
+
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="table-wrapper">
+    <table class="employee-table">
+      <thead>
         <tr>
-          <th scope="row">{{emp.name}}</th>
-          <td>{{emp.email}}</td>
-          <td>{{emp.phoneNumber}}</td>
-          <td>{{emp.brachName}}</td>
-          <td>{{emp.groupName}}</td>
-          <td>
-            <div class="form-check ms-3">
-              <input class="form-check-input" type="checkbox" [checked]="!emp.isDeleted"
-              (change)="isDeletedHandler($event,emp)" >
+          <th class="checkbox-col">
+            <input
+              type="checkbox"
+              (change)="toggleSelectAll($event)"
+              [checked]="
+                filteredEmployees.length > 0 &&
+                selectedEmployees.length === filteredEmployees.length
+              "
+            />
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('name')"
+            [class.sorted]="sortColumn === 'name'"
+          >
+            Employee Name
+            <span class="sort-icon" *ngIf="sortColumn === 'name'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('email')"
+            [class.sorted]="sortColumn === 'email'"
+          >
+            Email
+            <span class="sort-icon" *ngIf="sortColumn === 'email'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+          <th
+            class="sortable"
+            (click)="toggleSort('phoneNumber')"
+            [class.sorted]="sortColumn === 'phoneNumber'"
+          >
+            Phone
+            <span class="sort-icon" *ngIf="sortColumn === 'phoneNumber'">
+              <svg
+                *ngIf="sortDirection === 'asc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
+              </svg>
+              <svg
+                *ngIf="sortDirection === 'desc'"
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 5v14m0 0l7-7m-7 7l-7-7"></path>
+              </svg>
+            </span>
+          </th>
+
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of filteredEmployees">
+          <td class="checkbox-col">
+            <input
+              type="checkbox"
+              [checked]="selectedEmployees.includes(employee.id)"
+              (change)="toggleEmployeeSelection(employee.id)"
+            />
+          </td>
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.phoneNumber }}</td>
+
+          <td class="actions-col">
+            <button class="action-btn" (click)="showActionMenu(employee.id)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+
+            <div class="action-menu" *ngIf="activeActionMenu === employee.id">
+              <button
+                class="menu-item"
+                (click)="viewEmployeeDetails(employee.id)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                View
+              </button>
+              <button class="menu-item" (click)="editEmployee(employee)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                  ></path>
+                  <path
+                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                  ></path>
+                </svg>
+                Edit
+              </button>
+              <button
+                class="menu-item delete"
+                (click)="deleteEmployee(employee.id)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
+                </svg>
+                Delete
+              </button>
             </div>
           </td>
-          <td>
-            <i class="text-info fs-4 mx-2 bi bi-pencil-square" routerLink="/Employee/{{emp.id}}/edit"></i>
-            <i class="text-danger fs-4 mx-2 bi bi-trash-fill" (click)="DeleteHandler(emp)" ></i>
-          </td>
         </tr>
-      }
+      </tbody>
+    </table>
+  </div>
 
-    </tbody>
-  </table>
-  <button (click)="Pagination(PageIndex-1)"  [disabled]="PageIndex<=1" class="btn btn-warning">
-    Back
-  </button>
-  <button (click)="Pagination(PageIndex+1)"[disabled]="" class="btn btn-warning m-3">
-    Next
-  </button>
+  <div
+    class="pagination-container"
+    *ngIf="!isLoading && filteredEmployees.length > 0"
+  >
+    <div class="pagination-info">
+      Showing {{ displayRange.start }} to {{ displayRange.end }} of
+      {{ displayRange.total }} entries
+    </div>
+
+    <div class="pagination-controls">
+      <div class="page-size-selector">
+        <select (change)="changePageSize($event)">
+          <option
+            *ngFor="let size of pageSizeOptions"
+            [value]="size"
+            [selected]="pageSize === size"
+          >
+            {{ size }} per page
+          </option>
+        </select>
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="firstPage()"
+          aria-label="First page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="11 17 6 12 11 7"></polyline>
+            <polyline points="18 17 13 12 18 7"></polyline>
+          </svg>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+          aria-label="Previous page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <span *ngIf="page < 0" class="pagination-ellipsis">...</span>
+          <button
+            *ngIf="page > 0"
+            class="pagination-button"
+            [class.active]="currentPage === page"
+            (click)="goToPage(page)"
+          >
+            <span>{{ page }}</span>
+          </button>
+        </ng-container>
+
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+          aria-label="Next page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button
+          class="pagination-button"
+          [disabled]="currentPage === totalPages"
+          (click)="lastPage()"
+          aria-label="Last page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="13 17 18 12 13 7"></polyline>
+            <polyline points="6 17 11 12 6 7"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <app-employee-details
+    *ngIf="selectedEmployeeId && isEmployeeDetailsVisible"
+    [employeeId]="selectedEmployeeId"
+    [isVisible]="isEmployeeDetailsVisible"
+    (close)="closeEmployeeDetails()"
+  ></app-employee-details>
 </div>

@@ -14,6 +14,8 @@ import {
   MerchantRequest,
   MerchantResponse,
 } from '../models/merchant.model';
+import { CreateMerchantRequest } from '../components/Merchants/add-merchant/merchant.component';
+export interface UpdateMerchantRequest extends CreateMerchantRequest {}
 
 @Injectable({
   providedIn: 'root',
@@ -45,33 +47,39 @@ export class MerchantService {
       );
   }
 
-  getMerchantById(id: string): Observable<MerchantResponse> {
+  // getMerchantById(id: string): Observable<MerchantResponse> {
+  //   return this.http
+  //     .get<MerchantResponse>(`${this.apiUrl}/GetById/${id}`)
+  //     .pipe(catchError(this.handleError));
+  // }
+
+  // createMerchant(request: MerchantRequest): Observable<CreateMerchantResponse> {
+  //   return this.http
+  //     .post<CreateMerchantResponse>(`${this.apiUrl}/Add`, request)
+  //     .pipe(catchError(this.handleError));
+  // }
+
+  // updateMerchant(request: MerchantRequest): Observable<MerchantResponse> {
+  //   return this.http
+  //     .put<MerchantResponse>(`${this.apiUrl}/Update`, request)
+  //     .pipe(catchError(this.handleError));
+  // }
+  createMerchant(request: CreateMerchantRequest): Observable<MerchantResponse> {
     return this.http
-      .get<MerchantResponse>(`${this.apiUrl}/GetById/${id}`)
+      .post<MerchantResponse>(`${this.apiUrl}/Add`, request)
       .pipe(catchError(this.handleError));
   }
 
-  createMerchant(request: MerchantRequest): Observable<CreateMerchantResponse> {
-    return this.http
-      .post<CreateMerchantResponse>(`${this.apiUrl}/Add`, request)
-      .pipe(catchError(this.handleError));
-  }
-
-  updateMerchant(request: MerchantRequest): Observable<MerchantResponse> {
+  updateMerchant(request: UpdateMerchantRequest): Observable<MerchantResponse> {
     return this.http
       .put<MerchantResponse>(`${this.apiUrl}/Update`, request)
       .pipe(catchError(this.handleError));
   }
 
-  getCities(): Observable<City[]> {
-    return new Observable((observer) => {
-      observer.next([
-        { id: 1, name: 'Cairo' },
-        { id: 2, name: 'Alexandria' },
-        { id: 3, name: 'Giza' },
-      ]);
-      observer.complete();
-    });
+  getMerchantById(id: string): Observable<any> {
+    return this.http
+      .get<MerchantResponse>(`${this.apiUrl}/GetById/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
   deleteMerchant(id: string): Observable<void> {

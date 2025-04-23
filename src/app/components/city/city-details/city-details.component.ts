@@ -1,13 +1,15 @@
 import {
   Component,
+  EventEmitter,
   Input,
   Output,
-  EventEmitter,
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// import { CityResponse } from '../../../models/city.model';
 import { CityService } from '../../../services/city.service';
+import { Router } from '@angular/router';
 import { City } from '../../../models/city.model';
 
 @Component({
@@ -22,9 +24,9 @@ export class CityDetailsComponent implements OnChanges {
   @Input() isVisible = false;
   @Output() close = new EventEmitter<void>();
 
-  cityDetails: City | null = null;
+  city: City | null = null;
 
-  constructor(private cityService: CityService) {}
+  constructor(private cityService: CityService, private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['cityId'] && this.cityId !== null) {
@@ -33,15 +35,14 @@ export class CityDetailsComponent implements OnChanges {
   }
 
   loadCityDetails(): void {
-    if (!this.cityId) return;
+    if (this.cityId === null) return;
 
     this.cityService.getCityDetails(this.cityId).subscribe({
-      next: (details) => {
-        this.cityDetails = details;
+      next: (city) => {
+        this.city = city;
       },
-      error: (error) => {
-        console.error('Error loading city details:', error);
-        alert('Failed to load city details.');
+      error: (err) => {
+        console.error('Failed to load city:', err);
       },
     });
   }
@@ -53,11 +54,14 @@ export class CityDetailsComponent implements OnChanges {
   }
 
   onClose(): void {
-    this.cityDetails = null;
     this.close.emit();
+    this.city = null;
   }
 
   onEdit(): void {
-    console.log('Edit city details:', this.cityId);
+    if (this.cityId !== null) {
+      this.router.navigate([`/cities/edit/${this.cityId}`]);
+      this.onClose();
+    }
   }
 }

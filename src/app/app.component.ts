@@ -15,4 +15,7 @@ export class AppComponent {
   title = 'Shipping Management System';
 
   constructor(public authService: AuthService) {}
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 }

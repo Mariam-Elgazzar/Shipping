@@ -63,6 +63,8 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log(this.loginForm.value);
+
     if (this.loginForm.invalid) {
       return;
     }
@@ -75,20 +77,32 @@ export class LoginFormComponent implements OnInit {
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        if (localStorage.getItem('user_data') === 'Employee') {
-          this.router.navigate(['/orders']);
-        } else if (localStorage.getItem('user_data') === 'Merchant') {
-          this.router.navigate(['/orders']);
-        } else if (localStorage.getItem('user_data') === 'Delivery') {
-          this.router.navigate(['/orders']);
-        } else {
-          this.router.navigate(['/orders']);
+        localStorage.setItem('user_data', JSON.stringify(response));
+
+        const userData = response;
+
+        switch (userData.role) {
+          case 'Admin':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'Employee':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'Merchant':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'Delivary':
+            this.router.navigate(['/delivery']);
+            break;
+          default:
+            this.router.navigate(['/unauthorized']);
         }
-      },
+      }
+      ,
       error: (error) => {
         this.errorMessage = error.message || 'Login failed';
         this.loading = false;
-        this.router.navigate(['/orders']);
+        this.router.navigate(['/unauthorized']);
       },
     });
   }

@@ -113,7 +113,62 @@ export interface Branch {
   location: string;
   cityId: number;
 }
+// order-report.model.ts
+export interface OrderReport {
+  id: string;
+  status: string; // Maps to orderState
+  merchant: string; // Maps to merchantName
+  customer: string; // Maps to customerName
+  phone: string; // Maps to customerPhone1
+  governorate: string; // Not directly in API, can derive from cityName if needed
+  city: string; // Maps to cityName
+  orderCost: number; // Maps to orderPrice
+  receivedAmount: number; // Maps to amountReceived
+  shippingCost: number; // Maps to chargePrice
+  paidShippingValue: number; // Not directly in API, can derive or set to 0
+  companyValue: number; // Can calculate as orderPrice - chargePrice
+  date: string; // Maps to creationDate
+}
 
+// Use the existing order models from previous examples
+export interface ProductResponse {
+  id: number;
+  name: string;
+  weight: number;
+  quantity: number;
+  orderId: number;
+}
+
+export interface OrderResponse {
+  id: number;
+  creationDate: string;
+  customerName: string;
+  customerPhone1: string;
+  customerPhone2: string;
+  villageAndStreet: string;
+  notes: string | null;
+  orderState: string;
+  orderType: string;
+  paymentType: string;
+  chargePrice: number;
+  orderPrice: number;
+  amountReceived: number;
+  totalWeight: number;
+  isDeleted: boolean;
+  isShippingToVillage: boolean;
+  cityName: string;
+  chargeTypeName: string;
+  branchName: string;
+  merchantName: string;
+  shippigRepresentativeName: string | null;
+  products: ProductResponse[];
+}
+
+export interface PaginatedOrderResponse {
+  pageSize: number;
+  pageIndex: number;
+  totalCount: number;
+}
 @Injectable({
   providedIn: 'root',
 })

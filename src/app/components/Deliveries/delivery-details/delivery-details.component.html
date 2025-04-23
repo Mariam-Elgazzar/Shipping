@@ -20,113 +20,50 @@
       </button>
     </div>
 
-    <div class="modal-content" *ngIf="DeliveryDetails">
-      <div class="Delivery-section">
-        <h3>Delivery Information</h3>
+    <div class="modal-content" *ngIf="deliveryRep">
+      <div class="order-section">
+        <h3>Delivery Contact Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Delivery Name</div>
-            <div class="info-value">{{ DeliveryDetails.name }}</div>
+            <div class="info-label">Recipient Full Name</div>
+            <div class="info-value">{{ deliveryRep.name }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">{{ DeliveryDetails.email }}</div>
+            <div class="info-label">Contact Email Address</div>
+            <div class="info-value">{{ deliveryRep.email }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Phone</div>
-            <div class="info-value">{{ DeliveryDetails.phone }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Branch Location</div>
-            <div class="info-value">{{ DeliveryDetails.branchLocation }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Branch Name</div>
-            <div class="info-value">{{ DeliveryDetails.branchName }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="DeliveryDetails.status.toLowerCase()"
-              >
-                {{ DeliveryDetails.status }}
-              </span>
-            </div>
+            <div class="info-label">Contact Phone Number</div>
+            <div class="info-value">{{ deliveryRep.phoneNumber }}</div>
           </div>
         </div>
       </div>
 
-      <div class="Delivery-section">
-        <h3>Driver Information</h3>
+      <div class="order-section">
+        <h3>Delivery Logistics Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ DeliveryDetails.driverName }}</div>
+            <div class="info-label">Last Known Location</div>
+            <div class="info-value">{{ deliveryRep.companyPercentage }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">Phone Number</div>
+            <div class="info-label">Scheduled Delivery Time</div>
+            <div class="info-value">{{ deliveryRep.discountType }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Delivery Region</div>
             <div class="info-value">
-              {{ DeliveryDetails.driverPhone || "N/A" }}
+              <span class="status-badge delivery">{{
+                deliveryRep.governorates
+              }}</span>
             </div>
           </div>
           <div class="info-item">
-            <div class="info-label">License Number</div>
+            <div class="info-label">Hiring Date</div>
             <div class="info-value">
-              {{ DeliveryDetails.licenseNumber || "N/A" }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="Delivery-section">
-        <h3>Delivery Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Last Location</div>
-            <div class="info-value">{{ DeliveryDetails.lastLocation }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Schedule</div>
-            <div class="info-value">
-              {{ DeliveryDetails.deliverySchedule }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="DeliveryDetails.deliveryStatus.toLowerCase()"
-              >
-                {{ DeliveryDetails.deliveryStatus }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="Delivery-section"
-        *ngIf="DeliveryDetails.deliveryHistory?.length"
-      >
-        <h3>Delivery History</h3>
-        <div class="history-timeline">
-          <div
-            class="timeline-item"
-            *ngFor="let history of DeliveryDetails.deliveryHistory"
-          >
-            <div
-              class="timeline-dot"
-              [ngClass]="history.status.toLowerCase()"
-            ></div>
-            <div class="timeline-content">
-              <div class="timeline-date">{{ history.date }}</div>
-              <div class="timeline-title">{{ history.title }}</div>
-              <div class="timeline-description">
-                {{ history.description }}
-              </div>
+              <span class="status-badge delivery">{{
+                deliveryRep.hiringDate
+              }}</span>
             </div>
           </div>
         </div>

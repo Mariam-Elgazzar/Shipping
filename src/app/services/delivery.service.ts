@@ -161,17 +161,6 @@ export class DeliveryService {
       .pipe(catchError(this.handleError));
   }
 
-  getCities(): Observable<City[]> {
-    return new Observable((observer) => {
-      observer.next([
-        { id: 1, name: 'Cairo' },
-        { id: 2, name: 'Alexandria' },
-        { id: 3, name: 'Giza' },
-        { id: 4, name: 'ElGharbia' },
-      ]);
-      observer.complete();
-    });
-  }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';

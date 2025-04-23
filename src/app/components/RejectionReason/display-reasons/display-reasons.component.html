@@ -52,13 +52,7 @@
               <td class="date-column">{{ formatDate(reason.createdAt) }}</td>
               <td class="actions-column">
                 <div class="action-buttons">
-                  <button
-                    class="action-button view-button"
-                    (click)="viewReason(reason)"
-                    matTooltip="View"
-                  >
-                    <mat-icon>visibility</mat-icon>
-                  </button>
+                  
                   <button
                     class="action-button edit-button"
                     (click)="editReason(reason.id!)"

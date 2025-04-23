@@ -20,117 +20,73 @@
       </button>
     </div>
 
-    <div class="modal-content" *ngIf="EmployeeDetails">
-      <div class="Employee-section">
-        <h3>Employee Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Employee Name</div>
-            <div class="info-value">{{ EmployeeDetails.name }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">{{ EmployeeDetails.email }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone</div>
-            <div class="info-value">{{ EmployeeDetails.phone }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Branch Name</div>
-            <div class="info-value">{{ EmployeeDetails.branchName }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Permission</div>
-            <div class="info-value">{{ EmployeeDetails.permission }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="EmployeeDetails.status.toLowerCase()"
-              >
-                {{ EmployeeDetails.status }}
-              </span>
+    <div class="modal-content">
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+      <div *ngIf="employeeDetails; else loading">
+        <div class="employee-section">
+          <h3>Employee Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Employee Name</div>
+              <div class="info-value">{{ employeeDetails.name }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value">{{ employeeDetails.email }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Phone</div>
+              <div class="info-value">{{ employeeDetails.phoneNumber }}</div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Permission</div>
+              <div class="info-value">{{ employeeDetails.permission }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">InActive</div>
+              <div class="info-value">
+                <span
+                  class="status-badge"
+                  [ngClass]="employeeDetails.isDeleted ? 'InActive' : 'active'"
+                >
+                  {{ employeeDetails.isDeleted ? "InActive" : "active" }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="Employee-section">
-        <h3>Driver Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Driver Name</div>
-            <div class="info-value">{{ EmployeeDetails.driverName }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone Number</div>
-            <div class="info-value">
-              {{ EmployeeDetails.driverPhone || "N/A" }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">License Number</div>
-            <div class="info-value">
-              {{ EmployeeDetails.licenseNumber || "N/A" }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="Employee-section">
-        <h3>Delivery Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Last Location</div>
-            <div class="info-value">{{ EmployeeDetails.lastLocation }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Schedule</div>
-            <div class="info-value">
-              {{ EmployeeDetails.deliverySchedule }}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Delivery Status</div>
-            <div class="info-value">
-              <span
-                class="status-badge"
-                [ngClass]="EmployeeDetails.deliveryStatus.toLowerCase()"
-              >
-                {{ EmployeeDetails.deliveryStatus }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="Employee-section"
-        *ngIf="EmployeeDetails.deliveryHistory?.length"
-      >
-        <h3>Delivery History</h3>
-        <div class="history-timeline">
-          <div
-            class="timeline-item"
-            *ngFor="let history of EmployeeDetails.deliveryHistory"
-          >
+        <div
+          class="employee-section"
+          *ngIf="employeeDetails.deliveryHistory?.length"
+        >
+          <h3>Delivery History</h3>
+          <div class="history-timeline">
             <div
-              class="timeline-dot"
-              [ngClass]="history.status.toLowerCase()"
-            ></div>
-            <div class="timeline-content">
-              <div class="timeline-date">{{ history.date }}</div>
-              <div class="timeline-title">{{ history.title }}</div>
-              <div class="timeline-description">
-                {{ history.description }}
+              class="timeline-item"
+              *ngFor="let history of employeeDetails.deliveryHistory"
+            >
+              <div
+                class="timeline-dot"
+                [ngClass]="history.status.toLowerCase()"
+              ></div>
+              <div class="timeline-content">
+                <div class="timeline-date">{{ history.date }}</div>
+                <div class="timeline-title">{{ history.title }}</div>
+                <div class="timeline-description">
+                  {{ history.description }}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <ng-template #loading>
+        <div class="loading">Loading employee details...</div>
+      </ng-template>
     </div>
 
     <div class="modal-footer">

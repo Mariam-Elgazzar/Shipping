@@ -22,7 +22,7 @@ export class PricingService {
   constructor(private http: HttpClient) {}
 
   getAllPricings(): Observable<PricingResponse[]> {
-    return this.http.get<PricingResponse[]>(`${this.apiUrl}/GetALL`).pipe(
+    return this.http.get<PricingResponse[]>(`${this.apiUrl}/GetSetting`).pipe(
       map((response) => ({
         ...response,
       })),
@@ -46,7 +46,7 @@ export class PricingService {
     request: PricingRequest & { id: number }
   ): Observable<PricingResponse> {
     return this.http
-      .put<PricingResponse>(`${this.apiUrl}/Update`, request)
+      .put<PricingResponse>(`${this.apiUrl}/Update/${request.id}`, request)
       .pipe(catchError(this.handleError));
   }
 

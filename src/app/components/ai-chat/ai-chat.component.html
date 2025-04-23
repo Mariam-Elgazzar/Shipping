@@ -1,15 +1,26 @@
 <div class="chat-container">
-  <div class="chat-box">
-    <div *ngFor="let message of messages" class="message">
-      <span>{{ message }}</span>
+  <div class="messages">
+    <div
+      *ngFor="let message of messages"
+      class="message"
+      [ngClass]="{
+        'user-message': message.isUser,
+        'ai-message': !message.isUser
+      }"
+    >
+      {{ message.text }}
+    </div>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
   </div>
-
-  <textarea [(ngModel)]="userMessage" placeholder="Write your message..."></textarea>
-
-  <button (click)="sendMessage()">Send</button>
-
-  <div *ngIf="aiResponse" class="ai-response">
-    <p>{{ aiResponse }}</p>
+  <div class="input-container">
+    <input
+      type="text"
+      [(ngModel)]="userMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type your message..."
+    />
+    <button (click)="sendMessage()">Send</button>
   </div>
 </div>

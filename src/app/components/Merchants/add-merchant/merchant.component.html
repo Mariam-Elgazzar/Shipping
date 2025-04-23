@@ -46,13 +46,21 @@
 
       <div class="card-body">
         @if (errorMessage()) {
-        <div class="error-message">{{ errorMessage() }}</div>
+        <div class="error-message">
+          {{ errorMessage() }}
+          @if (errorMessage() === 'Failed to load Branches. Please try again.')
+          {
+          <button class="btn btn-retry" (click)="retryLoadBranches()">
+            Retry
+          </button>
+          }
+        </div>
         }
 
         <form [formGroup]="merchantForm" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="name">Name</label>
+              <label for="name">Name <span class="required">*</span></label>
               <input
                 type="text"
                 id="name"
@@ -77,7 +85,36 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="email">Email</label>
+              <label for="userName"
+                >Username <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="userName"
+                formControlName="userName"
+                class="form-control"
+                placeholder="Enter username"
+                [class.is-invalid]="
+                  merchantForm.get('userName')?.invalid &&
+                  merchantForm.get('userName')?.touched
+                "
+              />
+              @if (merchantForm.get('userName')?.invalid &&
+              merchantForm.get('userName')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('userName')?.errors?.['required']) {
+                <span>Username is required</span>
+                } @if (merchantForm.get('userName')?.errors?.['minlength']) {
+                <span>Username must be at least 3 characters</span>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="email">Email <span class="required">*</span></label>
               <input
                 type="email"
                 id="email"
@@ -100,11 +137,11 @@
               </div>
               }
             </div>
-          </div>
 
-          <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="phoneNumber">Phone Number</label>
+              <label for="phoneNumber"
+                >Phone Number <span class="required">*</span></label
+              >
               <input
                 type="tel"
                 id="phoneNumber"
@@ -122,14 +159,98 @@
                 @if (merchantForm.get('phoneNumber')?.errors?.['required']) {
                 <span>Phone number is required</span>
                 } @if (merchantForm.get('phoneNumber')?.errors?.['pattern']) {
-                <span>Please enter a valid phone number</span>
+                <span>Please enter a valid phone number (10-15 digits)</span>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="address"
+                >Address <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="address"
+                formControlName="address"
+                class="form-control"
+                placeholder="Enter address"
+                [class.is-invalid]="
+                  merchantForm.get('address')?.invalid &&
+                  merchantForm.get('address')?.touched
+                "
+              />
+              @if (merchantForm.get('address')?.invalid &&
+              merchantForm.get('address')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('address')?.errors?.['required']) {
+                <span>Address is required</span>
+                } @if (merchantForm.get('address')?.errors?.['minlength']) {
+                <span>Address must be at least 3 characters</span>
                 }
               </div>
               }
             </div>
 
             <div class="form-group col-md-6">
-              <label for="storeName">Store Name</label>
+              <label for="startWorkDDate"
+                >Start Work Date <span class="required">*</span></label
+              >
+              <input
+                type="datetime-local"
+                id="startWorkDDate"
+                formControlName="startWorkDDate"
+                class="form-control"
+                [class.is-invalid]="
+                  merchantForm.get('startWorkDDate')?.invalid &&
+                  merchantForm.get('startWorkDDate')?.touched
+                "
+              />
+              @if (merchantForm.get('startWorkDDate')?.invalid &&
+              merchantForm.get('startWorkDDate')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('startWorkDDate')?.errors?.['required']) {
+                <span>Start work date is required</span>
+                }
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="password"
+                >Password <span class="required">*</span></label
+              >
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="Enter password"
+                [class.is-invalid]="
+                  merchantForm.get('password')?.invalid &&
+                  merchantForm.get('password')?.touched
+                "
+              />
+              @if (merchantForm.get('password')?.invalid &&
+              merchantForm.get('password')?.touched) {
+              <div class="invalid-feedback">
+                @if (merchantForm.get('password')?.errors?.['required']) {
+                <span>Password is required</span>
+                } @if (merchantForm.get('password')?.errors?.['minlength']) {
+                <span>Password must be at least 6 characters</span>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="storeName"
+                >Store Name <span class="required">*</span></label
+              >
               <input
                 type="text"
                 id="storeName"
@@ -150,32 +271,33 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="rejectedOrderPercentage"
-                >Rejected Order Percentage (%)</label
+              <label for="rejectedOrderPrecentage"
+                >Rejected Order Percentage (%)
+                <span class="required">*</span></label
               >
               <input
                 type="number"
-                id="rejectedOrderPercentage"
-                formControlName="rejectedOrderPercentage"
+                id="rejectedOrderPrecentage"
+                formControlName="rejectedOrderPrecentage"
                 class="form-control"
                 placeholder="0"
                 min="0"
                 max="100"
                 [class.is-invalid]="
-                  merchantForm.get('rejectedOrderPercentage')?.invalid &&
-                  merchantForm.get('rejectedOrderPercentage')?.touched
+                  merchantForm.get('rejectedOrderPrecentage')?.invalid &&
+                  merchantForm.get('rejectedOrderPrecentage')?.touched
                 "
               />
-              @if (merchantForm.get('rejectedOrderPercentage')?.invalid &&
-              merchantForm.get('rejectedOrderPercentage')?.touched) {
+              @if (merchantForm.get('rejectedOrderPrecentage')?.invalid &&
+              merchantForm.get('rejectedOrderPrecentage')?.touched) {
               <div class="invalid-feedback">
                 @if
-                (merchantForm.get('rejectedOrderPercentage')?.errors?.['required'])
+                (merchantForm.get('rejectedOrderPrecentage')?.errors?.['required'])
                 {
                 <span>Percentage is required</span>
                 } @if
-                (merchantForm.get('rejectedOrderPercentage')?.errors?.['min'] ||
-                merchantForm.get('rejectedOrderPercentage')?.errors?.['max']) {
+                (merchantForm.get('rejectedOrderPrecentage')?.errors?.['min'] ||
+                merchantForm.get('rejectedOrderPrecentage')?.errors?.['max']) {
                 <span>Must be between 0 and 100</span>
                 }
               </div>
@@ -183,7 +305,9 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label for="specialPickUp">Special Pickup Fee ($)</label>
+              <label for="specialPickUp"
+                >Special Pickup Fee ($) <span class="required">*</span></label
+              >
               <input
                 type="number"
                 id="specialPickUp"
@@ -210,47 +334,93 @@
           </div>
 
           <div class="form-group">
-            <label for="cityIds">Cities</label>
-            <select
-              id="cityIds"
-              formControlName="cityIds"
-              class="form-control"
-              multiple
+            <label for="branchesIds"
+              >Branches <span class="required">*</span></label
+            >
+            <div
+              class="select-wrapper"
               [class.is-invalid]="
-                merchantForm.get('cityIds')?.invalid &&
-                merchantForm.get('cityIds')?.touched
+                merchantForm.get('branchesIds')?.invalid &&
+                merchantForm.get('branchesIds')?.touched
               "
             >
-              @for (city of cities(); track city.id) {
-              <option [value]="city.id">{{ city.name }}</option>
-              }
-            </select>
-            @if (merchantForm.get('cityIds')?.invalid &&
-            merchantForm.get('cityIds')?.touched) {
-            <div class="invalid-feedback">At least one city is required</div>
+              <select
+                id="branchesIds"
+                formControlName="branchesIds"
+                class="form-control"
+                multiple
+                [disabled]="isLoadingBranches() || Branches().length === 0"
+              >
+                @if (isLoadingBranches()) {
+                <option value="" disabled>Loading Branches...</option>
+                } @else if (Branches().length === 0) {
+                <option value="" disabled>No Branches available</option>
+                } @else { @for (branch of Branches(); track branch.id) {
+                <option [value]="branch.id">{{ branch.name }}</option>
+                } }
+              </select>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            @if (merchantForm.get('branchesIds')?.invalid &&
+            merchantForm.get('branchesIds')?.touched) {
+            <div class="invalid-feedback">At least one Branch is required</div>
             }
           </div>
 
           <div class="form-group">
-            <label>Special Prices</label>
+            <label>Special Delivery Prices</label>
             <div class="special-prices">
-              @for (price of specialPrices.controls; track $index) {
+              @for (price of specialDeliveryPrices.controls; track $index) {
               <div class="special-price-row" [formGroup]="price">
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <select
-                      formControlName="cityId"
-                      class="form-control"
+                    <div
+                      class="select-wrapper"
                       [class.is-invalid]="
                         price.get('cityId')?.invalid &&
                         price.get('cityId')?.touched
                       "
                     >
-                      <option value="">Select City</option>
-                      @for (city of cities(); track city.id) {
-                      <option [value]="city.id">{{ city.name }}</option>
-                      }
-                    </select>
+                      <select
+                        formControlName="cityId"
+                        class="form-control"
+                        [disabled]="isLoadingCities() || Cities().length === 0"
+                      >
+                        <option value="">Select City</option>
+                        @if (isLoadingCities()) {
+                        <option value="" disabled>Loading Cities...</option>
+                        } @else if (Cities().length === 0) {
+                        <option value="" disabled>No Cities available</option>
+                        } @else { @for (city of Cities(); track city.id) {
+                        <option [value]="city.id">{{ city.name }}</option>
+                        } }
+                      </select>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </div>
                     @if (price.get('cityId')?.invalid &&
                     price.get('cityId')?.touched) {
                     <div class="invalid-feedback">City is required</div>
@@ -259,21 +429,21 @@
                   <div class="form-group col-md-4">
                     <input
                       type="number"
-                      formControlName="specialPrice"
+                      formControlName="specialPreice"
                       class="form-control"
                       placeholder="0"
                       min="0"
                       [class.is-invalid]="
-                        price.get('specialPrice')?.invalid &&
-                        price.get('specialPrice')?.touched
+                        price.get('specialPreice')?.invalid &&
+                        price.get('specialPreice')?.touched
                       "
                     />
-                    @if (price.get('specialPrice')?.invalid &&
-                    price.get('specialPrice')?.touched) {
+                    @if (price.get('specialPreice')?.invalid &&
+                    price.get('specialPreice')?.touched) {
                     <div class="invalid-feedback">
-                      @if (price.get('specialPrice')?.errors?.['required']) {
+                      @if (price.get('specialPreice')?.errors?.['required']) {
                       <span>Price is required</span>
-                      } @if (price.get('specialPrice')?.errors?.['min']) {
+                      } @if (price.get('specialPreice')?.errors?.['min']) {
                       <span>Must be 0 or greater</span>
                       }
                     </div>
@@ -283,8 +453,8 @@
                     <button
                       type="button"
                       class="btn btn-icon btn-danger"
-                      (click)="removeSpecialPrice($index)"
-                      [disabled]="specialPrices.length === 1"
+                      (click)="removeSpecialDeliveryPrice($index)"
+                      [disabled]="specialDeliveryPrices.length === 1"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -308,9 +478,10 @@
               <button
                 type="button"
                 class="btn btn-outline"
-                (click)="addSpecialPrice()"
+                (click)="addSpecialDeliveryPrice()"
+                [disabled]="isLoadingCities() || Cities().length === 0"
               >
-                Add Special Price
+                Add Special Delivery Price
               </button>
             </div>
           </div>
@@ -319,11 +490,8 @@
             <button type="button" class="btn btn-outline" (click)="cancel()">
               Cancel
             </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="merchantForm.invalid || isLoading()"
-            >
+            <button type="submit" class="btn btn-primary">
+              <!-- [disabled]="merchantForm.invalid || isLoading() || isLoadingBranches() || isLoadingCities()" -->
               @if (isEditing()) { Update } @else { Create }
             </button>
           </div>

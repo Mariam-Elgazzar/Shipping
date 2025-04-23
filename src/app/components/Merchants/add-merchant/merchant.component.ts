@@ -9,9 +9,47 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MerchantService } from '../../../services/merchant.service';
-import { City, MerchantResponse } from '../../../models/merchant.model';
+import { City } from '../../../models/merchant.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Branch, OrderService } from '../../../services/order.service';
 
+export interface SpecialDeliveryPrice {
+  cityId: number;
+  cityName: string;
+  specialPreice: number;
+}
+
+export interface MerchantResponse {
+  id: string;
+  address: string;
+  name: string;
+  startWorkDDate: string;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  storeName: string;
+  rejectedOrderPrecentage: number;
+  specialPickUp: number;
+  merchantBranches: number[];
+  specialDeliveryPrices: SpecialDeliveryPrice[];
+}
+
+export interface CreateMerchantRequest {
+  id: string | null;
+  address: string;
+  name: string;
+  startWorkDDate: string;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  storeName: string;
+  rejectedOrderPrecentage: number;
+  specialPickUp: number;
+  branchesIds: number[];
+  specialDeliveryPrices: SpecialDeliveryPrice[];
+}
 @Component({
   selector: 'app-merchant-form',
   standalone: true,
@@ -26,8 +64,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class MerchantFormComponent {
   merchantForm: FormGroup;
-  cities = signal<City[]>([]);
+  Branches = signal<Branch[]>([]);
+  Cities = signal<City[]>([]);
   isLoading = signal(false);
+  isLoadingBranches = signal(false);
+  isLoadingCities = signal(false);
   errorMessage = signal('');
   isEditing = signal(false);
   merchantId = signal<string | null>(null);
@@ -35,64 +76,103 @@ export class MerchantFormComponent {
   constructor(
     private fb: FormBuilder,
     private merchantService: MerchantService,
+    private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.merchantForm = this.fb.group({
+      address: ['', [Validators.required, Validators.minLength(3)]],
       name: ['', [Validators.required, Validators.minLength(3)]],
+      startWorkDDate: ['', Validators.required],
+      userName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: [
         '',
         [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)],
       ],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       storeName: ['', Validators.required],
-      rejectedOrderPercentage: [
+      rejectedOrderPrecentage: [
         0,
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       specialPickUp: [0, [Validators.required, Validators.min(0)]],
-      cityIds: [[], Validators.required],
-      specialPrices: this.fb.array([]),
+      branchesIds: [[], Validators.required],
+      specialDeliveryPrices: this.fb.array([]),
     });
 
-    // Initialize merchantId and isEditing
     this.merchantId.set(this.route.snapshot.paramMap.get('id'));
     this.isEditing.set(!!this.merchantId());
   }
 
   ngOnInit(): void {
+    this.loadBranches();
     this.loadCities();
     if (!this.isEditing()) {
-      this.addSpecialPrice(); // Ensure at least one special price in create mode
+      this.addSpecialDeliveryPrice();
     }
     if (this.isEditing() && this.merchantId()) {
       this.loadMerchant(this.merchantId()!);
     }
   }
 
-  get specialPrices(): FormArray<FormGroup> {
-    return this.merchantForm.get('specialPrices') as FormArray<FormGroup>;
+  get specialDeliveryPrices(): FormArray<FormGroup> {
+    return this.merchantForm.get(
+      'specialDeliveryPrices'
+    ) as FormArray<FormGroup>;
   }
 
-  addSpecialPrice(cityId = '', specialPrice = 0): void {
-    const specialPriceGroup = this.fb.group({
+  addSpecialDeliveryPrice(cityId = '', cityName = '', specialPreice = 0): void {
+    const specialDeliveryPriceGroup = this.fb.group({
       cityId: [cityId, Validators.required],
-      specialPrice: [specialPrice, [Validators.required, Validators.min(0)]],
+      cityName: [cityName, Validators.required],
+      specialPreice: [specialPreice, [Validators.required, Validators.min(0)]],
     });
-    this.specialPrices.push(specialPriceGroup);
+    this.specialDeliveryPrices.push(specialDeliveryPriceGroup);
   }
 
-  removeSpecialPrice(index: number): void {
-    if (this.specialPrices.length > 1) {
-      this.specialPrices.removeAt(index);
+  removeSpecialDeliveryPrice(index: number): void {
+    if (this.specialDeliveryPrices.length > 1) {
+      this.specialDeliveryPrices.removeAt(index);
     }
   }
 
+  loadBranches(): void {
+    this.isLoadingBranches.set(true);
+    this.errorMessage.set('');
+    this.orderService
+      .getBranches(1, 100, undefined, undefined, false)
+      .subscribe({
+        next: (branches) => {
+          this.Branches.set(
+            branches.data.filter((branch) => !branch.isDeleted)
+          );
+          this.isLoadingBranches.set(false);
+        },
+        error: (err) => {
+          this.errorMessage.set('Failed to load Branches. Please try again.');
+          this.isLoadingBranches.set(false);
+        },
+      });
+  }
+
   loadCities(): void {
-    this.merchantService.getCities().subscribe({
-      next: (cities) => this.cities.set(cities),
-      error: (err) => this.errorMessage.set('Failed to load cities'),
+    this.isLoadingCities.set(true);
+    this.errorMessage.set('');
+    this.orderService.getCities().subscribe({
+      next: (cities) => {
+        this.Cities.set(cities.data.filter((city) => city.id));
+        this.isLoadingCities.set(false);
+      },
+      error: (err) => {
+        this.errorMessage.set('Failed to load Cities. Please try again.');
+        this.isLoadingCities.set(false);
+      },
     });
+  }
+
+  retryLoadBranches(): void {
+    this.loadBranches();
   }
 
   loadMerchant(id: string): void {
@@ -101,22 +181,31 @@ export class MerchantFormComponent {
     this.merchantService.getMerchantById(id).subscribe({
       next: (merchant: MerchantResponse) => {
         this.merchantForm.patchValue({
+          address: merchant.address,
           name: merchant.name,
+          startWorkDDate: merchant.startWorkDDate
+            ? new Date(merchant.startWorkDDate).toISOString().slice(0, 16)
+            : '',
+          userName: merchant.userName,
           email: merchant.email,
           phoneNumber: merchant.phoneNumber,
           storeName: merchant.storeName,
-          rejectedOrderPercentage: merchant.rejectedOrderPercentage,
+          rejectedOrderPrecentage: merchant.rejectedOrderPrecentage,
           specialPickUp: merchant.specialPickUp,
-          cityIds: merchant.merchantCities.map(Number),
+          branchesIds: merchant.merchantBranches.map(Number),
         });
-        this.specialPrices.clear();
-        if (!merchant.specialPrices || merchant.specialPrices.length === 0) {
-          this.addSpecialPrice(); // Ensure at least one entry
+        this.specialDeliveryPrices.clear();
+        if (
+          !merchant.specialDeliveryPrices ||
+          merchant.specialDeliveryPrices.length === 0
+        ) {
+          this.addSpecialDeliveryPrice();
         } else {
-          merchant.specialPrices.forEach((sp) =>
-            this.addSpecialPrice(
+          merchant.specialDeliveryPrices.forEach((sp) =>
+            this.addSpecialDeliveryPrice(
               sp.cityId ? sp.cityId.toString() : '',
-              sp.specialPrice || 0
+              sp.cityName || '',
+              sp.specialPreice || 0
             )
           );
         }
@@ -133,30 +222,53 @@ export class MerchantFormComponent {
   }
 
   onSubmit(): void {
-    if (this.merchantForm.invalid) {
-      this.merchantForm.markAllAsTouched();
-      return;
-    }
+    // if (this.merchantForm.invalid) {
+    //   this.merchantForm.markAllAsTouched();
+    //   return;
+    // }
 
     this.isLoading.set(true);
     this.errorMessage.set('');
 
+    const selectedCities = this.Cities().filter((city) =>
+      this.specialDeliveryPrices.value.some(
+        (sp: any) => Number(sp.cityId) === city.id
+      )
+    );
+
     const request = {
       id: this.merchantId() || null,
-      ...this.merchantForm.value,
-      password: 'P@ssword123',
-      cityIds: this.merchantForm.value.cityIds.map(Number),
-      specialPrices: this.specialPrices.value.map((sp: any) => ({
-        cityId: Number(sp.cityId),
-        specialPrice: Number(sp.specialPrice),
-      })),
+      address: this.merchantForm.value.address,
+      name: this.merchantForm.value.name,
+      startWorkDDate: new Date(
+        this.merchantForm.value.startWorkDDate
+      ).toISOString(),
+      userName: this.merchantForm.value.userName,
+      email: this.merchantForm.value.email,
+      phoneNumber: this.merchantForm.value.phoneNumber,
+      password: this.merchantForm.value.password,
+      storeName: this.merchantForm.value.storeName,
+      rejectedOrderPrecentage: Number(
+        this.merchantForm.value.rejectedOrderPrecentage
+      ),
+      specialPickUp: Number(this.merchantForm.value.specialPickUp),
+      branchesIds: this.merchantForm.value.branchesIds.map(Number),
+      specialDeliveryPrices: this.specialDeliveryPrices.value.map(
+        (sp: any, index: number) => ({
+          cityId: Number(sp.cityId),
+          cityName:
+            selectedCities.find((city) => city.id === Number(sp.cityId))
+              ?.name || '',
+          specialPreice: Number(sp.specialPreice),
+        })
+      ),
     };
-    console.log(request);
+
     const operation =
       this.isEditing() && this.merchantId()
         ? this.merchantService.updateMerchant(request)
         : this.merchantService.createMerchant(request);
-
+    console.log('Merchant Data:', request);
     operation.subscribe({
       next: () => {
         this.isLoading.set(false);

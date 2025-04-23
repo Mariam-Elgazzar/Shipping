@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -72,16 +77,12 @@ export class PricingUpdateComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.pricingForm.invalid) {
-      Object.values(this.pricingForm.controls).forEach((control) => control.markAsTouched());
-      return;
-    }
-
     if (this.pricingId) {
       const pricingData: PricingRequest & { id: number } = {
         id: this.pricingId,
         ...this.pricingForm.value,
       };
+      console.log('Updated Pricing Data:', pricingData);
       this.updatePricing(pricingData);
     }
   }
@@ -94,8 +95,8 @@ export class PricingUpdateComponent implements OnInit {
         this.router.navigate(['/pricings']);
       },
       error: (err) => {
-        console.error('Error updating pricing', err);
         this.isLoading = false;
+        this.router.navigate(['/pricings']);
       },
     });
   }

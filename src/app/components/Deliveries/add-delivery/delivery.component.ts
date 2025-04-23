@@ -7,15 +7,14 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-// import { DeliveryService } from '../../services/delivery.service';
-// import { City, DeliveryResponse, DeliveryRequest } from '../../models/delivery.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { City } from '../../../models/merchant.model';
 import { DeliveryService } from '../../../services/delivery.service';
 import {
   DeliveryRequest,
   DeliveryResponse,
 } from '../../../models/delivery.model';
+import { GovernmentService } from '../../../services/government.service';
+import { Government } from '../../../models/government.interface';
 
 @Component({
   selector: 'app-delivery-form',
@@ -31,7 +30,9 @@ import {
 })
 export class DeliveryFormComponent {
   deliveryForm: FormGroup;
-  cities = signal<City[]>([]);
+  governments = signal<Government[]>([]);
+  governorates = signal<string[]>([]);
+  saleTypes = signal<string[]>(['Fixed', 'Percentage']);
   isLoading = signal(false);
   errorMessage = signal('');
   isEditing = signal(false);
@@ -40,16 +41,14 @@ export class DeliveryFormComponent {
   constructor(
     private fb: FormBuilder,
     private deliveryService: DeliveryService,
+    private governmentService: GovernmentService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.deliveryForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [
-        '',
-        [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)],
-      ],
+      phone: ['', [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)]],
       password: [
         '',
         this.isEditing()
@@ -62,29 +61,33 @@ export class DeliveryFormComponent {
               ),
             ],
       ],
-      discountType: [0, Validators.required],
-      companyPercentage: [
-        100,
+      government: [[], Validators.required], // Array for multiple selections
+      address: ['', Validators.required],
+      saleType: ['', Validators.required],
+      salePresentage: [
+        0,
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
-      governorateIds: [[], Validators.required],
     });
 
-    // Initialize deliveryRepId and isEditing
     this.deliveryRepId.set(this.route.snapshot.paramMap.get('id'));
     this.isEditing.set(!!this.deliveryRepId());
   }
 
   ngOnInit(): void {
-    this.loadCities();
+    this.loadGovernments();
     if (this.isEditing() && this.deliveryRepId()) {
       this.loadDeliveryRep(this.deliveryRepId()!);
     }
   }
 
-  loadCities(): void {
-    this.deliveryService.getCities().subscribe({
-      next: (cities) => this.cities.set(cities),
+  loadGovernments(): void {
+    this.governmentService.getGovernments().subscribe({
+      next: (response) => {
+        const governments = response.data;
+        this.governments.set(governments);
+        this.governorates.set(governments.map((gov) => gov.name));
+      },
       error: (err) => this.errorMessage.set('Failed to load governorates'),
     });
   }
@@ -94,13 +97,21 @@ export class DeliveryFormComponent {
     this.errorMessage.set('');
     this.deliveryService.getDeliveryRepById(id).subscribe({
       next: (rep: DeliveryResponse) => {
+        const selectedGovernments = this.governments()
+          .filter((gov) =>
+            rep.governorates
+              .map((g) => g.toLowerCase())
+              .includes(gov.name.toLowerCase())
+          )
+          .map((gov) => gov.name);
+
         this.deliveryForm.patchValue({
           name: rep.name,
           email: rep.email,
-          phoneNumber: rep.phoneNumber,
-          discountType: rep.discountType,
-          companyPercentage: rep.companyPercentage,
-          governorateIds: this.mapGovernoratesToIds(rep.governorates),
+          phone: rep.phoneNumber,
+          government: selectedGovernments,
+          saleType: this.saleTypes()[rep.discountType] || '',
+          salePresentage: rep.companyPercentage,
         });
         this.isLoading.set(false);
       },
@@ -113,42 +124,37 @@ export class DeliveryFormComponent {
     });
   }
 
-  // Map governorate names to IDs based on cities
-  mapGovernoratesToIds(governorates: string[]): number[] {
-    return this.cities()
-      .filter((city) =>
-        governorates
-          .map((g) => g.toLowerCase())
-          .includes(city.name.toLowerCase())
-      )
-      .map((city) => city.id);
+  getSaleTypeLabel(type: string): string {
+    return type; // Can be customized if needed
   }
 
   onSubmit(): void {
-    if (this.deliveryForm.invalid) {
-      this.deliveryForm.markAllAsTouched();
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
 
     const formValue = this.deliveryForm.value;
+    const selectedGovernments = Array.isArray(formValue.government)
+      ? formValue.government
+      : [formValue.government];
+    const governorateIds = this.governments()
+      .filter((gov) => selectedGovernments.includes(gov.name))
+      .map((gov) => gov.id);
+
     const request: DeliveryRequest = {
       id: this.isEditing() ? this.deliveryRepId() || undefined : undefined,
       name: formValue.name,
       email: formValue.email,
-      phoneNumber: formValue.phoneNumber,
-      password: this.isEditing() ? undefined : formValue.password,
-      discountType: Number(formValue.discountType),
-      companyPercentage: Number(formValue.companyPercentage),
-      governorateIds: formValue.governorateIds.map(Number),
+      phoneNumber: formValue.phone,
+      password: this.isEditing() ? null : formValue.password,
+      discountType: this.saleTypes().indexOf(formValue.saleType) + 1,
+      companyPercentage: Number(formValue.salePresentage),
+      governorateIds: governorateIds,
     };
 
     const operation = this.isEditing()
       ? this.deliveryService.updateDeliveryRep(request)
       : this.deliveryService.createDeliveryRep(request);
-
+    console.log(request);
     operation.subscribe({
       next: () => {
         this.isLoading.set(false);

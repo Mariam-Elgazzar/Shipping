@@ -181,6 +181,7 @@
   } @if (isDeliveryDetailsVisible() && selectedDeliveryRepId()) {
   <app-delivery-details
     [deliveryRepId]="selectedDeliveryRepId()!"
+    [isVisible]="isDeliveryDetailsVisible()"
     (close)="closeDeliveryDetails()"
   ></app-delivery-details>
   }

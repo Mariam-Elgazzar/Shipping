@@ -1,83 +1,183 @@
-<div class="table-container">
+<div class="City-table-container">
   <div class="table-header">
-    <h2>Cities</h2>
-    <div class="table-actions">
-      <input
-        type="text"
-        placeholder="Search cities..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange($event)"
-        class="search-input"
-      />
+    <div class="header-left">
+      <div class="header-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <h3>Cities</h3>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search cities..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event); filterCities()"
+        />
+      </div>
+      <button class="add-btn" (click)="addCity()">Add City</button>
     </div>
   </div>
 
-  <table class="city-table">
-    <thead>
-      <tr>
-        <th>
-          <input
-            type="checkbox"
-            [checked]="
-              selectedCities.length === filteredCities.length &&
-              filteredCities.length > 0
-            "
-            (change)="toggleSelectAll($event)"
-          />
-        </th>
-        <th>Name</th>
-        <th>Governorate</th>
-        <th>Charge Price</th>
-        <th>PickUp Price</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let city of filteredCities">
-        <td>
-          <input
-            type="checkbox"
-            [checked]="selectedCities.includes(city.id)"
-            (change)="toggleCitySelection(city.id)"
-          />
-        </td>
-        <td>{{ city.name }}</td>
-        <td>{{ city.governorateName }}</td>
-        <td>{{ city.chargePrice }}</td>
-        <td>{{ city.pickUpPrice }}</td>
-        <td>{{ city.isDeleted ? "Deleted" : "Active" }}</td>
-        <td>
-          <button class="action-btn" (click)="showActionMenu(city.id)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+  <div class="table-wrapper">
+    <table class="City-table">
+      <thead>
+        <tr>
+          <th class="checkbox-col">
+            <input
+              type="checkbox"
+              [checked]="
+                selectedCities().length === filteredCities().length &&
+                filteredCities().length > 0
+              "
+              (change)="toggleSelectAll($event)"
+            />
+          </th>
+          <th (click)="toggleSort('name')">Name</th>
+          <th (click)="toggleSort('governorateName')">Governorate</th>
+          <th (click)="toggleSort('chargePrice')">Charge Price</th>
+          <th (click)="toggleSort('pickUpPrice')">PickUp Price</th>
+          <th>Status</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of filteredCities()">
+          <td class="checkbox-col">
+            <input
+              type="checkbox"
+              [checked]="selectedCities().includes(city.id)"
+              (change)="toggleCitySelection(city.id)"
+            />
+          </td>
+          <td>{{ city.name }}</td>
+          <td>{{ city.governorateName }}</td>
+          <td>{{ city.chargePrice }}</td>
+          <td>{{ city.pickUpPrice }}</td>
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="city.isDeleted ? 'inactive' : 'active'"
             >
-              <circle cx="12" cy="12" r="1"></circle>
-              <circle cx="12" cy="5" r="1"></circle>
-              <circle cx="12" cy="19" r="1"></circle>
-            </svg>
-          </button>
-          <div class="action-menu" *ngIf="activeActionMenu === city.id">
-            <button (click)="viewCityDetails(city.id)">View Details</button>
-            <button (click)="editCity(city.id)">Edit</button>
-            <button (click)="deleteCity(city.id)">Delete</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+              {{ city.isDeleted ? "Deleted" : "Active" }}
+            </span>
+          </td>
+          <td class="actions-col">
+            <button class="action-btn" (click)="showActionMenu(city.id)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+              </svg>
+            </button>
+            <div class="action-menu" *ngIf="activeActionMenu() === city.id">
+              <button class="menu-item" (click)="viewCityDetails(city.id)">
+                View Details
+              </button>
+              <button class="menu-item" (click)="editCity(city.id)">
+                Edit
+              </button>
+              <button class="menu-item delete" (click)="deleteCity(city.id)">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="cities()?.totalCount">
+    <div class="pagination-info">
+      Showing {{ displayRange().start }} to {{ displayRange().end }} of
+      {{ displayRange().total }} cities
+    </div>
+    <div class="pagination-controls">
+      <select (change)="changePageSize($event)">
+        <option *ngFor="let size of pageSizeOptions()" [value]="size">
+          {{ size }} per page
+        </option>
+      </select>
+      <button
+        class="pagination-btn"
+        (click)="firstPage()"
+        [disabled]="currentPage() === 1"
+      >
+        First
+      </button>
+      <button
+        class="pagination-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        Previous
+      </button>
+      <button
+        class="pagination-btn"
+        *ngFor="let page of getPageNumbers()"
+        [ngClass]="{ active: page === currentPage() }"
+        (click)="page > 0 ? goToPage(page) : null"
+      >
+        {{ page > 0 ? page : "..." }}
+      </button>
+      <button
+        class="pagination-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next
+      </button>
+      <button
+        class="pagination-btn"
+        (click)="lastPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Last
+      </button>
+    </div>
+  </div>
 
   <app-city-details
-    *ngIf="isCityDetailsVisible"
-    [cityId]="selectedCityId"
+    *ngIf="isCityDetailsVisible() && selectedCityId()"
+    [cityId]="selectedCityId()!"
+    [isVisible]="isCityDetailsVisible()"
     (close)="closeCityDetails()"
   ></app-city-details>
 </div>

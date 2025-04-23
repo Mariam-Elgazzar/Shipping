@@ -81,35 +81,14 @@
             <div class="info-label">Special Pickup Fee</div>
             <div class="info-value">${{ merchant()!.specialPickUp }}</div>
           </div>
-          <div class="info-item">
-            <div class="info-label">Cities</div>
-            <div class="info-value">
-              @if (merchant()!.merchantCities.length > 0) { @for (cityId of
-              merchant()!.merchantCities; track cityId) {
-              {{ getCityName(cityId) }}
-              @if (!$last) { , } } } @else { None }
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Special Prices</div>
-            <div class="info-value">
-              @if (merchant()!.specialPrices.length > 0) { @for (price of
-              merchant()!.specialPrices; track $index) {
-              <div class="special-price-item">
-                {{ getCityName(price.cityId) }}: ${{ price.specialPrice }}
-              </div>
-              } } @else { None }
-            </div>
-          </div>
         </div>
       </div>
-
       }
-    </div>
 
-    <div class="modal-footer">
-      <button class="secondary-btn" (click)="onClose()">Close</button>
-      <button class="primary-btn" (click)="onEdit()">Edit Details</button>
+      <div class="modal-footer">
+        <button class="secondary-btn" (click)="onClose()">Close</button>
+        <button class="primary-btn" (click)="onEdit()">Edit Details</button>
+      </div>
     </div>
   </div>
 </div>

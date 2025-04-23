@@ -1,353 +1,263 @@
-import { Component, type OnInit } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { FormControl, FormGroup } from "@angular/forms"
-
-interface OrderReport {
-  id: string
-  status: string
-  merchant: string
-  customer: string
-  phone: string
-  governorate: string
-  city: string
-  orderCost: number
-  receivedAmount: number
-  shippingCost: number
-  paidShippingValue: number
-  companyValue: number
-  date: string
+import { Component, signal, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {
+  OrderReport,
+  OrderService,
+  PaginatedOrderResponse,
+} from '../../services/order.service';
+import { OrderResponse } from '../dashboard/dashboard.component';
+// import { PaginatedOrderResponse, OrderResponse } from '../../models/order.model';
+// import { OrderReport } from '../../models/order-report.model';
+export interface OrderFilters {
+  search?: string;
+  orderState?: string;
+  cityId?: number;
+  branchId?: number;
+  merchantId?: string;
+  shippigRepresentativeId?: string;
+  fromDate?: string;
+  toDate?: string;
+  orderType?: string;
+  paymentType?: string;
+  isDeleted?: boolean;
+  sort?: string;
+  pageIndex: number;
+  pageSize: number;
 }
-
 @Component({
-  selector: "app-order-report",
+  selector: 'app-order-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: "./order-report.component.html",
-  styleUrls: ["./order-report.component.scss"],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
+  templateUrl: './order-report.component.html',
+  styleUrls: ['./order-report.component.scss'],
 })
 export class OrderReportComponent implements OnInit {
-  orders: OrderReport[] = []
-  filteredOrders: OrderReport[] = []
+  orders = signal<OrderReport[]>([]);
+  totalCount = signal(0);
 
-  // Status options
-  statusOptions = [
-    { value: "new", label: "New" },
-    { value: "delivered", label: "Delivered" },
-    { value: "cancelled", label: "Cancelled" },
-    { value: "pending", label: "Pending" },
-    { value: "returned", label: "Returned" },
-  ]
+  // Filter signals
+  searchTerm = signal('');
+  selectedStatus = signal<string | null>(null);
+  dateRangeStart = signal<Date | null>(null);
+  dateRangeEnd = signal<Date | null>(null);
 
-  // Entries per page options
-  entriesOptions = [10, 25, 50, 100]
-  entriesPerPage = 10
+  // Pagination signals
+  currentPage = signal(1);
+  pageSize = signal(10);
+  pageSizeOptions = signal([10, 25, 50, 100]);
 
-  // Current page
-  currentPage = 1
+  // Status options (aligned with API's orderState values)
+  statusOptions = signal([
+    { value: 'New', label: 'New' },
+    { value: 'Pendding', label: 'Pending' },
+    {
+      value: 'DeliveredToTheRepresentative',
+      label: 'Assigned to Delivery Agent',
+    },
+    { value: 'Delivered', label: 'Delivered to Customer' },
+    { value: 'Unreachable', label: 'Unreachable' },
+    { value: 'Postponed', label: 'Postponed' },
+    { value: 'PartiallyDelivered', label: 'Partially Delivered' },
+    { value: 'CanceledByRecipient', label: 'Canceled by Recipient' },
+    { value: 'RejectedWithFullPayment', label: 'Rejected with Full Payment' },
+    {
+      value: 'RejectedWithPartialPayment',
+      label: 'Rejected with Partial Payment',
+    },
+    { value: 'RejectedWithNoPayment', label: 'Rejected with NO Payment' },
+  ]);
 
-  // Search term
-  searchTerm = ""
+  // Loading and error states
+  isLoading = signal(false);
+  errorMessage = signal('');
 
-  // Date range form
-  dateRangeForm = new FormGroup({
-    fromDate: new FormControl(""),
-    toDate: new FormControl(""),
-  })
-
-  // Selected status
-  selectedStatus = "new"
-
-  constructor() {}
+  constructor(private orderService: OrderService) {}
 
   ngOnInit(): void {
-    // Load sample data
-    this.loadSampleData()
-    this.applyFilters()
+    this.loadOrders();
   }
 
-  loadSampleData(): void {
-    this.orders = [
-      {
-        id: "ORD-10001",
-        status: "New",
-        merchant: "Electronics Store",
-        customer: "John Smith",
-        phone: "555-123-4567",
-        governorate: "Cairo",
-        city: "Nasr City",
-        orderCost: 1200.5,
-        receivedAmount: 1200.5,
-        shippingCost: 50.0,
-        paidShippingValue: 50.0,
-        companyValue: 1150.5,
-        date: "2023-04-15",
-      },
-      {
-        id: "ORD-10002",
-        status: "Delivered",
-        merchant: "Fashion Outlet",
-        customer: "Sarah Johnson",
-        phone: "555-234-5678",
-        governorate: "Alexandria",
-        city: "Miami",
-        orderCost: 850.75,
-        receivedAmount: 850.75,
-        shippingCost: 35.0,
-        paidShippingValue: 35.0,
-        companyValue: 815.75,
-        date: "2023-04-14",
-      },
-      {
-        id: "ORD-10003",
-        status: "Cancelled",
-        merchant: "Home Goods",
-        customer: "Michael Brown",
-        phone: "555-345-6789",
-        governorate: "Giza",
-        city: "Dokki",
-        orderCost: 2100.0,
-        receivedAmount: 0.0,
-        shippingCost: 75.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-13",
-      },
-      {
-        id: "ORD-10004",
-        status: "Pending",
-        merchant: "Book Store",
-        customer: "Emily Davis",
-        phone: "555-456-7890",
-        governorate: "Cairo",
-        city: "Maadi",
-        orderCost: 350.25,
-        receivedAmount: 0.0,
-        shippingCost: 25.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-12",
-      },
-      {
-        id: "ORD-10005",
-        status: "Delivered",
-        merchant: "Sports Equipment",
-        customer: "David Wilson",
-        phone: "555-567-8901",
-        governorate: "Alexandria",
-        city: "Montazah",
-        orderCost: 1500.0,
-        receivedAmount: 1500.0,
-        shippingCost: 60.0,
-        paidShippingValue: 60.0,
-        companyValue: 1440.0,
-        date: "2023-04-11",
-      },
-      {
-        id: "ORD-10006",
-        status: "Returned",
-        merchant: "Tech Gadgets",
-        customer: "Lisa Taylor",
-        phone: "555-678-9012",
-        governorate: "Luxor",
-        city: "East Bank",
-        orderCost: 3200.0,
-        receivedAmount: 3200.0,
-        shippingCost: 100.0,
-        paidShippingValue: 100.0,
-        companyValue: 3100.0,
-        date: "2023-04-10",
-      },
-      {
-        id: "ORD-10007",
-        status: "New",
-        merchant: "Furniture Store",
-        customer: "Robert Miller",
-        phone: "555-789-0123",
-        governorate: "Aswan",
-        city: "Aswan City",
-        orderCost: 5000.0,
-        receivedAmount: 0.0,
-        shippingCost: 200.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-09",
-      },
-      {
-        id: "ORD-10008",
-        status: "Delivered",
-        merchant: "Grocery Store",
-        customer: "Jennifer White",
-        phone: "555-890-1234",
-        governorate: "Cairo",
-        city: "Heliopolis",
-        orderCost: 750.5,
-        receivedAmount: 750.5,
-        shippingCost: 30.0,
-        paidShippingValue: 30.0,
-        companyValue: 720.5,
-        date: "2023-04-08",
-      },
-      {
-        id: "ORD-10009",
-        status: "Pending",
-        merchant: "Pharmacy",
-        customer: "Thomas Anderson",
-        phone: "555-901-2345",
-        governorate: "Giza",
-        city: "6th of October",
-        orderCost: 420.75,
-        receivedAmount: 0.0,
-        shippingCost: 25.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-07",
-      },
-      {
-        id: "ORD-10010",
-        status: "Cancelled",
-        merchant: "Toy Store",
-        customer: "Jessica Martin",
-        phone: "555-012-3456",
-        governorate: "Alexandria",
-        city: "Smouha",
-        orderCost: 900.0,
-        receivedAmount: 0.0,
-        shippingCost: 40.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-06",
-      },
-      {
-        id: "ORD-10011",
-        status: "New",
-        merchant: "Electronics Store",
-        customer: "Daniel Clark",
-        phone: "555-123-7890",
-        governorate: "Cairo",
-        city: "New Cairo",
-        orderCost: 2500.0,
-        receivedAmount: 0.0,
-        shippingCost: 80.0,
-        paidShippingValue: 0.0,
-        companyValue: 0.0,
-        date: "2023-04-05",
-      },
-      {
-        id: "ORD-10012",
-        status: "Delivered",
-        merchant: "Fashion Outlet",
-        customer: "Olivia Johnson",
-        phone: "555-234-8901",
-        governorate: "Luxor",
-        city: "West Bank",
-        orderCost: 1200.25,
-        receivedAmount: 1200.25,
-        shippingCost: 55.0,
-        paidShippingValue: 55.0,
-        companyValue: 1145.25,
-        date: "2023-04-04",
-      },
-    ]
-    this.applyFilters()
+  loadOrders(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    const filters: OrderFilters = {
+      search: this.searchTerm() || undefined,
+      orderState: this.selectedStatus() || undefined,
+      fromDate: this.dateRangeStart()
+        ? this.dateRangeStart()!.toISOString()
+        : undefined,
+      toDate: this.dateRangeEnd()
+        ? this.dateRangeEnd()!.toISOString()
+        : undefined,
+      pageIndex: this.currentPage(),
+      pageSize: this.pageSize(),
+    };
+
+    this.orderService
+      .getAllOrders(
+        filters.pageSize,
+        filters.pageIndex,
+        filters.fromDate,
+        filters.toDate
+      )
+      .subscribe({
+        next: (response: PaginatedOrderResponse) => {
+          const mappedOrders = response.data.map((order: OrderResponse) => ({
+            id: order.id.toString(),
+            status: order.orderState,
+            merchant: order.merchantName,
+            customer: order.customerName,
+            phone: order.customerPhone1,
+            governorate: order.cityName, // Assuming cityName represents governorate; adjust if there's a separate field
+            city: order.cityName,
+            orderCost: order.orderPrice,
+            receivedAmount: order.amountReceived,
+            shippingCost: order.chargePrice,
+            paidShippingValue: 0, // Not available in API; set to 0 or derive if needed
+            companyValue: order.orderPrice - order.chargePrice, // Example calculation
+            date: order.creationDate,
+          }));
+          this.orders.set(mappedOrders);
+          this.totalCount.set(response.totalCount);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.errorMessage.set(err.message || 'Failed to load orders');
+          this.isLoading.set(false);
+        },
+      });
   }
 
   applyFilters(): void {
-    let filtered = [...this.orders]
+    this.currentPage.set(1);
+    this.loadOrders();
+  }
 
-    // Filter by status
-    if (this.selectedStatus) {
-      filtered = filtered.filter((order) => order.status.toLowerCase() === this.selectedStatus.toLowerCase())
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedStatus.set(null);
+    this.dateRangeStart.set(null);
+    this.dateRangeEnd.set(null);
+    this.currentPage.set(1);
+    this.loadOrders();
+  }
+
+  // Pagination methods
+  changePageSize(event: Event): void {
+    const newSize = Number((event.target as HTMLSelectElement).value);
+    this.pageSize.set(newSize);
+    this.currentPage.set(1);
+    this.loadOrders();
+  }
+
+  firstPage(): void {
+    if (this.currentPage() !== 1) {
+      this.currentPage.set(1);
+      this.loadOrders();
     }
+  }
 
-    // Filter by date range
-    const fromDate = this.dateRangeForm.get("fromDate")?.value
-    const toDate = this.dateRangeForm.get("toDate")?.value
-
-    if (fromDate && toDate) {
-      const fromDateObj = new Date(fromDate)
-      const toDateObj = new Date(toDate)
-
-      filtered = filtered.filter((order) => {
-        const orderDate = new Date(order.date)
-        return orderDate >= fromDateObj && orderDate <= toDateObj
-      })
+  previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+      this.loadOrders();
     }
-
-    // Filter by search term
-    if (this.searchTerm.trim()) {
-      const term = this.searchTerm.toLowerCase().trim()
-      filtered = filtered.filter(
-        (order) =>
-          order.id.toLowerCase().includes(term) ||
-          order.merchant.toLowerCase().includes(term) ||
-          order.customer.toLowerCase().includes(term) ||
-          order.phone.toLowerCase().includes(term) ||
-          order.city.toLowerCase().includes(term) ||
-          order.governorate.toLowerCase().includes(term),
-      )
-    }
-
-    this.filteredOrders = filtered
-  }
-
-  onSearch(): void {
-    this.currentPage = 1
-    this.applyFilters()
-  }
-
-  onStatusChange(): void {
-    this.currentPage = 1
-    this.applyFilters()
-  }
-
-  onDateRangeChange(): void {
-    this.currentPage = 1
-    this.applyFilters()
-  }
-
-  onEntriesChange(): void {
-    this.currentPage = 1
-    this.applyFilters()
-  }
-
-  search(): void {
-    this.applyFilters()
-  }
-
-  clearSearch(): void {
-    this.searchTerm = ""
-    this.applyFilters()
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredOrders.length / this.entriesPerPage)
-  }
-
-  get paginatedOrders(): OrderReport[] {
-    const startIndex = (this.currentPage - 1) * this.entriesPerPage
-    return this.filteredOrders.slice(startIndex, startIndex + this.entriesPerPage)
-  }
-
-  get showingInfo(): string {
-    if (this.filteredOrders.length === 0) {
-      return "Showing 0 to 0 of 0 entries"
-    }
-
-    const start = (this.currentPage - 1) * this.entriesPerPage + 1
-    const end = Math.min(start + this.entriesPerPage - 1, this.filteredOrders.length)
-    return `Showing ${start} to ${end} of ${this.filteredOrders.length} entries`
   }
 
   nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
+      this.loadOrders();
     }
   }
 
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--
+  lastPage(): void {
+    if (this.currentPage() !== this.totalPages()) {
+      this.currentPage.set(this.totalPages());
+      this.loadOrders();
     }
+  }
+
+  goToPage(page: number): void {
+    if (page !== this.currentPage() && page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+      this.loadOrders();
+    }
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.totalCount() / this.pageSize());
+  }
+
+  displayRange() {
+    const start = (this.currentPage() - 1) * this.pageSize() + 1;
+    const end = Math.min(
+      this.currentPage() * this.pageSize(),
+      this.totalCount()
+    );
+    return {
+      start: this.totalCount() === 0 ? 0 : start,
+      end,
+      total: this.totalCount(),
+    };
+  }
+
+  getPageNumbers(): number[] {
+    const maxPagesToShow = 5;
+    const pages: number[] = [];
+    const total = this.totalPages();
+
+    if (total <= maxPagesToShow) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+
+    const half = Math.floor(maxPagesToShow / 2);
+    let start = Math.max(1, this.currentPage() - half);
+    let end = Math.min(total, start + maxPagesToShow - 1);
+
+    if (end - start + 1 < maxPagesToShow) {
+      start = Math.max(1, end - maxPagesToShow + 1);
+    }
+
+    if (start > 1) {
+      pages.push(1);
+      if (start > 2) pages.push(-1); // Ellipsis
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < total) {
+      if (end < total - 1) pages.push(-1); // Ellipsis
+      pages.push(total);
+    }
+
+    return pages;
   }
 }

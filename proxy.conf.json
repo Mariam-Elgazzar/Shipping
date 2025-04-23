@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "https://api.x.ai/v1/chat/completions",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" },
+    "logLevel": "debug"
+  }
+}

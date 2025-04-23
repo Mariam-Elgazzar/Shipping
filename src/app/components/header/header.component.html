@@ -1,3 +1,5 @@
+<ng-container *ngIf="showHeader">
+
 <header class="header">
   <div class="logo-container">
     <img src="/images/logo.png" alt="Shipping Pro Logo" class="logo-image" />
@@ -9,20 +11,20 @@
     <mat-icon>{{ isMobileMenuOpen ? "close" : "menu" }}</mat-icon>
   </button>
 
-  <nav class="nav-links" [class.mobile-nav-open]="isMobileMenuOpen">
-    <a routerLink="/admin/roles" routerLinkActive="active-link">
+  <nav class="nav-links" [class.mobile-nav-open]="isMobileMenuOpen" *ngIf="isLoggedIn">
+    <!-- <a routerLink="/admin/roles" routerLinkActive="active-link">
       <mat-icon>dashboard</mat-icon>
       <span>Roles</span>
     </a>
-    <a routerLink="/employee/list" routerLinkActive="active-link">
+    <a routerLink="/Employee/list" routerLinkActive="active-link">
       <mat-icon>analytics</mat-icon>
       <span>Employee</span>
     </a>
-    <a routerLink="/merchant" routerLinkActive="active-link">
+    <a routerLink="/merchant/list" routerLinkActive="active-link">
       <mat-icon>local_shipping</mat-icon>
       <span>Merchant</span>
     </a>
-    <a routerLink="Delivery/list" routerLinkActive="active-link">
+    <a routerLink="delivery-reps" routerLinkActive="active-link">
       <mat-icon>track_changes</mat-icon>
       <span>Delivery</span>
     </a>
@@ -30,15 +32,85 @@
       <mat-icon>inventory</mat-icon>
       <span>City</span>
     </a>
-    <a routerLink="/trucks" routerLinkActive="active-link">
+    <a routerLink="/Branchs" routerLinkActive="active-link">
       <mat-icon>local_shipping</mat-icon>
-      <span>Truck</span>
+      <span>Branchs</span>
     </a>
+    <a routerLink="rejectionReason/display" routerLinkActive="active-link">
+      <span>Rejected Resons</span>
+    </a>
+    <a routerLink="orders" routerLinkActive="active-link">
+      <span>Orders</span>
+    </a> <a routerLink="pricings" routerLinkActive="active-link">
+
+      <span>Price Settings</span>
+    </a>
+
+    <a routerLink="Government/list" routerLinkActive="active-link">
+      <span>Government </span>
+    </a>
+    <a routerLink="reports/orders" routerLinkActive="active-link">
+      <span>Reports </span>
+    </a> -->
+    <!-- Admin & Employee only -->
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="/admin/roles" routerLinkActive="active-link">
+  <mat-icon>dashboard</mat-icon>
+  <span>Roles</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="/Employee/list" routerLinkActive="active-link">
+  <mat-icon>analytics</mat-icon>
+  <span>Employee</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="/merchant/list" routerLinkActive="active-link">
+  <mat-icon>local_shipping</mat-icon>
+  <span>Merchant</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="delivery-reps" routerLinkActive="active-link">
+  <mat-icon>track_changes</mat-icon>
+  <span>Delivery</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="/city/list" routerLinkActive="active-link">
+  <mat-icon>inventory</mat-icon>
+  <span>City</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="/Branchs" routerLinkActive="active-link">
+  <mat-icon>local_shipping</mat-icon>
+  <span>Branchs</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="rejectionReason/display" routerLinkActive="active-link">
+  <span>Rejected Resons</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="pricings" routerLinkActive="active-link">
+  <span>Price Settings</span>
+</a>
+
+<a *ngIf="role === 'Admin' || role === 'Employee'" routerLink="Government/list" routerLinkActive="active-link">
+  <span>Government</span>
+</a>
+
+<!-- Orders: Admin, Employee, Merchant -->
+<a *ngIf="role === 'Admin' || role === 'Employee' || role === 'Merchant'" routerLink="orders" routerLinkActive="active-link">
+  <span>Orders</span>
+</a>
+
+<!-- Reports: كلهم ماعدا اللي مش مذكور -->
+<a *ngIf="role === 'Admin' || role === 'Employee' || role === 'Merchant' || role === 'Delivery'" routerLink="reports/orders" routerLinkActive="active-link">
+  <span>Reports</span>
+</a>
+
+    <button class="btn btn-outline-danger ms-2" (click)="logout()">Logout</button>
+
   </nav>
 
   <div class="user-section">
     <button class="notification-button">
-      <mat-icon>notifications</mat-icon>
       <span class="notification-indicator"></span>
     </button>
 
@@ -76,3 +148,4 @@
   *ngIf="isMobileMenuOpen"
   (click)="closeMobileMenu()"
 ></div>
+</ng-container>

@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MerchantService } from '../../../services/merchant.service';
-import { City, MerchantResponse } from '../../../models/merchant.model';
+import { MerchantResponse } from '../../../models/merchant.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { City, OrderService } from '../../../services/order.service';
 
 @Component({
   selector: 'app-merchant-details',
@@ -25,6 +26,7 @@ export class MerchantDetailsComponent {
 
   constructor(
     private merchantService: MerchantService,
+    private orderService: OrderService,
     private router: Router
   ) {}
 
@@ -51,8 +53,8 @@ export class MerchantDetailsComponent {
   }
 
   loadCities(): void {
-    this.merchantService.getCities().subscribe({
-      next: (cities) => this.cities.set(cities),
+    this.orderService.getCities().subscribe({
+      next: (cities) => this.cities.set(cities.data),
       error: (err) => this.errorMessage.set('Failed to load cities'),
     });
   }

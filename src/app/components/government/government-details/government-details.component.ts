@@ -1,31 +1,29 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Government } from '../../../models/government.interface';
 import { GovernmentService } from '../../../services/government.service';
-// import { GovernmentService } from '../../../services/Government.service';
-// import { GovernmentService } from '../../../services/Government.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-Government-details',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './Government-details.component.html',
-  styleUrls: ['./Government-details.component.scss'],
+  templateUrl: './government-details.component.html',
+  styleUrls: ['./government-details.component.scss'],
 })
 export class GovernmentDetailsComponent implements OnChanges {
-  @Input() GovernmentId: string | null = null;
+  @Input() GovernmentId: number | null = null;
   @Input() isVisible = false;
   @Output() close = new EventEmitter<void>();
 
-  GovernmentDetails: any = null;
+  GovernmentDetails: Government | null = null;
 
-  constructor(private GovernmentService: GovernmentService) {}
+  constructor(
+    private GovernmentService: GovernmentService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['GovernmentId'] && this.GovernmentId) {
@@ -36,14 +34,14 @@ export class GovernmentDetailsComponent implements OnChanges {
   loadGovernmentDetails(): void {
     if (!this.GovernmentId) return;
 
-    this.GovernmentService.getGovernmentDetails(this.GovernmentId).subscribe(
-      (details) => {
+    this.GovernmentService.getGovernmentDetails(this.GovernmentId).subscribe({
+      next: (details) => {
         this.GovernmentDetails = details;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading Government details:', error);
-      }
-    );
+      },
+    });
   }
 
   onOverlayClick(event: MouseEvent): void {
@@ -57,6 +55,14 @@ export class GovernmentDetailsComponent implements OnChanges {
   }
 
   onEdit(): void {
-    console.log('Edit Government details:', this.GovernmentId);
+    if (this.GovernmentId && this.GovernmentDetails) {
+      console.log("ajfhkfjl");
+
+      this.router.navigate([`/government/${this.GovernmentId}/update`]);
+    }
+
+
+ 
+    this.onClose();
   }
 }

@@ -5,7 +5,6 @@
       Delivery Management
     </h1>
   </div>
-
   <div class="delivery-content">
     <div class="delivery-form-card">
       <div class="card-header">
@@ -13,40 +12,13 @@
           <i class="icon-info-circle"></i>
           {{ isEditing() ? "Edit Delivery" : "New Delivery" }}
         </h2>
-        <button *ngIf="isEditing" class="btn-close" (click)="cancel()">
+        <button *ngIf="isEditing()" class="btn-close" (click)="cancel()">
           <i class="icon-close"></i>
         </button>
       </div>
 
       <div class="card-body">
         <form [formGroup]="deliveryForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="userId">User</label>
-            <select
-              id="userId"
-              formControlName="userId"
-              class="form-control"
-              [class.is-invalid]="
-                deliveryForm.get('userId')?.invalid &&
-                deliveryForm.get('userId')?.touched
-              "
-            >
-              <option value="">Select User</option>
-              <!-- <option *ngFor="let user of users" [value]="user.id">
-                {{ user.username }}
-              </option> -->
-            </select>
-            <div
-              class="invalid-feedback"
-              *ngIf="
-                deliveryForm.get('userId')?.invalid &&
-                deliveryForm.get('userId')?.touched
-              "
-            >
-              User is required
-            </div>
-          </div>
-
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="name">Name</label>
@@ -136,32 +108,12 @@
                 >
                 <span
                   *ngIf="deliveryForm.get('password')?.errors?.['minlength']"
-                  >Password must be at least 6 characters</span
+                  >Password must be at least 8 characters</span
                 >
-              </div>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="branch">Branch</label>
-              <input
-                type="text"
-                id="branch"
-                formControlName="branch"
-                class="form-control"
-                placeholder="Enter branch name"
-                [class.is-invalid]="
-                  deliveryForm.get('branch')?.invalid &&
-                  deliveryForm.get('branch')?.touched
-                "
-              />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  deliveryForm.get('branch')?.invalid &&
-                  deliveryForm.get('branch')?.touched
-                "
-              >
-                Branch is required
+                <span *ngIf="deliveryForm.get('password')?.errors?.['pattern']"
+                  >Password must contain uppercase, lowercase, number, and
+                  special character</span
+                >
               </div>
             </div>
           </div>
@@ -173,7 +125,7 @@
               id="phone"
               formControlName="phone"
               class="form-control"
-              placeholder="Enter phone number"
+              placeholder="Enter phone number (e.g., +1234567890)"
               [class.is-invalid]="
                 deliveryForm.get('phone')?.invalid &&
                 deliveryForm.get('phone')?.touched
@@ -190,7 +142,7 @@
                 >Phone number is required</span
               >
               <span *ngIf="deliveryForm.get('phone')?.errors?.['pattern']"
-                >Please enter a valid phone number</span
+                >Please enter a valid phone number (10-15 digits)</span
               >
             </div>
           </div>
@@ -202,15 +154,16 @@
                 id="government"
                 formControlName="government"
                 class="form-control"
+                multiple
                 [class.is-invalid]="
                   deliveryForm.get('government')?.invalid &&
                   deliveryForm.get('government')?.touched
                 "
               >
-                <option value="">Select Government</option>
-                <!-- <option *ngFor="let gov of governments" [value]="gov">
-                  {{ gov }}
-                </option> -->
+                <option value="">Select Government(s)</option>
+                @for (gov of governorates(); track gov) {
+                <option [value]="gov">{{ gov }}</option>
+                }
               </select>
               <div
                 class="invalid-feedback"
@@ -219,35 +172,7 @@
                   deliveryForm.get('government')?.touched
                 "
               >
-                Government is required
-              </div>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="city">City</label>
-              <select
-                id="city"
-                formControlName="city"
-                class="form-control"
-                [class.is-invalid]="
-                  deliveryForm.get('city')?.invalid &&
-                  deliveryForm.get('city')?.touched
-                "
-                [disabled]="!deliveryForm.get('government')?.value"
-              >
-                <option value="">Select City</option>
-                <!-- <option *ngFor="let city of availableCities" [value]="city">
-                  {{ city }}
-                </option> -->
-              </select>
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  deliveryForm.get('city')?.invalid &&
-                  deliveryForm.get('city')?.touched
-                "
-              >
-                City is required
+                At least one government is required
               </div>
             </div>
           </div>
@@ -288,9 +213,10 @@
                   deliveryForm.get('saleType')?.touched
                 "
               >
-                <!-- <option *ngFor="let type of saleTypes" [value]="type">
-                  {{ getSaleTypeLabel(type) }}
-                </option> -->
+                <option value="">Select Sale Type</option>
+                @for (type of saleTypes(); track type) {
+                <option [value]="type">{{ getSaleTypeLabel(type) }}</option>
+                }
               </select>
               <div
                 class="invalid-feedback"
@@ -312,6 +238,8 @@
                   formControlName="salePresentage"
                   class="form-control"
                   placeholder="0"
+                  min="0"
+                  max="100"
                   [class.is-invalid]="
                     deliveryForm.get('salePresentage')?.invalid &&
                     deliveryForm.get('salePresentage')?.touched
@@ -344,106 +272,14 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="empId">Assigned Employee</label>
-            <select
-              id="empId"
-              formControlName="empId"
-              class="form-control"
-              [class.is-invalid]="
-                deliveryForm.get('empId')?.invalid &&
-                deliveryForm.get('empId')?.touched
-              "
-            >
-              <option value="">Select Employee</option>
-              <!-- <option *ngFor="let employee of employees" [value]="employee.id">
-                {{ employee.username }}
-              </option> -->
-            </select>
-            <div
-              class="invalid-feedback"
-              *ngIf="
-                deliveryForm.get('empId')?.invalid &&
-                deliveryForm.get('empId')?.touched
-              "
-            >
-              Employee is required
-            </div>
-          </div>
-
           <div class="form-actions">
             <button type="button" class="btn btn-outline" (click)="cancel()">
               Cancel
             </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="deliveryForm.invalid || isLoading"
-            >
-              Save
-            </button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </div>
         </form>
       </div>
     </div>
-
-    <!-- Delivery List Section -->
-    <!-- <div class="delivery-list-card">
-        <div class="card-header">
-          <h2>
-            <i class="icon-list"></i>
-            Delivery List
-          </h2>
-          <div class="header-actions">
-            <div class="search-box">
-              <i class="icon-search"></i>
-              <input type="text" placeholder="Search deliveries">
-            </div>
-            <button class="btn btn-filter">
-              <i class="icon-filter"></i>
-              Filter
-            </button>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <table class="delivery-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Branch</th>
-                <th>Location</th>
-                <th>Sale Type</th>
-                <th>Sale %</th>
-                <th>Employee</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let delivery of deliveries">
-                <td>{{ delivery.name }}</td>
-                <td>{{ delivery.email }}</td>
-                <td>{{ delivery.branch }}</td>
-                <td>{{ delivery.city }}, {{ delivery.government }}</td>
-                <td>{{ getSaleTypeLabel(delivery.saleType) }}</td>
-                <td>{{ delivery.salePresentage }}%</td>
-                <td>{{ getEmployeeName(delivery.empId) }}</td>
-                <td class="actions">
-                  <button class="btn-icon" (click)="editDelivery(delivery)">
-                    <i class="icon-edit"></i>
-                  </button>
-                  <button class="btn-icon btn-danger" (click)="deleteDelivery(delivery.userId)">
-                    <i class="icon-delete"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="deliveries.length === 0">
-                <td colspan="8" class="text-center">No deliveries found</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div> -->
   </div>
 </div>

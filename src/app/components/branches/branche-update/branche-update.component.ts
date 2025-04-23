@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BranchesService, Branch } from '../../../services/branches.service';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { BranchesService } from '../../../services/branches.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { Branch } from '../../../models/branches.model';
 
 @Component({
   selector: 'app-branche-update',
@@ -72,7 +78,9 @@ export class BranchesUpdateComponent implements OnInit {
 
   onSubmit(): void {
     if (this.branchForm.invalid) {
-      Object.values(this.branchForm.controls).forEach((control) => control.markAsTouched());
+      Object.values(this.branchForm.controls).forEach((control) =>
+        control.markAsTouched()
+      );
       return;
     }
 
@@ -88,7 +96,7 @@ export class BranchesUpdateComponent implements OnInit {
     this.branchesService.updateBranch(this.branchId, branch).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/branches']);
+        this.router.navigate(['/branch']);
       },
       error: (err) => {
         console.error('Error updating branch', err);
@@ -98,6 +106,6 @@ export class BranchesUpdateComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/branches']);
+    this.router.navigate(['/branch']);
   }
 }

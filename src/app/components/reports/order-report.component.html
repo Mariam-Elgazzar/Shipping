@@ -1,59 +1,76 @@
 <div class="order-report-container">
   <div class="report-header">
-    <h2>Order Reports by Status</h2>
+    <div class="header-left">
+      <div class="header-icon">
+        <mat-icon>assignment</mat-icon>
+      </div>
+      <h2>Order Reports by Status</h2>
+    </div>
 
     <div class="filters-container">
-      <div class="status-filter">
-        <label>Status</label>
-        <select [(ngModel)]="selectedStatus" (change)="onStatusChange()">
-          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
-        </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select
+          [value]="selectedStatus()"
+          (selectionChange)="selectedStatus.set($event.value)"
+        >
+          <mat-option [value]="null">All</mat-option>
+          <mat-option
+            *ngFor="let option of statusOptions()"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date Range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input
+            matStartDate
+            placeholder="Start date"
+            [value]="dateRangeStart()"
+            (dateChange)="dateRangeStart.set($event.value)"
+          />
+          <input
+            matEndDate
+            placeholder="End date"
+            [value]="dateRangeEnd()"
+            (dateChange)="dateRangeEnd.set($event.value)"
+          />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-raised-button color="primary" (click)="applyFilters()">
+          Apply Filters
+        </button>
+        <button mat-stroked-button color="warn" (click)="clearFilters()">
+          Clear
+        </button>
       </div>
-
-      <form [formGroup]="dateRangeForm" class="date-range-filter">
-        <div class="date-from">
-          <label>From</label>
-          <input
-            type="date"
-            formControlName="fromDate"
-            (change)="onDateRangeChange()"
-          >
-        </div>
-
-        <div class="date-to">
-          <label>To</label>
-          <input
-            type="date"
-            formControlName="toDate"
-            (change)="onDateRangeChange()"
-          >
-        </div>
-
-        <button type="button" class="search-btn" (click)="search()">Search</button>
-      </form>
     </div>
   </div>
 
   <div class="table-controls">
-    <div class="search-box">
+    <mat-form-field appearance="outline" class="search-box">
+      <mat-icon matPrefix>search</mat-icon>
       <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-        placeholder="Search..."
-      >
-    </div>
-
-    <div class="entries-selector">
-      <span>Show</span>
-      <select [(ngModel)]="entriesPerPage" (change)="onEntriesChange()">
-        <option *ngFor="let option of entriesOptions" [value]="option">{{ option }}</option>
-      </select>
-      <span>entries</span>
-    </div>
+        matInput
+        placeholder="Search orders..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event); applyFilters()"
+      />
+    </mat-form-field>
   </div>
 
-  <div class="responsive-table">
+  <div class="table-wrapper">
     <table class="order-report-table">
       <thead>
         <tr>
@@ -74,53 +91,93 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="paginatedOrders.length === 0">
+        <tr *ngIf="orders().length === 0 && !isLoading()">
           <td colspan="14" class="no-data">No data available in table</td>
         </tr>
-        <tr *ngFor="let order of paginatedOrders; let i = index">
-          <td data-label="#">{{ (currentPage - 1) * entriesPerPage + i + 1 }}</td>
-          <td data-label="ID">{{ order.id }}</td>
-          <td data-label="Status">
+        <tr
+          *ngFor="let order of orders(); let i = index"
+          [ngClass]="i % 2 === 0 ? 'row-even' : 'row-odd'"
+        >
+          <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
+          <td>{{ order.id }}</td>
+          <td>
             <span class="status-badge" [ngClass]="order.status.toLowerCase()">
               {{ order.status }}
             </span>
           </td>
-          <td data-label="Merchant">{{ order.merchant }}</td>
-          <td data-label="Customer">{{ order.customer }}</td>
-          <td data-label="Phone">{{ order.phone }}</td>
-          <td data-label="Governorate">{{ order.governorate }}</td>
-          <td data-label="City">{{ order.city }}</td>
-          <td data-label="Order Cost">{{ order.orderCost | currency }}</td>
-          <td data-label="Received">{{ order.receivedAmount | currency }}</td>
-          <td data-label="Shipping">{{ order.shippingCost | currency }}</td>
-          <td data-label="Paid Shipping">{{ order.paidShippingValue | currency }}</td>
-          <td data-label="Company Value">{{ order.companyValue | currency }}</td>
-          <td data-label="Date">{{ order.date }}</td>
+          <td>{{ order.merchant }}</td>
+          <td>{{ order.customer }}</td>
+          <td>{{ order.phone }}</td>
+          <td>{{ order.governorate }}</td>
+          <td>{{ order.city }}</td>
+          <td>{{ order.orderCost | currency : "USD" }}</td>
+          <td>{{ order.receivedAmount | currency : "USD" }}</td>
+          <td>{{ order.shippingCost | currency : "USD" }}</td>
+          <td>{{ order.paidShippingValue | currency : "USD" }}</td>
+          <td>{{ order.companyValue | currency : "USD" }}</td>
+          <td>{{ order.date | date : "medium" }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="table-footer">
-    <div class="pagination-controls">
-      <button
-        class="prev-btn"
-        [disabled]="currentPage === 1"
-        (click)="prevPage()"
-      >
-        <span>←</span>
-      </button>
-      <button
-        class="next-btn"
-        [disabled]="currentPage === totalPages || totalPages === 0"
-        (click)="nextPage()"
-      >
-        <span>→</span>
-      </button>
+  <div class="pagination" *ngIf="totalCount()">
+    <div class="pagination-info">
+      Showing {{ displayRange().start }} to {{ displayRange().end }} of
+      {{ displayRange().total }} orders
     </div>
-
-    <div class="showing-info">
-      {{ showingInfo }}
+    <div class="pagination-controls">
+      <mat-form-field appearance="outline" class="page-size-selector">
+        <mat-select [value]="pageSize()">
+          <mat-option *ngFor="let size of pageSizeOptions()" [value]="size">
+            {{ size }} per page
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-icon-button
+        class="pagination-btn"
+        (click)="firstPage()"
+        [disabled]="currentPage() === 1"
+      >
+        <mat-icon>first_page</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        class="pagination-btn"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        class="pagination-page"
+        *ngFor="let page of getPageNumbers()"
+        [color]="page === currentPage() ? 'primary' : 'basic'"
+        (click)="page > 0 ? goToPage(page) : null"
+      >
+        {{ page > 0 ? page : "..." }}
+      </button>
+      <button
+        mat-icon-button
+        class="pagination-btn"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        class="pagination-btn"
+        (click)="lastPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        <mat-icon>last_page</mat-icon>
+      </button>
     </div>
   </div>
+
+  <mat-spinner *ngIf="isLoading()" class="spinner"></mat-spinner>
+  <div class="error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
 </div>

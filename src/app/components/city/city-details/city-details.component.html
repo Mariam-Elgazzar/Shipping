@@ -20,43 +20,39 @@
       </button>
     </div>
 
-    <div class="modal-content" *ngIf="cityDetails">
-      <div class="city-section">
+    <div class="modal-content" *ngIf="city">
+      <div class="order-section">
         <h3>City Information</h3>
         <div class="info-grid">
           <div class="info-item">
-            <div class="info-label">Governorate</div>
-            <div class="info-value">{{ cityDetails.governorateName }}</div>
+            <div class="info-label">City Name</div>
+            <div class="info-value">{{ city.name }}</div>
           </div>
           <div class="info-item">
-            <div class="info-label">City</div>
-            <div class="info-value">{{ cityDetails.name }}</div>
+            <div class="info-label">Governorate Name</div>
+            <div class="info-value">{{ city.governorateName }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Charge Price</div>
-            <div class="info-value">{{ cityDetails.chargePrice }}</div>
+            <div class="info-value">{{ city.chargePrice }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">PickUp Price</div>
-            <div class="info-value">{{ cityDetails.pickUpPrice }}</div>
+            <div class="info-value">{{ city.pickUpPrice }}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Status</div>
             <div class="info-value">
               <span
                 class="status-badge"
-                [ngClass]="cityDetails.isDeleted ? 'deleted' : 'active'"
+                [ngClass]="city.isDeleted ? 'inactive' : 'active'"
               >
-                {{ cityDetails.isDeleted ? 'Deleted' : 'Active' }}
+                {{ city.isDeleted ? "Deleted" : "Active" }}
               </span>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="modal-content" *ngIf="!cityDetails && isVisible">
-      <p>Loading city details...</p>
     </div>
 
     <div class="modal-footer">

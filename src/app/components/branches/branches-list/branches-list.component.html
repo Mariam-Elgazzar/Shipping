@@ -1,95 +1,124 @@
-<div class="branches-list-container">
-  <div class="header-actions">
-    <h1>Branches</h1>
-    <!-- <div class="breadcrumb">
-      <a routerLink="/dashboard">Dashboard</a>
-      <span class="separator">/</span>
-      <span>Branches</span>
-    </div> -->
+<div class="branches-container">
+  <div class="table-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <mat-icon>business</mat-icon>
+      </div>
+      <h3>Branches</h3>
+    </div>
+    <div class="header-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          placeholder="Search branches..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event); onSearch()"
+        />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addBranch()">
+        <mat-icon>add</mat-icon> Add Branch
+      </button>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
+  <div class="table-wrapper">
+    <table class="branches-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date Added</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let branch of filteredBranches()">
+          <td>{{ branch.name }}</td>
+          <td>{{ branch.dateAdded | date: 'mediumDate' }}</td>
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="branch.status === 'Deleted' ? 'inactive' : 'active'"
+            >
+              {{ branch.status }}
+            </span>
+          </td>
+          <td class="actions-col">
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Edit"
+              (click)="editBranch(branch)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Delete"
+              (click)="deleteBranch(branch)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="totalCount()">
+    <div class="pagination-info">
+      Showing {{ displayRange().start }} to {{ displayRange().end }} of
+      {{ displayRange().total }} branches
+    </div>
+    <div class="pagination-controls">
+      <mat-form-field appearance="outline">
+        <mat-select [value]="pageSize()" (selectionChange)="changePageSize($event)">
+          <mat-option *ngFor="let size of pageSizeOptions()" [value]="size">
+            {{ size }} per page
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <button
         mat-raised-button
-        color="primary"
-        class="add-button"
-        (click)="addBranch()"
+        (click)="firstPage()"
+        [disabled]="currentPage() === 1"
       >
-        <mat-icon>add</mat-icon>
-        Add Branch
+        First
       </button>
-
-      <div class="search-filters">
-        <div class="search-container">
-          <input
-            matInput
-            type="text"
-            placeholder="Search Branches"
-            [(ngModel)]="searchQuery"
-            (keyup.enter)="onSearch()"
-          />
-          <mat-icon>search</mat-icon>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-container">
-      <table class="branches-list-table">
-        <thead>
-          <tr>
-            <th class="number-column">#</th>
-            <th class="name-column">Branch Name</th>
-            <th class="date-column">Date Added</th>
-            <th class="actions-column">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="!loading">
-            <tr
-              *ngFor="let branch of filteredBranchs; let i = index"
-              [ngClass]="{ 'even-row': i % 2 === 0 }"
-            >
-              <td class="number-column">{{ branch.id }}</td>
-              <td class="name-column">{{ branch.name }}</td>
-              <td class="date-column">{{ branch.dateAdded }}</td>
-              <td class="actions-column">
-                <div class="action-buttons">
-                  <button
-                    mat-mini-fab
-                    color="accent"
-                    class="action-button edit-button"
-                    (click)="editBranch(branch)"
-                    matTooltip="Edit"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-mini-fab
-                    color="warn"
-                    class="action-button delete-button"
-                    (click)="deleteBranch(branch)"
-                    matTooltip="Delete"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
-
-          <tr *ngIf="loading">
-            <td colspan="4" class="loading-cell">
-              <mat-spinner diameter="40"></mat-spinner>
-              <span>Loading Branches...</span>
-            </td>
-          </tr>
-
-          <tr *ngIf="!loading && filteredBranchs.length === 0">
-            <td colspan="4" class="empty-cell">No data available</td>
-          </tr>
-        </tbody>
-      </table>
+      <button
+        mat-raised-button
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        Previous
+      </button>
+      <button
+        mat-raised-button
+        *ngFor="let page of getPageNumbers()"
+        [color]="page === currentPage() ? 'primary' : 'basic'"
+        (click)="page > 0 ? goToPage(page) : null"
+      >
+        {{ page > 0 ? page : '...' }}
+      </button>
+      <button
+        mat-raised-button
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next
+      </button>
+      <button
+        mat-raised-button
+        (click)="lastPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Last
+      </button>
     </div>
   </div>
+
+  <mat-spinner *ngIf="loading()" class="spinner"></mat-spinner>
+  <div class="error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
 </div>
